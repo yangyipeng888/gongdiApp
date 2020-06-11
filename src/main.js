@@ -8,6 +8,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import {Spi} from './api/api'
+Vue.prototype.$Spi = Spi
+import _ from 'lodash'
+Vue.prototype._ = _
+
+
 // 设置 js中可以访问 $cdn
 import { $cdn } from '@/config'
 Vue.prototype.$cdn = $cdn

@@ -1,0 +1,292 @@
+<template>
+  <div class="map_container" id="total_map">
+    map
+    <van-popup v-model="selSite" position="bottom" :style="{ height: '35%' }">
+      <div class="gongdiDes_div" >
+        <div class="gongdiDes_title"> dfgdfgdf</div>
+        <div class="gongdiDes_font">
+          <span class="gongdiDes_font1">建设单位:  </span>
+          <span class="gongdiDes_font2">hfhghfgh</span>
+        </div>
+        <div class="gongdiDes_font">
+          <span class="gongdiDes_font1">建设阶段:  </span>
+          <span class="gongdiDes_font2">fghfghfgh</span>
+        </div>
+        <van-button
+          class="gongdiDes_btn"
+          block
+          @click="enterGongdi"
+          color="linear-gradient(to right, #4bb0ff, #6149f6)">
+          查看工地
+        </van-button>
+      </div>
+
+    </van-popup>
+
+  </div>
+</template>
+
+<script>
+  import MapLoader from '@/api/amap.js'
+
+  export default {
+    name: 'map',
+    data() {
+      return {
+        mapStyle: 'amap://styles/darkblue',
+        markers: [],
+        lazy: false,
+        map: null,
+        colors: [
+          { color: 'purple', hex: '#c44dff' },
+          { color: 'orange', hex: '#ff9447' },
+          { color: 'blue', hex: '#3ecbff' },
+          { color: 'green', hex: '#86e22a' },
+          { color: 'blueD', hex: '#00f7f5' },
+          { color: 'yellow', hex: '#fff44d' },
+          { color: 'greenD', hex: '#d8ff12' },
+          { color: 'pink', hex: '#fcb0e3' }
+        ],
+        valTypes: [],
+        totalTypes: [],
+        selectedTypes: [],
+        itemObj: null,
+        itemList: [],
+        itemList1: [],
+        rank2: [],
+        rank3: [],
+        options: [],
+        value: '',
+        showList: true,
+        textAniId: null,
+        textAniTarget: null,
+        selSite: null
+      }
+    },
+    mounted() {
+    },
+    watch: {
+      '$store.state.loginData': {
+        handler(n, o) {
+          var that = this
+          if (!Boolean(o)) {
+            that.getDanweiList()
+          }
+        },
+        deep: true,
+        immediate: true
+      },
+      'rank2': {
+        handler(n, o) {
+          var that = this
+        },
+        deep: true,
+        immediate: true
+      },
+      'rank3': {
+        handler(n, o) {
+          var that = this
+
+        },
+        deep: true,
+        immediate: true
+      }
+    },
+
+    methods: {
+      getDanweiList() {
+        if (this.$store.state.loginData) {
+          let projectids = this.$store.state.loginData.projectids
+          this.$Spi.getprojectBelongList(projectids).then((res) => {
+            this.createMap()//createMap为什么在这里执行，因为markers的颜色要根据这个接口返回的公司类型，暂时这样做
+            let data = res.data
+            let itemObj = {}
+            let itemList = []
+            let selOptions = []
+            let selItemsName = []
+            let indexArr = ['建投公司', '新中轴公司', '复建公司', '其他']//顺序数组,这边前端来改一下顺序
+            let copy = data.concat()
+            data = []
+            for (let i = 0; i < indexArr.length; i++) {
+              let findCompany = indexArr[i]
+              let findOut = this._.find(copy, (d) => {
+                return d.jianshedanwei == findCompany
+              })
+              if (findOut) {
+                data.push(findOut)
+              }
+            }
+
+            for (let i = 0; i < data.length; i++) {
+              let obj = { text: '', childs: [], show: true }
+              let jianshedanwei = data[i].jianshedanwei
+              obj.text = jianshedanwei
+              selItemsName.push(jianshedanwei)
+              let projectdetail = data[i].projectdetail
+              if (projectdetail && projectdetail.length) {
+                for (let j = 0; j < projectdetail.length; j++) {
+                  selOptions.push({ value: projectdetail[j].projectName, label: projectdetail[j].projectName })
+                  obj.childs.push({ text: projectdetail[j].projectName, id: projectdetail[j].projectId })
+                }
+              }
+              itemObj[jianshedanwei] = obj.childs
+              itemList.push(obj)
+            }
+            this.itemObj = itemObj
+            this.totalTypes = selItemsName
+            this.itemList = itemList
+            this.options = selOptions
+          })
+        }
+      },
+
+      createMap() {
+        var that = this
+        MapLoader().then(AMap => {
+          if (!that.map) {
+            this.map = new AMap.Map('total_map', {
+              zoom: 12,
+              center: [113.317373, 23.084758],
+              mapStyle: 'amap://styles/5db57f25559986e3ddef9376fa24adf3'
+            })
+            this.map.plugin([
+              'AMap.ToolBar'
+            ], function() {
+              that.map.addControl(new AMap.ToolBar({
+                position: 'RT'
+              }))
+            })
+
+          }
+          var infoWindow = new AMap.InfoWindow({
+            isCustom: true,
+            offset: new AMap.Pixel(0, -20),
+            content: `<div class="mapInfoBox"></div>`
+          }) //创建窗体
+          that.getMarkers(infoWindow) // 创建标记
+          that.map.add(that.markers) //添加标记
+
+        })
+
+      },
+      getMarkers(infoWindow) {
+        var that = this
+        for (var siteKey in that.$store.state.constructionSite) {
+          var mark = new AMap.Text({
+            position: that.$store.state.constructionSite[siteKey].position,
+            text: ' '
+          })
+          // let hex = this.getTypeColor(that.$store.state.constructionSite[siteKey].name).hex;
+          // let color = this.getTypeColor(that.$store.state.constructionSite[siteKey].name).color;
+          let type = this.findTypeByName(that.$store.state.constructionSite[siteKey].name)
+          mark.setStyle({
+            'height': '30px',
+            'width': '30px',
+            'border': '0',
+            'border-radius': '15px',
+            'background-color': this.getTypeColor(type).hex,
+            'animation': this.getTypeColor(type).color + ' 5s infinite'
+          })
+
+          mark.id = siteKey
+          // mark.type = that.$store.state.constructionSite[siteKey].type;
+          mark.name = that.$store.state.constructionSite[siteKey].name
+          mark.on('click', function(ev) {
+            that.changeSite(ev.target.id)
+          })
+          mark.on('mouseover', function(ev) {
+            $('.mapInfoBox').unbind('animationend ').unbind('webkitAnimationEnd')
+            $('.mapInfoBox').css('animation', 'infoBoxShow 0.5s forwards')
+            that.showInfo(infoWindow, ev.target.id, ev.lnglat)
+          })
+          mark.on('mouseout', function(ev) {
+            $('.mapInfoBox').css('animation', 'infoBoxHide 0.5s forwards')
+            $('.mapInfoBox').on('animationend webkitAnimationEnd', function(e) {
+              infoWindow.close(that)
+            })
+          })
+          that.markers.push(mark)
+          // if (that.valTypes.indexOf(that.$store.state.constructionSite[siteKey].type) == -1) {
+          //   that.valTypes.push(that.$store.state.constructionSite[siteKey].type);
+          // }
+
+        } //获取Marker
+      },
+      findTypeByName(name) {
+        if (this.itemObj) {
+          for (let type in this.itemObj) {
+            let childs = this.itemObj[type]
+            for (let i = 0; i < childs.length; i++) {
+              if (name == childs[i].text) {
+                return type
+              }
+            }
+          }
+        }
+      },
+      getTypeColor(type) {
+        let index = this.totalTypes.indexOf(type)
+        if (this.colors[index]) {
+          return this.colors[index]
+        } else {
+          return { color: 'orange', hex: '#ff9447' }
+        }
+      },
+      changeSite(id) {
+        this.selSite = id
+      },
+      enterGongdi() {
+        this.$router.push({
+          path: '/'
+        })
+      }
+    }
+
+  }
+</script>
+
+<style scoped lang="scss">
+  .map_container {
+    height: 100vh;
+
+    .gongdiDes_div {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px 8px 0 0;
+      background-color: white;
+      position: absolute;
+      /*z-index: 100;*/
+      bottom: 0;
+      padding-left: 20px;
+      padding-right: 20px;
+
+      .gongdiDes_title {
+        font-size: 36px;
+        font-weight: 900;
+      }
+
+      .gongdiDes_font {
+
+        .gongdiDes_font1 {
+          font-size: 32px;
+          font-weight: 900;
+        }
+
+        .gongdiDes_font2 {
+          font-size: 32px;
+
+        }
+      }
+
+
+      .gongdiDes_btn {
+        font-size: 22px;
+      }
+    }
+
+
+  }
+</style>

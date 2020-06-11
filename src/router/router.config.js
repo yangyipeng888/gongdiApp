@@ -4,6 +4,24 @@
  */
 export const constantRouterMap = [
   {
+    path: '/login',
+    component: () => import('@/views/login'),
+    meta: {
+      title: '登录',
+      keepAlive: false
+    }
+
+  },
+  {
+    path: '/map',
+    component: () => import('@/views/map'),
+    meta: {
+      title: '地图',
+      keepAlive: false
+    }
+
+  },
+  {
     path: '/',
     component: () => import('@/views/layouts/index'),
     redirect: '/home',
