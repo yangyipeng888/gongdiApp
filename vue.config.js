@@ -80,10 +80,9 @@ module.exports = {
   },
   configureWebpack: config => {
     config.name = name
-    // config.externals = {
-    //   "BMap": "BMap",
-    //   'AMap': 'AMap'
-    // }
+    config.externals = {
+      'AMap': 'AMap'
+    }
     // 为生产环境修改配置...
     // if (IS_PROD) {
     //   // externals

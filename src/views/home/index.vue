@@ -1,76 +1,98 @@
 <!-- home -->
 <template>
   <div class="index-container">
-    <div class="warpper">
-
-      <h1 class="demo-home__title"><img src="https://imgs.solui.cn/weapp/logo.png" /><span> VUE H5开发模板</span></h1>
-      <h2 class="demo-home__desc">
-        A vue h5 template with Vant UI
-      </h2>
+    <div class="box">
+      <div class="title">数据查看</div>
+      <div class="content">
+        <van-grid :column-num="4">
+          <van-grid-item v-for="item in btnList" @click="enter(item.path)">
+            <div>
+              <van-image :src="item.imgUrl"/>
+              <div>
+                {{item.desc}}
+              </div>
+            </div>
+          </van-grid-item>
+        </van-grid>
+      </div>
     </div>
-    <van-cell icon="success" v-for="item in list" :key="item" :title="item" />
+    <div class="box">
+      <div class="title">项目概况</div>
+      <div class="content" style="height: 300px">
+        <pro_progress></pro_progress>
+      </div>
+    </div>
+    <div class="box">
+      <div class="title">现场视频</div>
+      <div class="content">
+        <van-grid :column-num="2">
+          <van-grid-item icon="photo-o" text="文字"/>
+          <van-grid-item icon="photo-o" text="文字"/>
+          <van-grid-item icon="photo-o" text="文字"/>
+          <van-grid-item icon="photo-o" text="文字"/>
+        </van-grid>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      list: [
-        'Vue-cli4',
-        '配置多环境变量',
-        'VantUI 组件按需加载',
-        'Sass 全局样式',
-        'Webpack 4',
-        'Vuex 状态管理',
-        'Axios 封装及接口管理',
-        'Vue-router',
-        'Webpack 4 vue.config.js 基础配置',
-        '配置 proxy 跨域',
-        '配置 alias 别名',
-        '配置 打包分析',
-        '配置 externals 引入 cdn 资源',
-        '去掉 console.log',
-        'splitChunks 单独打包第三方模块',
-        '添加 IE 兼容',
-        'Eslint+Pettier 统一开发规范'
-      ]
-    }
-  },
+  import pro_progress from '../../components/progress'
 
-  computed: {},
+  export default {
+    components: {
+      pro_progress
+    },
+    data() {
+      return {
+        btnList: [
+          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '文件管理', path: '/files' },
+          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '现场照片', path: '/picView' },
+          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '半月报', path: '/projectHalfDetail' }
+        ]
+      }
+    },
 
-  mounted() { },
+    computed: {},
 
-  methods: {}
-}
-</script>
-<style lang="scss" scoped>
-.index-container {
-  .warpper {
-    padding: 12px;
-    background: #fff;
-    .demo-home__title {
-      margin: 0 0 6px;
-      font-size: 32px;
-      .demo-home__title img,
-      .demo-home__title span {
-        display: inline-block;
-        vertical-align: middle;
+    mounted() {
+    },
+
+    methods: {
+      enter(path) {
+        this.$router.push({
+          path
+        })
       }
-      img {
-        width: 32px;
-      }
-      span {
-        margin-left: 16px;
-        font-weight: 500;
-      }
-    }
-    .demo-home__desc {
-      margin: 0 0 20px;
-      color: rgba(69, 90, 100, 0.6);
-      font-size: 14px;
     }
   }
-}
+</script>
+<style lang="scss" scoped>
+  .index-container {
+    .box {
+      .title {
+        padding-left: 10px;
+        margin: 5px;
+        font-size: 18px;
+        font-weight: 600;
+        position: relative;
+      }
+
+      .title:after {
+        content: '';
+        width: 5px;
+        height: 100%;
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        background-color: #1989fa;
+      }
+
+      .content {
+
+      }
+    }
+
+  }
 </style>

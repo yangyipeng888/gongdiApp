@@ -6,7 +6,7 @@
       </keep-alive>
       <router-view v-else></router-view>
     </div>
-    <div class="layout-footer">
+    <div class="layout-footer" v-show="$store.state.currentSite">
       <TabBar :data="tabbars" @change="handleChange" />
     </div>
   </div>
@@ -19,6 +19,13 @@ export default {
   data() {
     return {
       tabbars: [
+        {
+          title: '地图',
+          to: {
+            name: 'Map'
+          },
+          icon: 'map-marked'
+        },
         {
           title: '首页',
           to: {

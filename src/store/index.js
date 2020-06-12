@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
-
+import {
+  Spi
+} from "../api/api"
 Vue.use(Vuex)
 const state = {
   jump: null,
@@ -60,6 +62,14 @@ const mutations = {
     }
     ;
     state.constructionSite = a;
+  },
+  setSite(state, siteId) {
+    Spi.getProjectSettings(siteId.id).then(function (response) {
+      state.constructionSite[siteId.id].settings = response;
+      state.streamSource = response.shexiangtouid;
+      state.currentSettings = response;
+    });
+    state.currentSite = siteId.id;
   },
 }
 const actions = {
