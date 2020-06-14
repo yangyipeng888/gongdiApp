@@ -54,6 +54,16 @@ export const constantRouterMap = [
 
   },
   {
+    path: '/video',
+    name: '/video',
+    component: () => import('@/views/videol'),
+    meta: {
+      title: '视频',
+      keepAlive: false
+    }
+
+  },
+  {
     path: '/',
     component: () => import('@/views/layouts/index'),
     redirect: '/home',

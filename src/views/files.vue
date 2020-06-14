@@ -2,15 +2,25 @@
   <div class="files_container">
     <div class="files_main">
       <van-nav-bar
-        class="navbar"
+        class="nav"
         title="文件管理"
         left-text="返回"
         left-arrow
         @click-left="onClickLeft"
-      />
-      <van-empty class="empty" description="暂无文件"/>
+      >
+        <template #right>
+          <van-icon @click="selFileType" name="search" size="45"/>
+        </template>
+      </van-nav-bar>
+      <div class="content">
+        <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
+        <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
+        <div class="files" v-show="contents">
+
+        </div>
+      </div>
+
     </div>
-    <van-button class="sel_btn" type="info" @click="selFileType">默认按钮</van-button>
     <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">
       <van-tree-select
         class="tree"
@@ -28,6 +38,7 @@
     data() {
       return {
         show: false,
+        contents: false,
         items: [
           {
             text: '前期文件',
@@ -125,29 +136,51 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .files_container {
     height: 100vh;
     width: 100%;
     position: relative;
 
+
     .files_main {
       height: 100%;
       display: flex;
       flex-direction: column;
-      .navbar {
 
+      .nav {
+        /*position: absolute;*/
+        height: 46px;
       }
 
-      .empty {
+      .content {
+        width: 100%;
+        padding: 0;
+        position: absolute;
+        top: 46px;
+        bottom: 0px;
+        left: 0px;
+
+        .sel_btn {
+          position: absolute;
+          z-index: 100;
+          top: 0;
+          right: 0;
+        }
+
+        .empty {
+          width: 100%;
+          height: 100%;
+          padding: 0;
+        }
+
+        .files {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
-    .sel_btn {
-      position: absolute;
-      z-index: 100;
-      top: 0;
-      right: 0;
-    }
+
 
     .tree {
       height: 100% !important;

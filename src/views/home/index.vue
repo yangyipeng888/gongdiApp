@@ -26,7 +26,7 @@
       <div class="title">现场视频</div>
       <div class="content">
         <van-grid :column-num="2">
-          <van-grid-item icon="photo-o" text="文字"/>
+          <van-grid-item @click="enter('/video')" icon="photo-o" text="文字"/>
           <van-grid-item icon="photo-o" text="文字"/>
           <van-grid-item icon="photo-o" text="文字"/>
           <van-grid-item icon="photo-o" text="文字"/>
