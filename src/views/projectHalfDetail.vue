@@ -13,29 +13,20 @@
         <van-tab title="资金进度">
           <div class="form">
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">项目名称：</div>
+              <div class="form_title">当年完成资金：</div>
               <div class="form_desc">手动阀手ddddddddd动阀</div>
             </div>
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">工期：</div>
+              <div class="form_title">总资金：</div>
               <div class="form_desc">投入和肉体和</div>
             </div>
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">建设阶段：</div>
+              <div class="form_title">累计完成：</div>
               <div class="form_desc">任天堂让他人托人容忍他</div>
             </div>
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">立项完成情况：</div>
+              <div class="form_title">当年完成工作量：</div>
               <div class="form_desc">任天堂让他人托人容忍他任天堂让他
-                任天堂让他人托人容忍他任天堂让他人托人容忍他人托人容忍他
-                任天堂让他人托人容忍他任天堂让他人托人容忍他任天堂让他人托人容忍他
-              </div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">项目规模和建设内容：</div>
-              <div class="form_desc">任天堂让他人托人容忍他任天堂让他
-                任天堂让他人托人容忍他任天堂让他人托人容忍他人托人容忍他
-                任天堂让他人托人容忍他任天堂让他人托人容忍他任天堂让他人托人容忍他
               </div>
             </div>
 
@@ -45,43 +36,11 @@
         <van-tab title="进展情况">
           <div class="form">
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">建设单位：</div>
+              <div class="form_title">进度1：</div>
               <div class="form_desc">手动阀手ddddddddd动阀</div>
             </div>
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">勘测单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">设计单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">监理单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">施工单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
+              <div class="form_title">进度2：</div>
               <div class="form_desc">投入和肉体和</div>
             </div>
           </div>
@@ -89,44 +48,8 @@
         <van-tab title="项目问题">
           <div class="form">
             <div class="form_item van-hairline--bottom">
-              <div class="form_title">建设单位：</div>
+              <div class="form_title">临建场地紧张问题：</div>
               <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">勘测单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">设计单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">监理单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">施工单位：</div>
-              <div class="form_desc">手动阀手ddddddddd动阀</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">负责人：</div>
-              <div class="form_desc">投入和肉体和</div>
             </div>
           </div>
         </van-tab>

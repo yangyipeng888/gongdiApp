@@ -3,7 +3,8 @@ import Vue from 'vue'
 import {
   Button, List, Cell, Tabbar, TabbarItem,
   Field, Popup, Grid, GridItem, Image as VanImage, Overlay
-  , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab, Tabs
+  , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab,
+  Tabs, Circle
 } from 'vant'
 
 Vue.use(Button)
@@ -15,6 +16,7 @@ Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(TreeSelect)
 Vue.use(Picker)
+Vue.use(Circle)
 Vue.use(Icon)
 Vue.use(VanImage)
 Vue.use(Overlay)

@@ -16,7 +16,26 @@
         <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
         <div class="files" v-show="contents">
-
+          <van-grid :column-num="2" :border="false">
+            <van-grid-item v-for="item in contents">
+              <div class="file_item" @click="previewImg(item.url)">
+                <van-image
+                  width="100%"
+                  height="250px"
+                  fit="contain"
+                  :src="item.url"
+                >
+                  <template v-slot:loading>
+                    <van-loading type="spinner" size="20"/>
+                  </template>
+                  <template v-slot:error>加载失败</template>
+                </van-image>
+                <div class="file_name">
+                  {{item.name}}
+                </div>
+              </div>
+            </van-grid-item>
+          </van-grid>
         </div>
       </div>
 
@@ -36,30 +55,40 @@
 
 <script>
   import { Toast } from 'vant'
+  import { ImagePreview } from 'vant'
 
   export default {
     name: 'files',
     data() {
       return {
         show: false,
-        contents: false,
+        contents: [
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 }
+        ],
+
         columns: [
           // 第一列
           {
             values: ['2019', '2020', '2021'],
-            defaultIndex: 2,
+            defaultIndex: 2
           },
           // 第一列
           {
             values: ['一月', '二月', '三月', '四月', '五月'],
-            defaultIndex: 2,
+            defaultIndex: 2
           },
           // 第二列
           {
             values: ['上月报', '下月报'],
-            defaultIndex: 1,
-          },
-        ],
+            defaultIndex: 1
+          }
+        ]
       }
     },
     methods: {
@@ -77,6 +106,12 @@
       },
       onCancel() {
         Toast('取消')
+      },
+      previewImg(url) {
+        ImagePreview({
+          images: [url],
+          showIndex: false
+        })
       }
     }
   }
@@ -106,6 +141,7 @@
         top: 46px;
         bottom: 0px;
         left: 0px;
+        overflow: scroll;
 
         .sel_btn {
           position: absolute;
@@ -123,6 +159,17 @@
         .files {
           width: 100%;
           height: 100%;
+
+          .file_item {
+            height: 100%;
+            width: 100%;
+
+            .file_name {
+              text-align: center;
+              font-size: 13px;
+
+            }
+          }
         }
       }
     }

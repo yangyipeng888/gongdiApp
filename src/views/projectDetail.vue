@@ -113,6 +113,7 @@
 
 <style lang="scss">
   .files_container {
+
     height: 100vh;
     width: 100%;
     position: relative;

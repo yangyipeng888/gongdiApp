@@ -1,171 +1,151 @@
 <template>
   <div id="project_progress" @mouseenter="stopAni" @mouseleave="setAni()">
-    <div id="project_progress_mask">
-      <transition name="progress_trans" mode="out-in">
-        <div class="progress_pannel row_pannel" v-if="tab%3 == 0" key="cap">
-          <div class="progress_title">已完成投资</div>
-          <div class="progress_row">
-            <div class="progress_cell">累计完成：</div>
-            <div class="progress_cell">{{noZero(detail.leijiwancheng)}}万</div>
-          </div>
-          <div class="progress_row">
-            <div class="progress_cell">截至去年底完成：</div>
-            <div class="progress_cell">{{noZero(detail.jiezhiwancheng)}}万</div>
-          </div>
-          <div class="progress_row">
-            <div class="progress_cell">本年度完成：</div>
-            <div class="progress_cell">{{noZero(detail.nianduwancheng)}}万</div>
-          </div>
-          <div class="progress_row no_f">
-            <div class="progress_p">
-              <div class="progress_pb" :style="{width:trans(detail.nianduwancheng,detail.niandutouzijihua)}"> &nbsp;
-              </div>
-            </div>
-            <div class="progress_num">
-              <div>{{trans(detail.nianduwancheng,detail.niandutouzijihua)}}</div>
-
-              <!--              <div :style="{left:trans(detail.nianduwanchenglv)}">{{trans(detail.nianduwanchenglv)
-              }}</div>-->
-            </div>
-          </div>
-          <!--          <div class="progress_row no_f">-->
-          <!--            <div class="progress_p">-->
-          <!--              <div class="progress_pb" :style="{width:trans(detail.nianduwanchenglv)}"> &nbsp;</div>-->
-          <!--            </div>-->
-          <!--            <div class="progress_num">-->
-          <!--              <div :style="{left:trans(detail.nianduwanchenglv)}">{{trans(detail.nianduwanchenglv)}}</div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-        </div>
-        <div class="progress_pannel row_pannel" v-if="tab%3 == 1" key="wl">
-          <div class="progress_title">已完成工作量</div>
-          <div class="progress_row">
-            <div class="progress_cell">累计完成：</div>
-            <div class="progress_cell">{{noZero(detail.gongzuoliangleijiwancheng)}}万</div>
-          </div>
-          <div class="progress_row">
-            <div class="progress_cell">截至去年底完成：</div>
-            <div class="progress_cell">{{noZero(detail.gongzuoliangjiezhiwancheng)}}万</div>
-          </div>
-          <div class="progress_row">
-            <div class="progress_cell">本年度完成：</div>
-            <div class="progress_cell">{{noZero(detail.gongzuoliangnianduwancheng)}}万</div>
-          </div>
-          <div class="progress_row no_f">
-            <div class="progress_p">
-              <div class="progress_pb"
-                   :style="{width:trans(detail.gongzuoliangnianduwancheng,detail.niandutouzijihua)}"> &nbsp;
-              </div>
-            </div>
-            <div class="progress_num">
-              <div>{{trans(detail.gongzuoliangnianduwancheng,detail.niandutouzijihua)}}</div>
-              <!--              <div :style="{left:trans(detail.gongzuoliangwanchenglv)}">{{trans(detail.gongzuoliangwanchenglv)
-              }}</div>-->
-            </div>
-          </div>
-          <!--          <div class="progress_row no_f">-->
-          <!--            <div class="progress_p">-->
-          <!--              <div class="progress_pb" :style="{width:trans(detail.gongzuoliangwanchenglv)}"> &nbsp;</div>-->
-          <!--            </div>-->
-          <!--            <div class="progress_num">-->
-          <!--              <div :style="{left:trans(detail.gongzuoliangwanchenglv)}">{{trans(detail.gongzuoliangwanchenglv)}}</div>-->
-          <!--            </div>-->
-          <!--          </div>-->
-        </div>
-        <div class="progress_pannel block_pannel" v-if="tab%3 == 2" key="total">
-          <div class="progress_column">
-            <div class="progress_cell title_v">总投资</div>
-            <div class="progress_cell title_v">已批复概算</div>
-          </div>
-          <div class="progress_column">
-            <div class="progress_cell">
-              <div>总额</div>
-              <div>{{noZero(detail.zongzijin)}}万</div>
-            </div>
-            <div class="progress_cell">
-              <div>总额</div>
-              <div>{{noZero(detail.pifuzijin)}}万</div>
-            </div>
-          </div>
-          <div class="progress_column">
-            <div class="progress_cell">
-              <div>集团出资</div>
-              <div>{{noZero(detail.jituanchuzi)}}万</div>
-            </div>
-            <div class="progress_cell">
-              <div>工程概算</div>
-              <div>{{noZero(detail.gongchengzijin)}}万</div>
-            </div>
-          </div>
-          <div class="progress_column">
-            <div class="progress_cell">
-              <div>其它</div>
-              <div>{{noZero(detail.qitazijin)}}万</div>
-            </div>
-            <div class="progress_cell">
-              <div>征拆概算</div>
-              <div>{{noZero(detail.zhengchaizijin)}}万</div>
-            </div>
-          </div>
-        </div>
-
-      </transition>
+    <div style="opacity: 0" :class="{pop_ani_show:tab%3 == 0,pop_ani_hide:tab%3 != 0}" class="progress_pannel" >
+      <div class="chart">
+        <van-circle class="circle" size="100%" :stroke-width="60"
+                    v-model="currentRate" :rate="30" :speed="100" :text="text"/>
+      </div>
+      <div class="list">
+        <div class="list_title">累计完成：</div>
+        <div class="list_content">1111111万元</div>
+        <div class="list_title">截止去年完成：</div>
+        <div class="list_content">2222222</div>
+      </div>
     </div>
+    <div style="opacity: 0" :class="{pop_ani_show:tab%3 == 1,pop_ani_hide:tab%3 != 1}" class="progress_pannel" >
+      <div class="chart">
+        <van-circle class="circle" size="100%" :stroke-width="60"
+                    v-model="currentRate" :rate="30" :speed="100" :text="text"/>
+      </div>
+      <div class="list">
+        <div class="list_title">累计完成：</div>
+        <div class="list_content">1111111万元</div>
+        <div class="list_title">截止去年完成：</div>
+        <div class="list_content">3333333</div>
+      </div>
+    </div>
+    <div style="opacity: 0" :class="{pop_ani_show:tab%3 == 2,pop_ani_hide:tab%3 != 2}" class="progress_pannel" >
+      <div class="chart" ref="pieChart">
+
+      </div>
+      <div class="list">
+        <div class="list_item">
+          <div class="color"></div>
+          <div class="name">累计完成：</div>
+          <div class="num">100000.0</div>
+        </div>
+        <div class="list_item">
+          <div class="color"></div>
+          <div class="name">截至去年完成：</div>
+          <div class="num">100000.0</div>
+        </div>
+        <div class="list_item">
+          <div class="color"></div>
+          <div class="name">年度投资计划：</div>
+          <div class="num">100000.0</div>
+        </div>
+        <div class="list_item">
+          <div class="color"></div>
+          <div class="name">本年度完成：</div>
+          <div class="num">100000.0</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 
+  import echarts from 'echarts'
 
   export default {
     name: 'progress-module',
     created() {
-      this.setAni();
-      this.$store.commit("getInfo", {
-        siteId: null
-      });
+      this.setAni()
     },
     watch: {
       '$store.state.currentSite': {
         handler(n, o) {
-          var that = this;
-          let curId = n;
-          this.$Spi.getDetail(curId).then(function (response) {
-            that.detail = response;
-          });
+          var that = this
+          let curId = n
+          this.$Spi.getDetail(curId).then(function(response) {
+            that.detail = response
+          })
         },
         deep: true,
         immediate: true
-      },
+      }
     },
     mounted() {
-      var that = this;
-      that.endLoading(that);
+      let ref = this.$refs.pieChart
+      let chart = echarts.init(ref)
+      let title = 'sfsdfdsffdfsd'
+      let value = [
+        {
+          value: 20,
+          name: ''
+        },
+        {
+          value: 80,
+          name: ''
+        },
+        {
+          value: 80,
+          name: ''
+        },
+        {
+          value: 80,
+          name: ''
+        }
+      ]
+      var option = {
+        title: {
+          text: title,
+          x: 'center',
+          bottom: 'middle',
+          textStyle: {
+            fontSize: '28',
+            color: 'black'
+            // color: "#2e75b6"
+          }
+        },
+        // color: ["#5b9bd5", "#cccccc"],
+        color: ['#00D600', '#FFAD33'],
+        series: [{
+          type: 'pie',
+          radius: ['80%', '100%'],
+          center: ['50%', '50%'],
+          data: value,
+          label: false
+        }]
+      }
+      chart.setOption(option)
     },
     data() {
       return {
         tab: 2,
         ani: null,
         detail: null,
+        currentRate: 40,
+        text: '123'
       }
     },
-    computed: {
-
-    },
+    computed: {},
     methods: {
       stopAni() {
-        clearInterval(this.ani);
+        clearInterval(this.ani)
       },
       setAni() {
-        var that = this;
-        this.ani = null;
-        this.ani = setInterval(function () {
-          that.tab += 1;
-        }, 5000);
+        var that = this
+        this.ani = null
+        this.ani = setInterval(function() {
+          that.tab += 1
+        }, 5000)
       },
       trans(spe, total) {
-        var perc = parseFloat(spe) / parseFloat(total) * 100;
-        perc = perc.toFixed(2) + "%"
+        var perc = parseFloat(spe) / parseFloat(total) * 100
+        perc = perc.toFixed(2) + '%'
         return perc
       },
       // trans(str) {
@@ -176,7 +156,7 @@
       //   return perc.toFixed(2) + "%"
       // },
       noZero(num) {
-        if (!num || num == "无") {
+        if (!num || num == '无') {
           return 0
         }
         return num
@@ -185,136 +165,109 @@
   }
 </script>
 
-<style scoped="scoped">
+<style scoped="scoped" lang="scss">
   #project_progress {
     height: 100%;
     width: 100%;
-    color: white;
-    background-image: url(/static/bg/gzt2.jpg);
-    background-size: 100% 100%;
-
-
-  }
-
-  #project_progress_mask {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  .progress_pannel {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 1rem 1.5rem 1rem 1.5rem;
-  }
-
-  .progress_title {
-    text-align: center;
-    font-weight: 900;
-    font-size: 1.1rem;
-  }
-
-  .progress_row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    font-size: 1rem;
-  }
-
-  .progress_row.no_f {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .progress_row.no_f div {
-    flex-grow: 1;
-  }
-
-  .progress_cell {
-    flex-grow: 1;
-  }
-
-  .row_pannel .progress_cell:last-child {
-    text-align: right;
-  }
-
-  .progress_p {
-    background-color: white;
-    width: 100%;
-    height: 1rem;
-    overflow: hidden;
-    border-radius: 0.5rem;
-  }
-
-  .progress_pb {
-    background-color: #00D600;
-  }
-
-  .progress_num {
     color: black;
-    font-size: 0.9rem;
-    height: 1rem;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateY(-65%) translateX(-50%);
+    background-color: white;
+    position: relative;
+    .progress_pannel {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+
+      .chart {
+        width: 40%;
+        padding: 20px;
+
+        .circle {
+          /*width: 100%;*/
+          /*height: 100%;*/
+        }
+      }
+
+      .list {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+
+        .list_title {
+          font-size: 18px;
+          font-weight: 500;
+          padding: 3px;
+
+        }
+
+        .list_content {
+          font-size: 16px;
+          color: gray;
+          padding: 3px;
+
+        }
+
+        .list_item {
+          margin: 3px 0;
+          display: flex;
+          flex-direction: row;
+          align-content: center;
+          font-size: 16px;
+          color: gray;
+
+          .color {
+            border-radius: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: orange;
+          }
+
+          .name {
+
+          }
+
+          .num {
+
+          }
+        }
+      }
+    }
+
+
   }
 
-  /*.progress_num div {*/
-  /*  position: absolute;*/
-  /*  transform: translateX(-50%);*/
-  /*}*/
-
-  .progress_cell.title_v {
-    font-size: 0.8rem;
-    writing-mode: tb-rl;
-    -webkit-writing-mode: vertical-rl;
-    white-space: nowrap;
+  /*--------------------------隐藏div动画*/
+  .pop_ani_show {
+    animation: pop_ani_show 1s;
+    animation-fill-mode: forwards;
   }
 
-  .progress_pannel.block_pannel {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    text-align: center;
+  .pop_ani_hide {
+    animation: pop_ani_hide 1s;
+    animation-fill-mode: forwards;
   }
 
-  .progress_pannel.block_pannel .progress_column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+  @keyframes pop_ani_show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
 
+    }
   }
 
-  .progress_pannel.block_pannel .progress_column .progress_cell {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 50%;
+  @keyframes pop_ani_hide {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 
-  .progress_pannel.block_pannel .progress_column .progress_cell div {
-  }
-
-  .progress_pannel.block_pannel .progress_row {
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-
-  .progress_trans-enter-active,
-  .progress_trans-leave-active {
-    transition: opacity .5s;
-  }
-
-  .progress_trans-enter,
-  .progress_trans-leave-to {
-    opacity: 0;
-  }
 </style>

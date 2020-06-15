@@ -16,6 +16,16 @@
         <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
         <div class="files" v-show="contents">
+          <van-grid :column-num="3" :border="false">
+            <van-grid-item v-for="item in contents">
+              <div class="file_item">
+                <img src="../assets/img/file.png">
+                <div class="file_name">
+                  {{item.name}}
+                </div>
+              </div>
+            </van-grid-item>
+          </van-grid>
 
         </div>
       </div>
@@ -38,7 +48,15 @@
     data() {
       return {
         show: false,
-        contents: false,
+        contents: [
+          { name: 123123213123 },
+          { name: 123123213123 },
+          { name: 12312321312334 },
+          { name: 12312321312334 },
+          { name: 12312321312334 },
+          { name: 12312321312334 },
+          { name: 12312321312334 }
+        ],
         items: [
           {
             text: '前期文件',
@@ -138,6 +156,10 @@
 
 <style lang="scss">
   .files_container {
+    .van-grid-item__content {
+      background-color: #f8f8f8;
+    }
+
     height: 100vh;
     width: 100%;
     position: relative;
@@ -160,6 +182,7 @@
         top: 46px;
         bottom: 0px;
         left: 0px;
+        overflow: scroll;
 
         .sel_btn {
           position: absolute;
@@ -177,6 +200,17 @@
         .files {
           width: 100%;
           height: 100%;
+
+          .file_item {
+            height: 100%;
+            width: 100%;
+
+            .file_name {
+              text-align: center;
+              font-size: 13px;
+
+            }
+          }
         }
       }
     }

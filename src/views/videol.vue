@@ -1,82 +1,138 @@
 <template>
-  <div id="modelAndPic">
-    <video
-      id="example-video"
-      style="width: 100%;height: 100%"
-      class="video-js vjs-default-skin vjs-big-play-centered"
-      poster=""
-    >
-      <source
-        :src="src"
-        type="application/x-mpegURL"
-        id="target"
+  <div class="files_container">
+    <div class="files_main">
+      <van-nav-bar
+        class="nav"
+        title="现场视频"
+        left-text="返回"
+        left-arrow
+        @click-left="onClickLeft"
       >
-    </video>
+      </van-nav-bar>
+      <div class="content">
+        <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
+        <van-empty class="empty" v-show="!contents" description="暂无视频"></van-empty>
+        <div class="files" v-show="contents">
+          <van-grid :column-num="2" :border="false">
+            <van-grid-item v-for="item in contents">
+              <div class="file_item" @click="previewImg(item.url)">
+                <van-image
+                  width="100%"
+                  height="250px"
+                  fit="contain"
+                  :src="item.url"
+                >
+                  <template v-slot:loading>
+                    <van-loading type="spinner" size="20"/>
+                  </template>
+                  <template v-slot:error>加载失败</template>
+                </van-image>
+                <div class="file_name">
+                  {{item.name}}
+                </div>
+              </div>
+            </van-grid-item>
+          </van-grid>
+        </div>
+      </div>
+
+    </div>
+
   </div>
-
-
 </template>
 
 <script>
-  import video from "video.js";
-  import "video.js/dist/video-js.css";
-  export default {
-    name: "videoI",
+  import { Toast } from 'vant'
+  import { ImagePreview } from 'vant'
 
+  export default {
+    name: 'files',
     data() {
       return {
-        player: null,
-        shipinurl: null,
-        sel_url: "i",
-        video_url: null,
-        shipinName: null,
-        src:"http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8"
-      };
-    },
-    mounted() {
-      // this.getVideoList();
-      this.showVideo();
-    },
-    beforeDestroy() {
-      video("example-video").dispose();
+        contents: [
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
+          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 }
+        ],
+
+      }
     },
     methods: {
-
-      showVideo() {
-        if (!this.src) {
-          return;
-        }
-        this.player = video("example-video", {
-          poster: "",
-          controls: "true",
-          src: this.src
-        });
+      onClickLeft() {
+        this.$router.back(-1)
+      },
+      previewImg(url) {
+        ImagePreview({
+          images: [url],
+          showIndex: false
+        })
       }
     }
-  };
+  }
 </script>
 
-<style scoped>
-  #modelAndPic {
-    position: absolute;
+<style lang="scss">
+  .files_container {
+    height: 100vh;
     width: 100%;
-    height: 100%;
-    color: white;
-    display: flex;
-    flex-direction: row;
-  }
-  .video_sel {
-    z-index: 100;
-    position: absolute;
-    top: 2rem;
-    right: 2.5rem;
-    width: 10rem;
-    word-break: break-all;
-    background-color: rgba(59, 114, 200, 0.8);
-    border: none;
-    color: white;
-    display: block !important;
-    resize: none;
-  }
-</style>
+    position: relative;
 
+
+    .files_main {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .nav {
+        /*position: absolute;*/
+        height: 46px;
+      }
+
+      .content {
+        width: 100%;
+        padding: 0;
+        position: absolute;
+        top: 46px;
+        bottom: 0px;
+        left: 0px;
+        overflow: scroll;
+
+        .sel_btn {
+          position: absolute;
+          z-index: 100;
+          top: 0;
+          right: 0;
+        }
+
+        .empty {
+          width: 100%;
+          height: 100%;
+          padding: 0;
+        }
+
+        .files {
+          width: 100%;
+          height: 100%;
+
+          .file_item {
+            height: 100%;
+            width: 100%;
+
+            .file_name {
+              text-align: center;
+              font-size: 13px;
+
+            }
+          }
+        }
+      }
+    }
+
+
+  }
+
+</style>
