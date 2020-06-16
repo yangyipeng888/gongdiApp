@@ -2,14 +2,18 @@
   <div class="map_container" id="total_map">
 <!--    <van-popup v-model="selSite" position="bottom" :style="{ height: '35%' }">-->
 <!--      <div class="gongdiDes_div">-->
-<!--        <div class="gongdiDes_title"> dfgdfgdf</div>-->
+<!--        <div class="gongdiDes_title"> {{siteInfo.projectName}}</div>-->
 <!--        <div class="gongdiDes_font">-->
 <!--          <span class="gongdiDes_font1">建设单位:  </span>-->
-<!--          <span class="gongdiDes_font2">hfhghfgh</span>-->
+<!--          <span class="gongdiDes_font2">{{siteInfo.jianshedanwei}}</span>-->
 <!--        </div>-->
 <!--        <div class="gongdiDes_font">-->
-<!--          <span class="gongdiDes_font1">建设阶段:  </span>-->
-<!--          <span class="gongdiDes_font2">fghfghfgh</span>-->
+<!--          <span class="gongdiDes_font1">监理单位:  </span>-->
+<!--          <span class="gongdiDes_font2">{{siteInfo.jianlidanwei}}</span>-->
+<!--        </div>-->
+<!--        <div class="gongdiDes_font">-->
+<!--          <span class="gongdiDes_font1">施工单位:  </span>-->
+<!--          <span class="gongdiDes_font2">{{siteInfo.shigongdanwei}}</span>-->
 <!--        </div>-->
 <!--        <van-button-->
 <!--          class="gongdiDes_btn"-->
@@ -21,27 +25,30 @@
 <!--      </div>-->
 
 <!--    </van-popup>-->
-    <transition name="van-slide-up">
-      <div class="gongdiDes_div" v-show="selSite">
-        <div class="gongdiDes_title"> dfgdfgdf</div>
-        <div class="gongdiDes_font">
-          <span class="gongdiDes_font1">建设单位:  </span>
-          <span class="gongdiDes_font2">hfhghfgh</span>
-        </div>
-        <div class="gongdiDes_font">
-          <span class="gongdiDes_font1">建设阶段:  </span>
-          <span class="gongdiDes_font2">fghfghfgh</span>
-        </div>
-        <van-button
-          class="gongdiDes_btn"
-          block
-          @click="enterGongdi"
-          color="linear-gradient(to right, #4bb0ff, #6149f6)">
-          查看工地
-        </van-button>
-      </div>
-
-    </transition>
+        <transition name="van-slide-up">
+          <div class="gongdiDes_div" v-show="siteInfo">
+            <div class="gongdiDes_title"> {{siteInfo.projectName}}</div>
+            <div class="gongdiDes_font">
+              <span class="gongdiDes_font1">建设单位:  </span>
+              <span class="gongdiDes_font2">{{siteInfo.jianshedanwei}}</span>
+            </div>
+            <div class="gongdiDes_font">
+              <span class="gongdiDes_font1">监理单位:  </span>
+              <span class="gongdiDes_font2">{{siteInfo.jianlidanwei}}</span>
+            </div>
+            <div class="gongdiDes_font">
+              <span class="gongdiDes_font1">施工单位:  </span>
+              <span class="gongdiDes_font2">{{siteInfo.shigongdanwei}}</span>
+            </div>
+            <van-button
+              class="gongdiDes_btn"
+              block
+              @click="enterGongdi"
+              color="linear-gradient(to right, #4bb0ff, #6149f6)">
+              查看工地
+            </van-button>
+          </div>
+        </transition>
 
   </div>
 </template>
@@ -51,6 +58,18 @@
 
   export default {
     name: 'map',
+    computed: {
+      siteInfo() {
+        var info
+        if (this.selSite) {
+          info = this.$store.state.constructionSite[this.selSite].info
+        }
+        if (info) {
+          return info
+        }
+        return ''
+      },
+    },
     data() {
       return {
         mapStyle: 'amap://styles/darkblue',
@@ -80,7 +99,7 @@
         showList: true,
         textAniId: null,
         textAniTarget: null,
-        selSite: null
+        selSite: null,
       }
     },
     mounted() {
@@ -159,7 +178,6 @@
           })
         }
       },
-
       createMap() {
         var that = this
         MapLoader().then(AMap => {
@@ -214,17 +232,6 @@
           mark.on('click', function(ev) {
             that.changeSite(ev.target.id)
           })
-          mark.on('mouseover', function(ev) {
-            $('.mapInfoBox').unbind('animationend ').unbind('webkitAnimationEnd')
-            $('.mapInfoBox').css('animation', 'infoBoxShow 0.5s forwards')
-            that.showInfo(infoWindow, ev.target.id, ev.lnglat)
-          })
-          mark.on('mouseout', function(ev) {
-            $('.mapInfoBox').css('animation', 'infoBoxHide 0.5s forwards')
-            $('.mapInfoBox').on('animationend webkitAnimationEnd', function(e) {
-              infoWindow.close(that)
-            })
-          })
           that.markers.push(mark)
           // if (that.valTypes.indexOf(that.$store.state.constructionSite[siteKey].type) == -1) {
           //   that.valTypes.push(that.$store.state.constructionSite[siteKey].type);
@@ -254,6 +261,19 @@
       },
       changeSite(id) {
         this.selSite = id
+        var info = this.$store.state.constructionSite[id].info
+        if (!info) {
+          let that = this
+          this.$Spi.getShowprojectdetail(id).then(
+            function(response) {
+              var d = response
+              that.$store.commit('updateInfo', {
+                id,
+                info: response
+              })
+
+            })
+        }
       },
       enterGongdi() {
         if (this.selSite) {
@@ -273,36 +293,36 @@
 
 <style scoped lang="scss">
   .map_container {
-    height: 100vh;
+    /*height: 100vh;*/
+    height: 100%;
 
     .gongdiDes_div {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       width: 100%;
-      height: 30%;
+      /*height: 30%;*/
       border-radius: 8px 8px 0 0;
       background-color: white;
       position: absolute;
       z-index: 100;
       bottom: 0;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 18px;
 
       .gongdiDes_title {
-        font-size: 36px;
+        font-size: 26px;
         font-weight: 900;
       }
 
       .gongdiDes_font {
 
         .gongdiDes_font1 {
-          font-size: 32px;
+          font-size: 20px;
           font-weight: 900;
         }
 
         .gongdiDes_font2 {
-          font-size: 32px;
+          font-size: 20px;
 
         }
       }

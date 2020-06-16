@@ -6,9 +6,9 @@
       <div class="content van-hairline--top">
         <van-grid :column-num="4" :border="false">
           <van-grid-item v-for="item in btnList" @click="enter(item.path)">
-            <div>
+            <div class="file_item">
               <van-image :src="item.imgUrl"/>
-              <div>
+              <div class="file_name">
                 {{item.desc}}
               </div>
             </div>
@@ -114,7 +114,6 @@
 
       .content {
         background-color: white;
-
         .file_item {
           height: 100%;
           width: 100%;

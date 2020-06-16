@@ -31,8 +31,21 @@ const state = {
   fullscreen: false
 }
 const mutations = {
-  SET_USER_NAME(state, name) {
-    state.userName = name
+
+  updateInfo(state, siteInfo) {
+    if (state.constructionSite[siteInfo.id].info.projectId) {
+      return
+    }
+
+    var s = state.constructionSite[siteInfo.id].info = siteInfo.info;
+    console.log("数据已更新！");
+
+  },
+  updateInfoForce(state, siteInfo) {
+
+    var s = state.constructionSite[siteInfo.id].info = siteInfo.info;
+    console.log("数据已更新！");
+
   },
   updateConstructionSite(state, result) {
     state.loginData = result;
@@ -63,6 +76,18 @@ const mutations = {
     ;
     state.constructionSite = a;
   },
+  getInfo(state, siteId) {
+    var id = state.currentSite;
+    if (siteId.siteId) {
+      id = siteId.siteId;
+    }
+    if (state.constructionSite[id].info.projectId) {
+      return
+    }
+    Spi.getDetail(id).then(function (response) {
+      state.constructionSite[id].info = response;
+    });
+  },
   setSite(state, siteId) {
     Spi.getProjectSettings(siteId.id).then(function (response) {
       state.constructionSite[siteId.id].settings = response;
@@ -71,6 +96,53 @@ const mutations = {
     });
     state.currentSite = siteId.id;
   },
+  setPage(state, pageId) {
+    state.currentPage = pageId.id;
+  },
+  getAllCs() {
+    state.allCs = [];
+    let projectids = state.loginData.projectids;
+    let quanxian = state.right;
+    Spi.getProjects(projectids, quanxian).then(function (response) {
+      for (var i = 0; i < response.length; i++) {
+        state.allCs.push({
+          id: String(response[i].projectId),
+          name: response[i].projectName,
+          cls: false
+        })
+      }
+    });
+  },
+  getAllAc() {
+    state.allAc = [];
+    let quanxian = state.right;
+    Spi.getAccounts(quanxian).then(function (response) {
+      var accounts = response;
+      for (var i = 0; i < accounts.length; i++) {
+        state.allAc.push({
+          account: accounts[i].account == "null" ? "" : accounts[i].account,
+          name: accounts[i].name == "null" ? "" : accounts[i].name,
+          quanxian: accounts[i].quanxian == "null" ? "" : accounts[i].quanxian,
+          passwd: "",
+          passwd2: "",
+          zhiwei: accounts[i].zhiwei == "null" ? "" : accounts[i].zhiwei,
+          belong: accounts[i].belong == "null" ? "" : accounts[i].belong,
+          Mobile: accounts[i].mobile == "null" ? "" : accounts[i].mobile,
+          Email: accounts[i].email == "null" ? "" : accounts[i].email,
+          Projectids: String(accounts[i].projectIds) != "null" ? accounts[i].projectIds.split(",") : [],
+          shenheprojectids: accounts[i].shenheprojectids == "null" ? "" : accounts[i].shenheprojectids,
+        })
+      }
+    });
+  },
+  keyLis(state, type) {
+    if (type.type == 0) {
+      state.keyDown = true;
+    } else {
+      state.keyDown = false;
+    }
+  }
+
 }
 const actions = {
   // 设置name

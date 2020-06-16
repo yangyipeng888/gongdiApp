@@ -6,8 +6,10 @@ body .app {
   color: #333333;
   font-family: Arial, Helvetica, 'STHeiti STXihei', 'Microsoft YaHei', Tohoma, sans-serif;
   background-color: $background-color;
+
 }
 
-.app-container {
-  padding-bottom: 50px;
+html, body, body .app {
+  height: 100%;
 }
+
