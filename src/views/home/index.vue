@@ -27,22 +27,25 @@
       <div class="content van-hairline--top">
         <van-grid :column-num="2">
           <van-grid-item v-for="item in contents">
-            <div class="file_item" @click="enter('/video')">
-              <van-image
-                width="100%"
-                height="280px"
-                fit="fill"
-                :src="item.url"
-              >
-                <template v-slot:loading>
-                  <van-loading type="spinner" size="20"/>
-                </template>
-                <template v-slot:error>加载失败</template>
-              </van-image>
-              <div class="file_name">
-                {{item.name}}
-              </div>
+            <div class="file_item">
+              <video-item></video-item>
             </div>
+            <!--            <div class="file_item" @click="enter('/video')">-->
+            <!--              <van-image-->
+            <!--                width="100%"-->
+            <!--                height="280px"-->
+            <!--                fit="fill"-->
+            <!--                :src="item.url"-->
+            <!--              >-->
+            <!--                <template v-slot:loading>-->
+            <!--                  <van-loading type="spinner" size="20"/>-->
+            <!--                </template>-->
+            <!--                <template v-slot:error>加载失败</template>-->
+            <!--              </van-image>-->
+            <!--              <div class="file_name">-->
+            <!--                {{item.name}}-->
+            <!--              </div>-->
+            <!--            </div>-->
           </van-grid-item>
 
         </van-grid>
@@ -53,10 +56,12 @@
 
 <script>
   import pro_progress from '../../components/progress'
+  import videoItem from '../../components/videoItem'
 
   export default {
     components: {
-      pro_progress
+      pro_progress,
+      videoItem
     },
     data() {
       return {
@@ -114,6 +119,7 @@
 
       .content {
         background-color: white;
+
         .file_item {
           height: 100%;
           width: 100%;

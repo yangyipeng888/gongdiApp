@@ -1,60 +1,44 @@
 <template>
   <div class="map_container" id="total_map">
-<!--    <van-popup v-model="selSite" position="bottom" :style="{ height: '35%' }">-->
-<!--      <div class="gongdiDes_div">-->
-<!--        <div class="gongdiDes_title"> {{siteInfo.projectName}}</div>-->
-<!--        <div class="gongdiDes_font">-->
-<!--          <span class="gongdiDes_font1">建设单位:  </span>-->
-<!--          <span class="gongdiDes_font2">{{siteInfo.jianshedanwei}}</span>-->
-<!--        </div>-->
-<!--        <div class="gongdiDes_font">-->
-<!--          <span class="gongdiDes_font1">监理单位:  </span>-->
-<!--          <span class="gongdiDes_font2">{{siteInfo.jianlidanwei}}</span>-->
-<!--        </div>-->
-<!--        <div class="gongdiDes_font">-->
-<!--          <span class="gongdiDes_font1">施工单位:  </span>-->
-<!--          <span class="gongdiDes_font2">{{siteInfo.shigongdanwei}}</span>-->
-<!--        </div>-->
-<!--        <van-button-->
-<!--          class="gongdiDes_btn"-->
-<!--          block-->
-<!--          @click="enterGongdi"-->
-<!--          color="linear-gradient(to right, #4bb0ff, #6149f6)">-->
-<!--          查看工地-->
-<!--        </van-button>-->
-<!--      </div>-->
-
-<!--    </van-popup>-->
-        <transition name="van-slide-up">
-          <div class="gongdiDes_div" v-show="siteInfo">
-            <div class="gongdiDes_title"> {{siteInfo.projectName}}</div>
-            <div class="gongdiDes_font">
-              <span class="gongdiDes_font1">建设单位:  </span>
-              <span class="gongdiDes_font2">{{siteInfo.jianshedanwei}}</span>
-            </div>
-            <div class="gongdiDes_font">
-              <span class="gongdiDes_font1">监理单位:  </span>
-              <span class="gongdiDes_font2">{{siteInfo.jianlidanwei}}</span>
-            </div>
-            <div class="gongdiDes_font">
-              <span class="gongdiDes_font1">施工单位:  </span>
-              <span class="gongdiDes_font2">{{siteInfo.shigongdanwei}}</span>
-            </div>
-            <van-button
-              class="gongdiDes_btn"
-              block
-              @click="enterGongdi"
-              color="linear-gradient(to right, #4bb0ff, #6149f6)">
-              查看工地
-            </van-button>
-          </div>
-        </transition>
+    <van-search class="search" v-model="value" @search="onSearch" shape="round" placeholder="请输入搜索工地"/>
+    <!--    <transition name="progress_trans">-->
+    <!--      <div-->
+    <!--        class="gongdiDes_mask"-->
+    <!--        v-show="siteInfo"-->
+    <!--        @click.self="close"-->
+    <!--      ></div>-->
+    <!--    </transition>-->
+    <transition name="van-slide-up">
+      <div class="gongdiDes_div" v-show="siteInfo">
+        <div class="gongdiDes_title"> {{siteInfo.projectName}}</div>
+        <div class="gongdiDes_font">
+          <span class="gongdiDes_font1">建设单位:  </span>
+          <span class="gongdiDes_font2">{{siteInfo.jianshedanwei}}</span>
+        </div>
+        <div class="gongdiDes_font">
+          <span class="gongdiDes_font1">监理单位:  </span>
+          <span class="gongdiDes_font2">{{siteInfo.jianlidanwei}}</span>
+        </div>
+        <div class="gongdiDes_font">
+          <span class="gongdiDes_font1">施工单位:  </span>
+          <span class="gongdiDes_font2">{{siteInfo.shigongdanwei}}</span>
+        </div>
+        <van-button
+          class="gongdiDes_btn"
+          block
+          @click="enterGongdi"
+          color="linear-gradient(to right, #4bb0ff, #6149f6)">
+          查看工地
+        </van-button>
+      </div>
+    </transition>
 
   </div>
 </template>
 
 <script>
   import MapLoader from '@/api/amap.js'
+  import { Toast } from 'vant'
 
   export default {
     name: 'map',
@@ -68,7 +52,7 @@
           return info
         }
         return ''
-      },
+      }
     },
     data() {
       return {
@@ -99,7 +83,7 @@
         showList: true,
         textAniId: null,
         textAniTarget: null,
-        selSite: null,
+        selSite: null
       }
     },
     mounted() {
@@ -187,13 +171,13 @@
               center: [113.317373, 23.084758],
               mapStyle: 'amap://styles/5db57f25559986e3ddef9376fa24adf3'
             })
-            this.map.plugin([
-              'AMap.ToolBar'
-            ], function() {
-              that.map.addControl(new AMap.ToolBar({
-                position: 'RT'
-              }))
-            })
+            // this.map.plugin([
+            //   'AMap.ToolBar'
+            // ], function() {
+            //   that.map.addControl(new AMap.ToolBar({
+            //     position: 'RT'
+            //   }))
+            // })
 
           }
           var infoWindow = new AMap.InfoWindow({
@@ -285,16 +269,52 @@
             path: '/'
           })
         }
+      },
+      close() {
+        this.selSite = null
+      },
+      onSearch(value) {
+        var reg = new RegExp(value)
+        let arr = this.markers
+        let results = []
+        for (var i = 0; i < arr.length; i++) {
+          //如果字符串中不包含目标字符会返回-1
+          let name = arr[i].name
+          if (name.match(reg)) {
+            results.push(arr[i])
+
+            // this.map.setFitView(arr[i]);
+          }
+        }
+        console.log(111111, arr,results)
+        Toast.fail('没有匹配工地!')
       }
     }
 
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .map_container {
     /*height: 100vh;*/
     height: 100%;
+
+    .search {
+      position: absolute;
+      top: 10px;
+      z-index: 98;
+      background-color: transparent;
+      width: 100%;
+    }
+
+    .gongdiDes_mask {
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      opacity: 0.5;
+      z-index: 99;
+      position: absolute;
+    }
 
     .gongdiDes_div {
       -webkit-box-sizing: border-box;
@@ -335,4 +355,5 @@
 
 
   }
+
 </style>

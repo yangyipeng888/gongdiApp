@@ -63,7 +63,9 @@
       let el2 = this.$refs.videoHandle2[0]
       el2.currentTime = 0
       el2.pause()
-
+      let el3 = this.$refs.videoHandle3[0]
+      el3.currentTime = 0
+      el3.pause()
     }
   }
 </script>

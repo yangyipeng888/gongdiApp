@@ -1,14 +1,15 @@
 <template>
   <div class="files_container">
     <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="半月报概况"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-      >
-      </van-nav-bar>
+      <!--      <van-nav-bar-->
+      <!--        class="nav"-->
+      <!--        title="半月报概况"-->
+      <!--        left-text="返回"-->
+      <!--        left-arrow-->
+      <!--        @click-left="onClickLeft"-->
+      <!--      >-->
+      <!--      </van-nav-bar>-->
+      <nav-bar class="nav"></nav-bar>
       <van-tabs class="sel_tab" v-model="active" animated sticky>
         <van-tab title="资金进度">
           <div class="form">
@@ -62,16 +63,20 @@
 
 <script>
   import { Toast } from 'vant'
+  import navBar from '../components/navBar'
 
   export default {
     name: 'files',
+    components: {
+      navBar
+    },
     data() {
       return {}
     },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
-      },
+      }
 
     }
   }

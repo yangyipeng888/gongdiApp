@@ -100,7 +100,7 @@
     },
     data() {
       return {
-        color: ['#123456', '#012579', '#765', '#098'],
+        color: ['#50E3C2', '#FE8786', '#FFB544','#C28ADF'],
         tab: 2,
         ani: null,
         detail: {

@@ -14,7 +14,6 @@
 
 <script>
   import TabBar from '@/components/TabBar'
-
   export default {
     name: 'AppLayout',
     data() {
@@ -45,7 +44,7 @@
       }
     },
     components: {
-      TabBar
+      TabBar,
     },
     methods: {
       handleChange(v) {
