@@ -1,27 +1,21 @@
 <template>
-  <div class="files_container">
-    <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="我的"
-      >
-      </van-nav-bar>
+  <div class="user_container">
+    <div class="user_main">
+      <nav-bar class="nav"
+               :title="'我的'"
+      ></nav-bar>
       <div class="content">
-        <van-button class="logout" type="default" @click="play">播放</van-button>
-
-        <video v-for="item in arr" :ref="'videoHandle'+item" style="width: 200px;height: 200px;"
-               autoplay="autoplay"
-               src="http://203.195.187.186:10001/hls/34020000001320000012_0200000030/34020000001320000012_0200000030_live.m3u8"
-        >
-        </video>
         <div class="userbox">
-          <div class="userImg"></div>
-          <div class="name">张三</div>
-          <div class="comp">xxxx公司</div>
+          <img class="userImg" src="../../assets/img/user.png">
+          <div class="userText">
+            <div class="name">账号名:gongsi</div>
+            <div class="comp">xxxx公司</div>
+          </div>
         </div>
+        <div class="logout_box">
+          <van-button class="logout_btn" type="default" @click="logout">退出登录</van-button>
 
-        <van-button class="logout" type="default" @click="logout">退出登录</van-button>
-
+        </div>
       </div>
 
 
@@ -32,52 +26,42 @@
 
 <script>
   import { Toast } from 'vant'
+  import navBar from '../../components/navBar'
 
   export default {
-    name: 'files',
+    name: 'user',
     data() {
       return {
         arr: [1, 2, 3]
       }
     },
+    components: {
+      navBar
+    },
     methods: {
-      onClickLeft() {
-        this.$router.back(-1)
-      },
       logout() {
         localStorage.clear()
         this.$store.state.logined = false
         //		this.changeMain(0, '/login');
         console.log('登出成功！')
         window.location.reload()
-      },
-      play() {
-        let el = this.$refs.videoHandle1[0]
-        el.play()
       }
+
     },
     mounted() {
-      let el = this.$refs.videoHandle1[0]
-      el.currentTime = 0
-      el.pause()
-      let el2 = this.$refs.videoHandle2[0]
-      el2.currentTime = 0
-      el2.pause()
-      let el3 = this.$refs.videoHandle3[0]
-      el3.currentTime = 0
-      el3.pause()
+
     }
   }
 </script>
 
-<style lang="scss">
-  .files_container {
+<style lang="scss" scoped>
+  .user_container {
     height: 100vh;
     width: 100%;
     position: relative;
 
 
-    .files_main {
+    .user_main {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -95,6 +79,44 @@
         bottom: 0px;
         left: 0px;
         overflow: scroll;
+
+        .userbox {
+          margin-top: 10px;
+          background-color: white;
+          display: flex;
+          flex-direction: row;
+          padding: 10px;
+
+          .userImg {
+            width: 70px;
+            height: 70px;
+          }
+
+          .userText {
+            padding: 10px 20px;
+
+            .name {
+              font-size: 20px;
+            }
+
+            .comp {
+              font-size: 16px;
+            }
+          }
+
+        }
+
+        .logout_box {
+          margin-top: 100px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          .logout_btn {
+            width: 80%;
+            font-size: 20px;
+          }
+        }
 
       }
     }

@@ -1,6 +1,20 @@
 <template>
   <div class="map_container" id="total_map">
-    <van-search class="search" v-model="value" @search="onSearch" shape="round" placeholder="请输入搜索工地"/>
+    <div class="searchBox">
+      <van-search
+        class="search"
+        v-model="value"
+        @input="onInput"
+        @search="onSearch"
+        shape="round"
+        placeholder="请输入搜索工地"
+      />
+      <div class="searchResults">
+        <div class="resultItem" v-for="item in searchResults" @click="showSite(item)">
+          {{item.name}}
+        </div>
+      </div>
+    </div>
     <!--    <transition name="progress_trans">-->
     <!--      <div-->
     <!--        class="gongdiDes_mask"-->
@@ -83,7 +97,8 @@
         showList: true,
         textAniId: null,
         textAniTarget: null,
-        selSite: null
+        selSite: null,
+        searchResults: null
       }
     },
     mounted() {
@@ -205,7 +220,7 @@
             'height': '30px',
             'width': '30px',
             'border': '0',
-            'border-radius': '15px',
+            'border-radius': '18px',
             'background-color': this.getTypeColor(type).hex,
             'animation': this.getTypeColor(type).color + ' 5s infinite'
           })
@@ -273,21 +288,37 @@
       close() {
         this.selSite = null
       },
+      showSite(item) {
+        this.map.setFitView(item)
+        this.searchResults = null
+        this.changeSite(item.id)
+      },
       onSearch(value) {
-        var reg = new RegExp(value)
         let arr = this.markers
         let results = []
         for (var i = 0; i < arr.length; i++) {
           //如果字符串中不包含目标字符会返回-1
           let name = arr[i].name
-          if (name.match(reg)) {
+          if (name.indexOf(value) >= 0) {
             results.push(arr[i])
-
-            // this.map.setFitView(arr[i]);
           }
         }
-        console.log(111111, arr,results)
-        Toast.fail('没有匹配工地!')
+        if (results.length == 0) {
+          Toast.fail('没有找到工地!')
+        }
+      },
+      onInput(value) {
+        let arr = this.markers
+        let results = []
+        for (var i = 0; i < arr.length; i++) {
+          //如果字符串中不包含目标字符会返回-1
+          let name = arr[i].name
+          if (name.indexOf(value) >= 0) {
+            results.push(arr[i])
+          }
+
+        }
+        this.searchResults = results
       }
     }
 
@@ -299,12 +330,33 @@
     /*height: 100vh;*/
     height: 100%;
 
-    .search {
+    .searchBox {
       position: absolute;
       top: 10px;
       z-index: 98;
-      background-color: transparent;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .search {
+        background-color: transparent;
+      }
+
+      .searchResults {
+        background-color: white;
+        overflow: scroll;
+        max-height: 200px;
+        margin: 0 15px;
+        border-radius: 5px;
+
+        .resultItem {
+          padding: 5px;
+          height: 30px;
+          font-size: 20px;
+        }
+
+      }
+
     }
 
     .gongdiDes_mask {

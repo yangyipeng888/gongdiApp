@@ -1,14 +1,11 @@
 <template>
   <div class="files_container">
     <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="项目概况"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-      >
-      </van-nav-bar>
+      <nav-bar class="nav"
+               :leftText="'返回'"
+               :onClickLeftHandler="onClickLeft"
+               :title="'项目概况'"
+      ></nav-bar>
       <van-tabs class="sel_tab" v-model="active" animated sticky>
         <van-tab title="项目概况">
           <div class="form">
@@ -89,6 +86,7 @@
 <script>
   import { Spi } from '../api/api'
   import { Toast } from 'vant'
+  import navBar from '../components/navBar'
 
   export default {
     name: 'files',
@@ -99,28 +97,31 @@
         info: {
           projectName: '',
           projectGuimo: '',
-          projectBulidTime:'',
-          projectBulidJieduan:'',
-          piwen:'',
-          jianshedanwei:'',
-          jianshedanweiname:'',
-          jianshedanweitel:'',
-          xianchangdanwei:'',
-          xianchangdanweiname:'',
-          xianchangdanweitel:'',
-          shejidanwei:'',
-          shejidanweiname:'',
-          shejidanweitel:'',
-          jianlidanwei:'',
-          jianlidanweiname:'',
-          jianlidanweitel:'',
-          shigongdanwei:'',
-          shigongdanweiname:'',
-          shigongdanweitel:'',
+          projectBulidTime: '',
+          projectBulidJieduan: '',
+          piwen: '',
+          jianshedanwei: '',
+          jianshedanweiname: '',
+          jianshedanweitel: '',
+          xianchangdanwei: '',
+          xianchangdanweiname: '',
+          xianchangdanweitel: '',
+          shejidanwei: '',
+          shejidanweiname: '',
+          shejidanweitel: '',
+          jianlidanwei: '',
+          jianlidanweiname: '',
+          jianlidanweitel: '',
+          shigongdanwei: '',
+          shigongdanweiname: '',
+          shigongdanweitel: ''
 
 
         }
       }
+    },
+    components: {
+      navBar
     },
     mounted() {
       let projectid = this.$store.state.currentSite

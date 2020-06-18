@@ -114,7 +114,7 @@
         top: 50%;
         transform: translateY(-50%);
         left: 3px;
-        background-color: #1989fa;
+        background-color: $common_blue;
       }
 
       .content {

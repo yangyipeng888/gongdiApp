@@ -85,19 +85,20 @@
       align-items: center;
 
       .login_input {
+        padding: 5px;
         font-size: 20px;
         margin-top: 30px;
         background: none;
         outline: none;
         border: 1px solid blue;
         width: 80%;
-        height: 35px;
+        height: 30px;
         border-radius: 2px;
       }
 
       .login_btn {
         margin-top: 50px;
-        width: 80%;
+        width: 83.5%;
       }
     }
 

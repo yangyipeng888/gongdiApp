@@ -1,38 +1,33 @@
 <template>
   <div class="files_container">
     <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="现场照片"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-      >
-        <template #right>
-          <van-icon @click="selFileType" name="search" size="45"/>
-        </template>
-      </van-nav-bar>
+      <nav-bar class="nav"
+               :leftText="'返回'"
+               :onClickLeftHandler="onClickLeft"
+               :title="'半月报概况'"
+               :onClickRightHandler="selFileType"
+      ></nav-bar>
       <div class="content">
         <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
         <div class="files" v-show="contents">
           <van-grid :column-num="2" :border="false">
             <van-grid-item v-for="item in contents">
-              <div class="file_item" @click="previewImg(item.url)">
+              <div class="file_item" @click="previewImg(item.suolue)">
                 <van-image
                   width="100%"
                   height="250px"
                   fit="contain"
-                  :src="item.url"
+                  :src="item.suolue"
                 >
                   <template v-slot:loading>
                     <van-loading type="spinner" size="20"/>
                   </template>
                   <template v-slot:error>加载失败</template>
                 </van-image>
-                <div class="file_name">
-                  {{item.name}}
-                </div>
+                <!--                <div class="file_name">-->
+                <!--                  {{item.name}}-->
+                <!--                </div>-->
               </div>
             </van-grid-item>
           </van-grid>
@@ -42,7 +37,7 @@
     </div>
     <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">
       <van-picker
-        title="标题"
+        title="选择时间"
         show-toolbar
         :columns="columns"
         @confirm="onConfirm"
@@ -56,37 +51,28 @@
 <script>
   import { Toast } from 'vant'
   import { ImagePreview } from 'vant'
+  import navBar from '../components/navBar'
 
   export default {
     name: 'files',
+    components: {
+      navBar
+    },
     data() {
       return {
         show: false,
-        contents: [
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 }
-        ],
-
+        contents: null,
         columns: [
           // 第一列
           {
-            values: ['2019', '2020', '2021'],
-            defaultIndex: 2
+            values: [2019, 2020, 2021],
+            defaultIndex: 1
           },
           // 第一列
           {
-            values: ['一月', '二月', '三月', '四月', '五月'],
-            defaultIndex: 2
-          },
-          // 第二列
-          {
-            values: ['上月报', '下月报'],
-            defaultIndex: 1
+            values: ['一月', '二月', '三月', '四月', '五月', '六月',
+              '七月', '八月', '九月', '十月', '十一月', '十二月'],
+            defaultIndex: 0
           }
         ]
       }
@@ -98,14 +84,53 @@
       selFileType() {
         this.show = true
       },
-      onConfirm(value, index) {
-        Toast(`当前值：${value}, 当前索引：${index}`)
+      onConfirm(values, index) {
+        this.show = false
+        let monthObj = {
+          '一月': '1',
+          '二月': '2',
+          '三月': '3',
+          '四月': '4',
+          '五月': '5',
+          '六月': '6',
+          '七月': '7',
+          '八月': '8',
+          '九月': '9',
+          '十月': '10',
+          '十一月': '11',
+          '十二月': '12'
+        }
+        let year = values[0]
+        let month = Number(monthObj[values[1]])
+        let beginTime = year.toString() + ((month < 10) ? '0' + month : month.toString())
+        var year2 = year
+        var month2 = parseInt(month) + 1
+        if (month2 == 13) {
+          year2 = parseInt(year) + 1
+          month2 = 1
+        }
+        let endTime = year2.toString() + ((month2 < 10) ? '0' + month2 : month2.toString())
+        this.$Spi.getFileList(
+          this.$store.state.currentSite,
+          15,
+          1,
+          100,
+          beginTime,
+          endTime
+        ).then((response) => {
+          if (response.length == 0) {
+            Toast.fail('没有找到文件!')
+            return
+          }
+          this.contents = response
+          Toast.fail('获取成功!')
+        }).catch(function(response) {
+          Toast.fail('获取失败!')
+        })
       },
       onChange(picker, value, index) {
-        Toast(`当前值：${value}, 当前索引：${index}`)
       },
       onCancel() {
-        Toast('取消')
       },
       previewImg(url) {
         ImagePreview({

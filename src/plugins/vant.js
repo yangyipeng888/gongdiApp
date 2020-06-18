@@ -4,9 +4,11 @@ import {
   Button, List, Cell, Tabbar, TabbarItem,
   Field, Popup, Grid, GridItem, Image as VanImage, Overlay
   , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab,
-  Tabs, Circle, Search
+  Tabs, Circle, Search, Swipe, SwipeItem
 } from 'vant'
 
+Vue.use(Swipe)
+Vue.use(SwipeItem)
 Vue.use(Search)
 Vue.use(Button)
 Vue.use(Cell)

@@ -126,7 +126,7 @@
         Spi.getDetail(curId).then((response) => {
           that.detail = response
           let ref1 = that.$refs.pieChart1
-          let title1 = 234234
+          let title1 = ''
           let value1 = [
             {
               value: that.detail.leijiwancheng,
@@ -147,7 +147,7 @@
           ]
           that.createChart(ref1, title1, value1)
           let ref2 = that.$refs.pieChart2
-          let title2 = 234234
+          let title2 = ''
           let value2 = [
             {
               value: that.detail.leijiwancheng,
@@ -257,7 +257,7 @@
       justify-content: space-around;
 
       .chart {
-        width: 40%;
+        width: 35%;
         padding: 20px;
 
         .circle {
@@ -267,7 +267,7 @@
       }
 
       .list {
-        width: 60%;
+        width: 65%;
         display: flex;
         flex-direction: column;
 

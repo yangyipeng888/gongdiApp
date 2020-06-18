@@ -1,17 +1,12 @@
 <template>
   <div class="files_container">
     <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="文件管理"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-      >
-        <template #right>
-          <van-icon @click="showPop=true;" name="search" size="45"/>
-        </template>
-      </van-nav-bar>
+      <nav-bar class="nav"
+               :leftText="'返回'"
+               :onClickLeftHandler="onClickLeft"
+               :title="'文件管理'"
+               :onClickRightHandler="selFileType"
+      ></nav-bar>
       <div class="content">
         <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
@@ -45,9 +40,13 @@
 
 <script>
   import { Toast } from 'vant'
+  import navBar from '../components/navBar'
 
   export default {
     name: 'files',
+    components: {
+      navBar
+    },
     data() {
       return {
         showPop: false,
@@ -172,6 +171,9 @@
       },
       openFile(url) {
         window.open(url)
+      },
+      selFileType() {
+        this.showPop = true
       },
       getFileList(value) {
         let type = value.id
