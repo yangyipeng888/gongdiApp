@@ -9,12 +9,15 @@
         />
       </div>
       <div class="list">
-        <div class="list_title">累计完成投资：</div>
-        <div class="list_content">{{noZero(detail.leijiwancheng)}}（万元）</div>
-        <div class="list_title">截止去年完成投资：</div>
-        <div class="list_content">{{noZero(detail.jiezhiwancheng)}}（万元）</div>
-        <div class="list_title">本年度完成投资：</div>
-        <div class="list_content">{{noZero(detail.nianduwancheng)}}（万元）</div>
+        <div class="list_item">
+          累计完成投资：{{noZero(detail.leijiwancheng)}}
+        </div>
+        <div class="list_item">
+          截止去年完成投资：{{noZero(detail.jiezhiwancheng)}}
+        </div>
+        <div class="list_item">
+          本年度完成投资：{{noZero(detail.nianduwancheng)}}
+        </div>
       </div>
     </div>
     <div style="opacity: 0" :class="{pop_ani_show:tab%4 == 1,pop_ani_hide:tab%4 != 1}" class="progress_pannel">
@@ -22,23 +25,20 @@
       <div class="list">
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[0]}"></div>
-          <div class="name">累计完成投资：</div>
-          <div class="num">{{noZero(detail.gongzuoliangnianduwancheng)}}</div>
+          累计完成投资：{{noZero(detail.gongzuoliangnianduwancheng)}}
+
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[1]}"></div>
-          <div class="name">截至去年完成投资：</div>
-          <div class="num">{{noZero(detail.jiezhiwancheng)}}</div>
+          截至去年完成投资：{{noZero(detail.jiezhiwancheng)}}
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[2]}"></div>
-          <div class="name">年度投资计划投资：</div>
-          <div class="num">{{noZero(detail.niandutouzijihua)}}</div>
+          年度投资计划投资：{{noZero(detail.niandutouzijihua)}}
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[3]}"></div>
-          <div class="name">本年度完成投资：</div>
-          <div class="num">{{noZero(detail.nianduwancheng)}}</div>
+          本年度完成投资：{{noZero(detail.nianduwancheng)}}
         </div>
       </div>
     </div>
@@ -51,12 +51,15 @@
         />
       </div>
       <div class="list">
-        <div class="list_title">累计完成工作量：</div>
-        <div class="list_content">{{noZero(detail.gongzuoliangleijiwancheng)}}（万元）</div>
-        <div class="list_title">截止去年完成工作量：</div>
-        <div class="list_content">{{noZero(detail.gongzuoliangjiezhiwancheng)}}（万元）</div>
-        <div class="list_title">本年度完成工作量：</div>
-        <div class="list_content">{{noZero(detail.gongzuoliangnianduwancheng)}}（万元）</div>
+        <div class="list_item">
+          累计完成工作量：{{noZero(detail.gongzuoliangleijiwancheng)}}
+        </div>
+        <div class="list_item">
+          截止去年完成工作量：{{noZero(detail.gongzuoliangjiezhiwancheng)}}
+        </div>
+        <div class="list_item">
+          本年度完成工作量：{{noZero(detail.gongzuoliangnianduwancheng)}}
+        </div>
       </div>
     </div>
     <div style="opacity: 0" :class="{pop_ani_show:tab%4 == 3,pop_ani_hide:tab%4 != 3}" class="progress_pannel">
@@ -64,23 +67,19 @@
       <div class="list">
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[0]}"></div>
-          <div class="name">累计完成工作量：</div>
-          <div class="num">{{noZero(detail.gongzuoliangleijiwancheng)}}</div>
+          累计完成工作量：{{noZero(detail.gongzuoliangleijiwancheng)}}
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[1]}"></div>
-          <div class="name">截至去年完成工作量：</div>
-          <div class="num">{{noZero(detail.gongzuoliangjiezhiwancheng)}}</div>
+          截至去年完成工作量：{{noZero(detail.gongzuoliangjiezhiwancheng)}}
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[2]}"></div>
-          <div class="name">年度投资计划工作量：</div>
-          <div class="num">{{noZero(detail.niandutouzijihua)}}</div>
+          年度投资计划工作量：{{noZero(detail.niandutouzijihua)}}
         </div>
         <div class="list_item">
           <div class="color" :style="{backgroundColor:color[3]}"></div>
-          <div class="name">本年度完成工作量：</div>
-          <div class="num">{{noZero(detail.gongzuoliangnianduwancheng)}}</div>
+          本年度完成工作量：{{noZero(detail.gongzuoliangnianduwancheng)}}
         </div>
       </div>
     </div>
@@ -100,8 +99,8 @@
     },
     data() {
       return {
-        color: ['#50E3C2', '#FE8786', '#FFB544','#C28ADF'],
-        tab: 2,
+        color: ['#50E3C2', '#FE8786', '#FFB544', '#C28ADF'],
+        tab: 0,
         ani: null,
         detail: {
           leijiwancheng: '',
@@ -270,7 +269,6 @@
         width: 65%;
         display: flex;
         flex-direction: column;
-
         justify-content: center;
 
         .list_title {
@@ -288,12 +286,13 @@
         }
 
         .list_item {
-          margin: 3px 0;
+          margin: 5px 0;
           display: flex;
           flex-direction: row;
           align-content: center;
           font-size: 16px;
           color: gray;
+          height: 20px;
 
           .color {
             border-radius: 2px;

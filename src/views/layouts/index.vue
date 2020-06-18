@@ -33,13 +33,13 @@
             },
             icon: 'home-o'
           },
-          {
-            title: '关于我',
-            to: {
-              name: 'About'
-            },
-            icon: 'user-o'
-          }
+          // {
+          //   title: '关于我',
+          //   to: {
+          //     name: 'About'
+          //   },
+          //   icon: 'user-o'
+          // }
         ]
       }
     },

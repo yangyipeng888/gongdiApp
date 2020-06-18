@@ -1,8 +1,12 @@
 <!-- home -->
 <template>
   <div class="index-container">
+    <pic-swipe></pic-swipe>
+    <div class="pro_info">
+      <div class="pro_name">项目名称：11111<span class="pro_change">切换</span></div>
+      <div class="pro_danwei">单位：r3454354235</div>
+    </div>
     <div class="box">
-      <div class="title ">数据查看</div>
       <div class="content van-hairline--top">
         <van-grid :column-num="4" :border="false">
           <van-grid-item v-for="item in btnList" @click="enter(item.path)">
@@ -17,7 +21,7 @@
       </div>
     </div>
     <div class="box">
-      <div class="title ">项目概况</div>
+      <div class="title ">项目进度</div>
       <div class="content van-hairline--top" style="height: 300px">
         <pro_progress></pro_progress>
       </div>
@@ -57,11 +61,13 @@
 <script>
   import pro_progress from '../../components/progress'
   import videoItem from '../../components/videoItem'
+  import picSwipe from '../../components/picSwipe'
 
   export default {
     components: {
       pro_progress,
-      videoItem
+      videoItem,
+      picSwipe
     },
     data() {
       return {
@@ -94,8 +100,27 @@
 </script>
 <style lang="scss" scoped>
   .index-container {
+    .pro_info {
+      background-color: white;
+      padding: 10px;
+      .pro_name {
+        font-size: 19px;
+        font-weight: 600;
+        .pro_change{
+          padding-left: 10px;
+          color: $common_blue;
+          font-weight: 100;
+          text-decoration: underline;
+        }
+      }
+
+      .pro_danwei {
+        font-size: 18px;
+      }
+    }
+
     .box {
-      margin-top: 10px;
+      /*margin-top: 10px;*/
 
       .title {
         padding: 8px 8px 8px 10px;
