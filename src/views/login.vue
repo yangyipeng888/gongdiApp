@@ -16,6 +16,7 @@
 
 <script>
   import { Toast } from 'vant'
+  import store from '../store'
 
   export default {
     name: 'login',
@@ -40,9 +41,13 @@
             that.$store.state.logined = true
             that.$store.state.userName = that.id
             that.$store.state.pw = that.pw
+            store.commit('setSite', {
+              name: 'siteId',
+              id: 1001
+            })
             setTimeout(() => {
               this.$router.push({
-                path: '/map'
+                path: '/'
               })
             }, 500)
 

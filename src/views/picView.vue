@@ -5,6 +5,7 @@
                :leftText="'返回'"
                :onClickLeftHandler="onClickLeft"
                :title="'半月报概况'"
+               :show-right="true"
                :onClickRightHandler="selFileType"
       ></nav-bar>
       <div class="content">

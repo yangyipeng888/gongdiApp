@@ -26,21 +26,23 @@ const router = createRouter()
 router.beforeEach((to, from, next) => {
   if (store.state.logined) {
     // 判断是否登录
-    if (
-      //判断跳转的页面要不要选择工地
-      [
-        '/map',
-        '/login'
-      ].indexOf(to.path) == -1 &&
-      store.state.currentSite == null
-    ) {
-      //需要选择而未选择，跳转地图
-      alert('未选择工地或未获取到工地信息！')
-      next('/map')
-    } else {
-      //需要选择且选择，直接跳转
-      next()
-    }
+    // if (
+    //   //判断跳转的页面要不要选择工地
+    //   [ '/home',
+    //     '/map',
+    //     '/login'
+    //   ].indexOf(to.path) == -1 &&
+    //   store.state.currentSite == null
+    // ) {
+    //   //需要选择而未选择，跳转地图
+    //   // alert('未选择工地或未获取到工地信息！')
+    //   next('/home')
+    // } else {
+    //   //需要选择且选择，直接跳转
+    //   next()
+    // }
+    next()
+
   } else if (localStorage.getItem('userInfo')) {
     //是否有登录记录
     console.log('之前已登录')
@@ -48,10 +50,15 @@ router.beforeEach((to, from, next) => {
     var userInfo = JSON.parse(userInfo)
     Spi.login(userInfo.uid, userInfo.pw)
       .then(function(result) {
-        store.commit("updateConstructionSite", result);
-        store.state.logined = true;
-        store.state.userName = userInfo.uid;
+        store.commit('updateConstructionSite', result)
+        store.state.logined = true
+        store.state.userName = userInfo.uid
         store.state.pw = userInfo.pw;
+        store.commit('setSite', {
+          name: 'siteId',
+          id: 1001
+        })
+        next('/home')
         //请求登录记录信息
         if (result.msg) {
           console.log('登陆成功！')
@@ -64,20 +71,20 @@ router.beforeEach((to, from, next) => {
       .catch(function(e) {
         Toast.fail('请求超时！')
       })
-    if (
-      //与第一if相同，跳转判断
-      [
-        '/map',
-        '/login'
-      ].indexOf(to.path) == -1 &&
-      store.state.currentSite == null
-    ) {
-      alert('未选择工地或未获取到工地信息！')
-      next('/map')
-    } else {
-      //页面没有权限要求就直接访问
-      next()
-    }
+    // if (
+    //   //与第一if相同，跳转判断
+    //   ['/home',
+    //     '/map',
+    //     '/login'
+    //   ].indexOf(to.path) == -1 &&
+    //   store.state.currentSite == null
+    // ) {
+    //   // alert('未选择工地或未获取到工地信息！')
+    //   next('/home')
+    // } else {
+    //   //页面没有权限要求就直接访问
+    //   next()
+    // }
   } else if (to.path != '/login') {
     //没有登录则跳转登录
     next({

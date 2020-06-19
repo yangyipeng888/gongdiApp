@@ -3,11 +3,12 @@
     <van-nav-bar
       :title="title"
       :left-text="leftText"
-      :left-arrow="showArrow"
+      :left-arrow="leftText!=''"
       @click-left="onClickLeftHandler"
     >
       <template #right>
-        <van-icon v-show="onClickRightHandler" @click="onClickRightHandler" name="search" size="45"/>
+        <span v-show="rightText!=''" class="rightText" @click="onClickRightHandler">{{rightText}}</span>
+        <van-icon v-show="showRight" @click="onClickRightHandler" name="search" size="45"/>
       </template>
     </van-nav-bar>
   </div>
@@ -16,19 +17,54 @@
 <script>
   export default {
     name: 'navBar',
-    computed: {
-      showArrow() {
-        return !!this.leftText;
+    computed: {},
+    data() {
+      return {}
+    },
+    props: {
+      title: {
+        type: String,
+        default: ''
+      },
+      leftText: {
+        type: String,
+        default: ''
+      },
+      onClickLeftHandler: {
+        type: Function,
+        default: function() {
+
+        }
+      },
+      rightText:{
+        type:String,
+        default:''
+      },
+      showRight: {
+        type: Boolean,
+        default: false
+      },
+      onClickRightHandler: {
+        type: Function,
+        default: function() {
+          return null
+        }
       }
     },
-    props: ['onClickLeftHandler', 'title', 'onClickRightHandler', 'leftText']
+    methods: {}
+    // props: ['onClickLeftHandler', 'title', 'onClickRightHandler', 'leftText']
   }
 </script>
 
 <style lang="scss">
   .nav_container {
+    .rightText{
+      color: white;
+      font-size: 18px;
+    }
     .van-nav-bar__title {
       color: white;
+      font-size: 18px;
     }
 
 

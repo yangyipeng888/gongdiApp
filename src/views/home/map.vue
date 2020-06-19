@@ -217,10 +217,10 @@
           // let color = this.getTypeColor(that.$store.state.constructionSite[siteKey].name).color;
           let type = this.findTypeByName(that.$store.state.constructionSite[siteKey].name)
           mark.setStyle({
-            'height': '30px',
-            'width': '30px',
+            'height': '0.36rem',
+            'width': '0.36rem',
             'border': '0',
-            'border-radius': '18px',
+            'border-radius': '0.3rem',
             'background-color': this.getTypeColor(type).hex,
             'animation': this.getTypeColor(type).color + ' 5s infinite'
           })
@@ -343,7 +343,7 @@
       }
 
       .searchResults {
-        background-color: white;
+        background-color: rgba(255,255,255,0.95);
         overflow: scroll;
         max-height: 200px;
         margin: 0 15px;

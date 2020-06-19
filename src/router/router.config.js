@@ -54,6 +54,16 @@ export const constantRouterMap = [
 
   },
   {
+    path: '/submit',
+    name: '/submit',
+    component: () => import('@/views/submit'),
+    meta: {
+      title: '问题上报',
+      keepAlive: false
+    }
+
+  },
+  {
     path: '/video',
     name: '/video',
     component: () => import('@/views/videol'),

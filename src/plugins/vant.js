@@ -4,13 +4,15 @@ import {
   Button, List, Cell, Tabbar, TabbarItem,
   Field, Popup, Grid, GridItem, Image as VanImage, Overlay
   , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab,
-  Tabs, Circle, Search, Swipe, SwipeItem
+  Tabs, Circle, Search, Swipe, SwipeItem, Form, Uploader
 } from 'vant'
 
+Vue.use(Uploader)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
 Vue.use(Search)
 Vue.use(Button)
+Vue.use(Form)
 Vue.use(Cell)
 Vue.use(Popup)
 Vue.use(Field)
