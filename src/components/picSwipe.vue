@@ -59,7 +59,7 @@
   .picSwiper_container {
     .my-swipe {
       .swipe_img {
-        height: 180px;
+        height: 32vh;
         width: 100%;
       }
     }

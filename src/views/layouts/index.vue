@@ -7,13 +7,16 @@
       <router-view v-else></router-view>
     </div>
     <div class="layout-footer" v-show="$store.state.currentSite">
-      <TabBar :data="tabbars" @change="handleChange"/>
+      <!--      <TabBar :data="tabbars" @change="handleChange"/>-->
+      <Tabbar2 :data="tabbars"></Tabbar2>
     </div>
   </div>
 </template>
 
 <script>
   import TabBar from '@/components/TabBar'
+  import Tabbar2 from '../../components/Tabbar2'
+
   export default {
     name: 'AppLayout',
     data() {
@@ -27,12 +30,19 @@
             icon: 'map-marked'
           },
           {
+            img: require('../../assets/img/安全.png'),
+            to: {
+              name: 'submit'
+            }
+
+          },
+          {
             title: '首页',
             to: {
               name: 'Home'
             },
             icon: 'home-o'
-          },
+          }
           // {
           //   title: '关于我',
           //   to: {
@@ -45,6 +55,7 @@
     },
     components: {
       TabBar,
+      Tabbar2
     },
     methods: {
       handleChange(v) {
@@ -56,6 +67,7 @@
 <style scoped lang="scss">
   .app-container {
     height: 100%;
+
     .layout-content {
       height: 100%;
     }

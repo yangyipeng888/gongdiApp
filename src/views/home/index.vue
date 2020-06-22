@@ -14,7 +14,7 @@
           <van-grid :column-num="4" :border="false">
             <van-grid-item v-for="item in btnList" @click="enter(item.path)">
               <div class="file_item">
-                <van-image :src="item.imgUrl"/>
+                <van-image :src="item.imgUrl" fit="contain" style="height: 100px"/>
                 <div class="file_name">
                   {{item.desc}}
                 </div>
@@ -25,20 +25,14 @@
       </div>
       <div class="box">
         <div class="title ">项目进度</div>
-        <div class="box_content van-hairline--top" style="height: 300px">
+        <div class="box_content van-hairline--top">
           <pro_progress></pro_progress>
         </div>
       </div>
       <div class="box">
         <div class="title ">现场视频</div>
         <div class="box_content van-hairline--top">
-          <van-grid :column-num="2">
-            <van-grid-item v-for="item in videos">
-              <div class="file_item">
-                <video-item></video-item>
-              </div>
-            </van-grid-item>
-          </van-grid>
+          <video-list></video-list>
         </div>
       </div>
     </div>
@@ -52,28 +46,24 @@
   import picSwipe from '../../components/picSwipe'
   import navBar from '../../components/navBar'
   import proInfo from '../../components/proInfo'
+  import videoList from '../../components/videoList'
   export default {
     components: {
       proInfo,
       pro_progress,
       videoItem,
       picSwipe,
-      navBar
+      navBar,
+      videoList
     },
     data() {
       return {
         btnList: [
-          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '文件管理', path: '/files' },
-          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '现场照片', path: '/picView' },
-          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '项目概况', path: '/projectDetail' },
-          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '半月报', path: '/projectHalfDetail' },
-          { imgUrl: 'https://img.yzcdn.cn/vant/apple-1.jpg', desc: '问题上报', path: '/submit' }
-
+          { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
+          { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
         ],
-        videos: [
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: '海心沙xxx视频' },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: '海印桥视频' }
-        ]
       }
     },
 
@@ -112,14 +102,13 @@
     height: 100%;
     width: 100%;
     position: relative;
-
     .nav {
       height: 46px;
     }
 
     .content {
       width: 100%;
-      padding: 0;
+      padding-bottom: 100px;
       position: absolute;
       top: 46px;
       bottom: 0px;

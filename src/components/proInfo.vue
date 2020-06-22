@@ -1,6 +1,6 @@
 <template>
   <div class="pro_info">
-    <div class="pro_name">项目名称：{{info.projectName}}<span class="pro_change">切换</span></div>
+    <div class="pro_name">项目名称：{{info.projectName}}<span class="pro_change" @click="changeS">切换</span></div>
     <div class="pro_danwei">建设单位：{{info.jianshedanwei}}</div>
   </div>
 </template>
@@ -32,6 +32,9 @@
             })
 
           })
+      },
+      changeS() {
+        this.$router.push('/map')
       }
     }
   }

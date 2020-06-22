@@ -5,7 +5,7 @@
 export const constantRouterMap = [
   {
     path: '/login',
-    name: '/login',
+    name: 'login',
     component: () => import('@/views/login'),
     meta: {
       title: '登录',
@@ -15,7 +15,7 @@ export const constantRouterMap = [
   },
   {
     path: '/files',
-    name: '/files',
+    name: 'files',
     component: () => import('@/views/files'),
     meta: {
       title: '文件管理',
@@ -25,7 +25,7 @@ export const constantRouterMap = [
   },
   {
     path: '/picView',
-    name: '/picView',
+    name: 'picView',
     component: () => import('@/views/picView'),
     meta: {
       title: '现场照片',
@@ -35,7 +35,7 @@ export const constantRouterMap = [
   },
   {
     path: '/projectDetail',
-    name: '/projectDetail',
+    name: 'projectDetail',
     component: () => import('@/views/projectDetail'),
     meta: {
       title: '项目概况',
@@ -45,7 +45,7 @@ export const constantRouterMap = [
   },
   {
     path: '/projectHalfDetail',
-    name: '/projectHalfDetail',
+    name: 'projectHalfDetail',
     component: () => import('@/views/projectHalfDetail'),
     meta: {
       title: '半月报概况',
@@ -55,7 +55,7 @@ export const constantRouterMap = [
   },
   {
     path: '/submit',
-    name: '/submit',
+    name: 'submit',
     component: () => import('@/views/submit'),
     meta: {
       title: '问题上报',
@@ -65,7 +65,7 @@ export const constantRouterMap = [
   },
   {
     path: '/video',
-    name: '/video',
+    name: 'video',
     component: () => import('@/views/videol'),
     meta: {
       title: '视频',

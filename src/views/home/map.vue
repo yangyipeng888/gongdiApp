@@ -220,7 +220,7 @@
             'height': '0.36rem',
             'width': '0.36rem',
             'border': '0',
-            'border-radius': '0.3rem',
+            'border-radius': '0.36rem',
             'background-color': this.getTypeColor(type).hex,
             'animation': this.getTypeColor(type).color + ' 5s infinite'
           })
@@ -351,7 +351,6 @@
 
         .resultItem {
           padding: 5px;
-          height: 30px;
           font-size: 20px;
         }
 

@@ -4,7 +4,7 @@
       <nav-bar class="nav"
                :leftText="'返回'"
                :onClickLeftHandler="onClickLeft"
-               :title="'半月报概况'"
+               :title="'现场照片'"
                :show-right="true"
                :onClickRightHandler="selFileType"
       ></nav-bar>
@@ -13,12 +13,11 @@
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
         <div class="files" v-show="contents">
           <van-grid :column-num="2" :border="false">
-            <van-grid-item v-for="item in contents">
+            <grid-item v-for="item in contents">
               <div class="file_item" @click="previewImg(item.suolue)">
                 <van-image
-                  width="100%"
-                  height="250px"
-                  fit="contain"
+                  class="file_img"
+                  fit="fill"
                   :src="item.suolue"
                 >
                   <template v-slot:loading>
@@ -26,11 +25,12 @@
                   </template>
                   <template v-slot:error>加载失败</template>
                 </van-image>
-                <!--                <div class="file_name">-->
-                <!--                  {{item.name}}-->
-                <!--                </div>-->
+                <!--                                <div class="file_name">-->
+                <!--                                  {{item.timestamp}}-->
+                <!--                                </div>-->
               </div>
-            </van-grid-item>
+            </grid-item>
+
           </van-grid>
         </div>
       </div>
@@ -53,11 +53,13 @@
   import { Toast } from 'vant'
   import { ImagePreview } from 'vant'
   import navBar from '../components/navBar'
+  import gridItem from '../components/gridItem'
 
   export default {
     name: 'files',
     components: {
-      navBar
+      navBar,
+      gridItem
     },
     data() {
       return {
@@ -185,10 +187,18 @@
         .files {
           width: 100%;
           height: 100%;
+          padding-top: 10px;
 
           .file_item {
-            height: 100%;
+            height: 120px !important;
             width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .file_img {
+              width: 95%;
+              height: 95%;
+            }
 
             .file_name {
               text-align: center;

@@ -2,7 +2,7 @@
   <div id="project_progress" @mouseenter="stopAni" @mouseleave="setAni()">
     <div style="opacity: 0" :class="{pop_ani_show:tab%4 == 0,pop_ani_hide:tab%4 != 0}" class="progress_pannel">
       <div class="chart">
-        <van-circle class="circle" size="100%" :stroke-width="80"
+        <van-circle class="circle" size="80%" :stroke-width="80"
                     v-model="zijinRate"
                     :rate="zijinRate1"
                     :text="zijinText"
@@ -44,7 +44,7 @@
     </div>
     <div style="opacity: 0" :class="{pop_ani_show:tab%4 == 2,pop_ani_hide:tab%4 != 2}" class="progress_pannel">
       <div class="chart">
-        <van-circle class="circle" size="100%" :stroke-width="80"
+        <van-circle class="circle" size="80%" :stroke-width="80"
                     v-model="workRate"
                     :rate="workRate1"
                     :text="workText"
@@ -177,13 +177,13 @@
         return this.divide(this.detail.nianduwancheng, this.detail.niandutouzijihua)
       },
       zijinText() {
-        return this.divide(this.detail.nianduwancheng, this.detail.niandutouzijihua) + '%'
+        return '投资完成率：\n' + this.divide(this.detail.nianduwancheng, this.detail.niandutouzijihua) + '%'
       },
       workRate1() {
         return this.divide(this.detail.gongzuoliangnianduwancheng, this.detail.niandutouzijihua)
       },
       workText() {
-        return this.divide(this.detail.gongzuoliangnianduwancheng, this.detail.niandutouzijihua) + '%'
+        return '工作量完成率：\n' + this.divide(this.detail.gongzuoliangnianduwancheng, this.detail.niandutouzijihua) + '%'
       }
     },
     methods: {
@@ -196,7 +196,8 @@
             x: 'center',
             bottom: 'middle',
             textStyle: {
-              fontSize: '28',
+              fontWeight : 0,
+              fontSize: '18',
               color: 'black'
               // color: "#2e75b6"
             }
@@ -205,10 +206,17 @@
           color: this.color,
           series: [{
             type: 'pie',
-            radius: ['80%', '100%'],
+            radius: ['68%', '80%'],
             center: ['50%', '50%'],
             data: value,
-            label: false
+            label: false,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 0,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
           }]
         }
         chart.setOption(option)
@@ -241,7 +249,7 @@
 
 <style scoped="scoped" lang="scss">
   #project_progress {
-    height: 100%;
+    height: 200px;
     width: 100%;
     color: black;
     background-color: white;
@@ -256,8 +264,11 @@
       justify-content: space-around;
 
       .chart {
-        width: 35%;
-        padding: 20px;
+        width: 40%;
+        /*padding: 20px;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .circle {
           /*width: 100%;*/
@@ -266,7 +277,7 @@
       }
 
       .list {
-        width: 65%;
+        width: 60%;
         display: flex;
         flex-direction: column;
         justify-content: center;

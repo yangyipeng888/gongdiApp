@@ -36,9 +36,9 @@
 
         }
       },
-      rightText:{
-        type:String,
-        default:''
+      rightText: {
+        type: String,
+        default: ''
       },
       showRight: {
         type: Boolean,
@@ -58,15 +58,25 @@
 
 <style lang="scss">
   .nav_container {
-    .rightText{
+    .rightText {
       color: white;
       font-size: 18px;
     }
+
     .van-nav-bar__title {
       color: white;
       font-size: 18px;
     }
 
+    .van-icon-search {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .van-icon-search::before {
+      font-size: 30px !important;
+    }
 
     .van-nav-bar__text {
       color: white;

@@ -28,13 +28,15 @@
 
     </div>
     <van-popup v-model="showPop" position="bottom" :style="{ height: '38%' }">
-      <van-tree-select
-        class="tree"
-        :items="items"
-        :active-id.sync="activeId"
-        :main-active-index.sync="activeIndex"
-        @click-item="getFileList"
-      />
+<!--      <van-tree-select-->
+<!--        class="tree"-->
+<!--        :items="items"-->
+<!--        :active-id.sync="activeId"-->
+<!--        :main-active-index.sync="activeIndex"-->
+<!--        @click-item="getFileList"-->
+<!--      />-->
+      <tree-select :items="items" :getFileList="getFileList">
+      </tree-select>
     </van-popup>
   </div>
 </template>
@@ -42,11 +44,12 @@
 <script>
   import { Toast } from 'vant'
   import navBar from '../components/navBar'
-
+  import treeSelect from '../components/treeSelect'
   export default {
     name: 'files',
     components: {
-      navBar
+      navBar,
+      treeSelect
     },
     data() {
       return {

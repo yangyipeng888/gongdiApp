@@ -10,10 +10,9 @@
         <van-form @submit="onSubmit">
           <van-field
             v-model="username"
-            name="用户名"
-            label="用户名"
-            placeholder="用户名"
-            :rules="[{ required: true, message: '请填写用户名' }]"
+            name="问题地点"
+            label="问题地点"
+            placeholder="问题地点"
           >
           </van-field>
           <van-field
@@ -21,7 +20,6 @@
             name="问题描述"
             label="问题描述"
             placeholder="问题描述"
-            :rules="[{ required: true, message: '请填写用户名' }]"
           >
           </van-field>
           <van-field
@@ -34,13 +32,14 @@
             @click="showPicker = true"
           >
           </van-field>
-          <van-field name="uploader" label="文件上传">
+          <van-field name="uploader" label="问题照片">
             <template #input>
-              <van-uploader v-model="fileList"/>
+              <uploader :fileList="fileList"></uploader>
+<!--              <van-uploader v-model="fileList"/>-->
             </template>
           </van-field>
           <div style="margin: 16px;">
-            <van-button round block type="info" native-type="submit">
+            <van-button block type="info" native-type="submit">
               提交
             </van-button>
           </div>
@@ -63,11 +62,13 @@
   import { Toast } from 'vant'
   import { ImagePreview } from 'vant'
   import navBar from '../components/navBar'
+  import uploader from '../components/uploader'
 
   export default {
     name: 'files',
     components: {
-      navBar
+      navBar,
+      uploader
     },
     data() {
       return {
@@ -76,11 +77,11 @@
           { url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
           // Uploader 根据文件后缀来判断是否为图片文件
           // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-          { url: 'https://cloud-image', isImage: true }
+          // { url: 'https://cloud-image', isImage: true }
         ],
         value: '',
         columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-        showPicker: false,
+        showPicker: false
       }
     },
     methods: {
@@ -92,9 +93,9 @@
 
       },
       onConfirm(value) {
-        this.value = value;
-        this.showPicker = false;
-      },
+        this.value = value
+        this.showPicker = false
+      }
     }
   }
 </script>
