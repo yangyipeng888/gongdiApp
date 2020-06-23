@@ -15,7 +15,7 @@
           <van-grid :column-num="3" :border="false">
             <van-grid-item v-for="item in contents" @click="openFile(item.url)">
               <div class="file_item">
-                <img src="../assets/img/file.png">
+                <van-image  fit="fill" :src="require('../assets/img/file.png')"/>
                 <div class="file_name">
                   {{item.miaoshu}}
                 </div>
@@ -252,7 +252,8 @@
           .file_item {
             height: 100%;
             width: 100%;
-
+            display: flex;
+            flex-direction: column;
             .file_name {
               text-align: center;
               font-size: 13px;

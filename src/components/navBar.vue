@@ -61,11 +61,12 @@
     .rightText {
       color: white;
       font-size: 18px;
+      text-decoration: underline;
     }
 
     .van-nav-bar__title {
       color: white;
-      font-size: 18px;
+      font-size: 19px;
     }
 
     .van-icon-search {

@@ -9,14 +9,14 @@
       <div class="content">
         <van-form @submit="onSubmit">
           <van-field
-            v-model="username"
+            v-model="pro.site"
             name="问题地点"
             label="问题地点"
             placeholder="问题地点"
           >
           </van-field>
           <van-field
-            v-model="username"
+            v-model="pro.desc"
             name="问题描述"
             label="问题描述"
             placeholder="问题描述"
@@ -26,16 +26,26 @@
             readonly
             clickable
             name="picker"
-            :value="value"
+            :value="pro.type"
+            label="问题类型"
+            placeholder="请点击选择"
+            @click="showType = true"
+          >
+          </van-field>
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="pro.lv"
             label="重要程度"
             placeholder="请点击选择"
-            @click="showPicker = true"
+            @click="showLv = true"
           >
           </van-field>
           <van-field name="uploader" label="问题照片">
             <template #input>
               <uploader :fileList="fileList"></uploader>
-<!--              <van-uploader v-model="fileList"/>-->
+              <!--              <van-uploader v-model="fileList"/>-->
             </template>
           </van-field>
           <div style="margin: 16px;">
@@ -47,12 +57,20 @@
       </div>
 
     </div>
-    <van-popup v-model="showPicker" position="bottom">
+    <van-popup v-model="showType" position="bottom">
       <van-picker
         show-toolbar
-        :columns="columns"
-        @confirm="onConfirm"
-        @cancel="showPicker = false"
+        :columns="proTypes"
+        @confirm="onConfirmType"
+        @cancel="showType = false"
+      />
+    </van-popup>
+    <van-popup v-model="showLv" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="proLvs"
+        @confirm="onConfirmLv"
+        @cancel="showLv = false"
       />
     </van-popup>
   </div>
@@ -72,29 +90,39 @@
     },
     data() {
       return {
-        username: '',
+        pro: {
+          site: '',
+          desc: '',
+          type: '',
+          lv: ''
+        },
         fileList: [
-          { url: 'https://img.yzcdn.cn/vant/leaf.jpg' },
+          { url: 'https://img.yzcdn.cn/vant/leaf.jpg' }
           // Uploader 根据文件后缀来判断是否为图片文件
           // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
           // { url: 'https://cloud-image', isImage: true }
         ],
-        value: '',
-        columns: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-        showPicker: false
+        proTypes: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+        proLvs: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+        showType: false,
+        showLv: false
+
       }
     },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
       },
-
       onSubmit() {
 
       },
-      onConfirm(value) {
-        this.value = value
-        this.showPicker = false
+      onConfirmType(value) {
+        this.pro.type = value
+        this.showType = false
+      },
+      onConfirmLv(value) {
+        this.pro.lv = value
+        this.showLv = false
       }
     }
   }

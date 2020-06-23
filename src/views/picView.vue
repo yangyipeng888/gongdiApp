@@ -68,7 +68,7 @@
         columns: [
           // 第一列
           {
-            values: [2019, 2020, 2021],
+            values: this.getYears(),
             defaultIndex: 1
           },
           // 第一列
@@ -86,6 +86,17 @@
       },
       selFileType() {
         this.show = true
+      },
+      getYears() {
+        let arr = []
+        let start = 2019
+        let curYear = new Date().getFullYear()
+        let end = curYear + 1
+        while (start <= end) {
+          arr.push(start)
+          start++
+        }
+        return arr
       },
       onConfirm(values, index) {
         this.show = false

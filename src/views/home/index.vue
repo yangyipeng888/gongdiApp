@@ -24,13 +24,28 @@
         </div>
       </div>
       <div class="box">
-        <div class="title ">项目进度</div>
+        <div class="title ">
+          <div class="titleC">项目进度</div>
+<!--          <div class="more">更多</div>-->
+        </div>
         <div class="box_content van-hairline--top">
           <pro_progress></pro_progress>
         </div>
       </div>
       <div class="box">
-        <div class="title ">现场视频</div>
+        <div class="title ">
+          <div class="titleC">问题报警</div>
+<!--          <div class="more">更多</div>-->
+        </div>
+        <div class="box_content van-hairline--top">
+          <problem-list></problem-list>
+        </div>
+      </div>
+      <div class="box">
+        <div class="title ">
+          <div class="titleC">现场视频</div>
+<!--          <div class="more">更多</div>-->
+        </div>
         <div class="box_content van-hairline--top">
           <video-list></video-list>
         </div>
@@ -47,6 +62,8 @@
   import navBar from '../../components/navBar'
   import proInfo from '../../components/proInfo'
   import videoList from '../../components/videoList'
+  import problemList from '../../components/problemList'
+
   export default {
     components: {
       proInfo,
@@ -54,7 +71,8 @@
       videoItem,
       picSwipe,
       navBar,
-      videoList
+      videoList,
+      problemList
     },
     data() {
       return {
@@ -62,8 +80,8 @@
           { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
           { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
-          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
-        ],
+          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' }
+        ]
       }
     },
 
@@ -87,7 +105,7 @@
           path
         })
       },
-      logout(){
+      logout() {
         localStorage.clear()
         this.$store.state.logined = false
         //		this.changeMain(0, '/login');
@@ -102,6 +120,7 @@
     height: 100%;
     width: 100%;
     position: relative;
+
     .nav {
       height: 46px;
     }
@@ -125,6 +144,16 @@
           font-weight: 600;
           position: relative;
           background-color: white;
+          display: flex;
+          flex-direction: row;
+          .titleC{
+            width: 88%;
+          }
+          .more{
+            text-decoration: underline;
+            color: $common_blue;
+            font-weight: 100;
+          }
         }
 
 
