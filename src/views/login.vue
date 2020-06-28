@@ -90,10 +90,10 @@
         .logoRound {
           position: absolute;
           left: 50%;
-          top: -80px;
+          top: -210%;
           transform: translateX(-50%);
           .logoImg {
-            height: 120px;
+            width:26vw;
           }
         }
       }
