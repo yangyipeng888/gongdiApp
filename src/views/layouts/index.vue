@@ -22,6 +22,21 @@
     data() {
       return {
         tabbars: [
+
+          {
+            title: '首页',
+            to: {
+              name: 'Home'
+            },
+            icon: 'home-o'
+          },
+          {
+            img: require('../../assets/img/jiahao.png'),
+            to: {
+              name: 'submit'
+            }
+
+          },
           {
             title: '地图',
             to: {
@@ -29,20 +44,6 @@
             },
             icon: 'map-marked'
           },
-          {
-            img: require('../../assets/img/安全.png'),
-            to: {
-              name: 'submit'
-            }
-
-          },
-          {
-            title: '首页',
-            to: {
-              name: 'Home'
-            },
-            icon: 'home-o'
-          }
           // {
           //   title: '关于我',
           //   to: {

@@ -27,7 +27,7 @@
         this.problems.unshift(
           { time: '2020-6-6', type: 1, desc: Math.random() + 'xx工地xx人员没佩戴安全帽子' }
         )
-      }, 10000)
+      }, 1000)
     },
     destroyed() {
       if (this.timeId) {
@@ -122,16 +122,19 @@
     transition: transform 1s ease;
   }
 
-  .checkin_ani-enter,
-  .checkin_ani-enter-to,
-  .checkin_ani-enter-leave,
-  .checkin_ani-enter-leave-to {
+  /*.checkin_ani-enter-to,*/
+  /*.checkin_ani-enter-leave-to {*/
+  /*  transition: transform 1s ease;*/
+  /*}*/
+  .checkin_ani-leave-active,
+  .checkin_ani-enter-active {
     transition: transform 1s ease;
   }
-
   .checkin_ani-enter {
     transform: translateY(-100%);
   }
-
+  .checkin_ani-leave-to {
+    transform: translateY(100%);
+  }
 
 </style>

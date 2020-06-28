@@ -189,15 +189,21 @@
     methods: {
       createChart(dom, title, value) {
         let chart = echarts.init(dom)
+        let fontsize = '18'
 
+        if (this.$isAndroid) {
+          fontsize = '18'
+        } else if (this.$isIphone) {
+          fontsize = '28'
+        }
         var option = {
           title: {
             text: title,
             x: 'center',
             bottom: 'middle',
             textStyle: {
-              fontWeight : 0,
-              fontSize: '18',
+              fontWeight: 0,
+              fontSize: fontsize,
               color: 'black'
               // color: "#2e75b6"
             }
@@ -274,6 +280,14 @@
           /*width: 100%;*/
           /*height: 100%;*/
         }
+      }
+
+      .list:after {
+        content: '单位（万元）';
+        text-align: left;
+        color: black;
+        font-size: 15px;
+        padding-right: 20px;
       }
 
       .list {

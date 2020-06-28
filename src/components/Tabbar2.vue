@@ -63,7 +63,7 @@
       }
 
       .tabImg {
-        height: 100%;
+        height: 85%;
       }
 
       .tabName {

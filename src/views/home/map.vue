@@ -1,20 +1,27 @@
 <template>
   <div class="map_container" id="total_map">
-    <div class="searchBox">
-      <van-search
-        class="search"
-        v-model="value"
-        @input="onInput"
-        @search="onSearch"
-        shape="round"
-        placeholder="请输入搜索工地"
-      />
-      <div class="searchResults">
-        <div class="resultItem" v-for="item in searchResults" @click="showSite(item)">
-          {{item.name}}
+    <div class="topBox">
+      <div class="listBox" @click="showList=true">
+        所有
+      </div>
+      <div class="searchBox">
+        <van-search
+          class="search"
+          v-model="value"
+          @input="onInput"
+          @search="onSearch"
+          shape="round"
+          placeholder="请输入搜索工地"
+        />
+        <div class="searchResults">
+          <div class="resultItem" v-for="item in searchResults" @click="showSite(item)">
+            {{item.name}}
+          </div>
         </div>
       </div>
+
     </div>
+
     <!--    <transition name="progress_trans">-->
     <!--      <div-->
     <!--        class="gongdiDes_mask"-->
@@ -46,7 +53,13 @@
         </van-button>
       </div>
     </transition>
-
+    <van-popup v-model="showList">
+      <div class="allSites">
+        <div class="siteItem" v-for="item in markers" @click="showSite(item)">
+          {{item.name}}
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -70,9 +83,8 @@
     },
     data() {
       return {
-        mapStyle: 'amap://styles/darkblue',
+        mapStyle: '',
         markers: [],
-        lazy: false,
         map: null,
         colors: [
           { color: 'purple', hex: '#c44dff' },
@@ -94,7 +106,7 @@
         rank3: [],
         options: [],
         value: '',
-        showList: true,
+        showList: false,
         textAniId: null,
         textAniTarget: null,
         selSite: null,
@@ -184,7 +196,7 @@
             this.map = new AMap.Map('total_map', {
               zoom: 12,
               center: [113.317373, 23.084758],
-              mapStyle: 'amap://styles/5db57f25559986e3ddef9376fa24adf3'
+              mapStyle: this.mapStyle
             })
             // this.map.plugin([
             //   'AMap.ToolBar'
@@ -330,31 +342,41 @@
     /*height: 100vh;*/
     height: 100%;
 
-    .searchBox {
+    .topBox {
       position: absolute;
       top: 10px;
       z-index: 98;
       width: 100%;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
 
-      .search {
-        background-color: transparent;
+      .listBox {
+        background-color: white;
+        width: 10%;
       }
 
-      .searchResults {
-        background-color: rgba(255,255,255,0.95);
-        overflow: scroll;
-        max-height: 200px;
-        margin: 0 15px;
-        border-radius: 5px;
+      .searchBox {
+        width: 90%;
 
-        .resultItem {
-          padding: 5px;
-          font-size: 20px;
+        .search {
+          background-color: transparent;
         }
 
+        .searchResults {
+          background-color: rgba(255, 255, 255, 0.95);
+          overflow: scroll;
+          max-height: 200px;
+          margin: 0 15px;
+          border-radius: 5px;
+
+          .resultItem {
+            padding: 5px;
+            font-size: 20px;
+          }
+
+        }
       }
+
 
     }
 
@@ -404,7 +426,21 @@
       }
     }
 
+    .allSites {
+      /*background-color: rgba(255, 255, 255, 0.95);*/
+      overflow: scroll;
+      max-height: 80vh;
+      width: 90vw;
+      /*border-radius: 20px;*/
+      background-color: rgba(255,255,255,0.9);
 
+      .siteItem {
+        background-color: transparent;
+        font-size: 20px;
+        padding: 5px;
+      }
+
+    }
   }
 
 </style>

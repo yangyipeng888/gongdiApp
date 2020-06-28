@@ -1,16 +1,25 @@
 <template>
   <div class="login_container">
-    <div class="title">
-      <div class="title1">欢迎使用</div>
-      <div class="title2">广州城投智慧工地</div>
+    <div class="box">
+      <div class="logo">
+        <div class="logoRound">
+          <van-image class="logoImg" :src="logo" fit="contain"/>
+
+        </div>
+      </div>
+
+      <div class="title">
+        广州城投智慧工地
+      </div>
+      <div class="form">
+        <input class="login_input" placeholder="请输入用户名" v-model="id">
+        <input class="login_input" placeholder="请输入密码" v-model="pw" type="password">
+        <van-button class="login_btn" block type="info" @click="login"
+                    color="linear-gradient(to right, #4bb0ff, #6149f6)">登录
+        </van-button>
+      </div>
     </div>
-    <div class="form">
-      <input class="login_input" placeholder="请输入用户名" v-model="id">
-      <input class="login_input" placeholder="请输入密码" v-model="pw" type="password">
-      <van-button class="login_btn" block type="info" @click="login"
-                  color="linear-gradient(to right, #4bb0ff, #6149f6)">登录
-      </van-button>
-    </div>
+
   </div>
 </template>
 
@@ -23,7 +32,8 @@
     data() {
       return {
         id: null,
-        pw: null
+        pw: null,
+        logo: require('../assets/img/logo.png')
       }
     },
     methods: {
@@ -65,47 +75,63 @@
   .login_container {
     background: #fff;
     height: 100vh;
+    background-image: url("../assets/img/111.jpg");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    .title {
-      height: 30%;
-      font-size: 23px;
-      color: cornflowerblue;
-      .title1 {
-        position: absolute;
-        top: 80px;
-        left: 40px
+    .box {
+      box-shadow: 0px 0px 5px #888888;
+      width: 90%;
+      .logo {
+        height: 35px;
+        position: relative;
+        .logoRound {
+          position: absolute;
+          left: 50%;
+          top: -80px;
+          transform: translateX(-50%);
+          .logoImg {
+            height: 120px;
+          }
+        }
       }
 
-      .title2 {
-        position: absolute;
-        top: 115px;
-        left: 110px
+      .title {
+        font-size: 23px;
+        color: cornflowerblue;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .form {
+        background-color: rgba(206,206,206,0.6);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .login_input {
+          padding: 5px;
+          margin-top: 20px;
+          font-size: 20px;
+          background: none;
+          outline: none;
+          border: 1px solid blue;
+          width: 90%;
+          height: 30px;
+          border-radius: 2px;
+        }
+
+        .login_btn {
+          margin: 20px;
+          width: 93.5%;
+        }
       }
     }
 
-    .form {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-
-      .login_input {
-        padding: 5px;
-        font-size: 20px;
-        margin-top: 30px;
-        background: none;
-        outline: none;
-        border: 1px solid blue;
-        width: 80%;
-        height: 30px;
-        border-radius: 2px;
-      }
-
-      .login_btn {
-        margin-top: 50px;
-        width: 83.5%;
-      }
-    }
 
   }
 </style>

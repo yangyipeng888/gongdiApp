@@ -8,7 +8,7 @@
     >
     </video>
     <div class="mask">
-      <van-icon class="btn_play" name="play-circle-o"/>
+      <van-icon class="btn_play" name="play-circle-o" @click="play"/>
       <!--          <img class="btn_play" src="../assets/img/btn_play.png" @click="play">-->
     </div>
 

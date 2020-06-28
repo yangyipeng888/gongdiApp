@@ -18,6 +18,7 @@
                 <van-image
                   class="file_img"
                   fit="fill"
+                  lazy-load
                   :src="item.suolue"
                 >
                   <template v-slot:loading>
@@ -60,6 +61,9 @@
     components: {
       navBar,
       gridItem
+    },
+    mounted() {
+
     },
     data() {
       return {

@@ -4,9 +4,13 @@ import {
   Button, List, Cell, Tabbar, TabbarItem,
   Field, Popup, Grid, GridItem, Image as VanImage, Overlay
   , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab,
-  Tabs, Circle, Search, Swipe, SwipeItem, Form, Uploader
+  Tabs, Circle, Search, Swipe, SwipeItem, Form, Uploader,Lazyload
 } from 'vant'
 
+Vue.use(Lazyload)
+Vue.use(Lazyload, {
+  lazyComponent: true,
+});
 Vue.use(Uploader)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
