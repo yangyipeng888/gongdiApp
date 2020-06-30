@@ -2,10 +2,7 @@
   <div class="login_container">
     <div class="box">
       <div class="logo">
-        <div class="logoRound">
-          <van-image class="logoImg" :src="logo" fit="contain"/>
-
-        </div>
+        <van-image class="logoImg" :src="logo" fit="contain"/>
       </div>
 
       <div class="title">
@@ -84,29 +81,30 @@
     .box {
       box-shadow: 0px 0px 5px #888888;
       width: 90%;
+
       .logo {
-        height: 35px;
+        height: 50px;
         position: relative;
-        .logoRound {
+
+        .logoImg {
           position: absolute;
-          left: 50%;
-          top: -210%;
           transform: translateX(-50%);
-          .logoImg {
-            width:26vw;
-          }
+          left: 50%;
+          top: -150%;
+          width: 30%;
         }
+
       }
 
       .title {
         font-size: 23px;
         color: cornflowerblue;
         text-align: center;
-        padding: 10px;
+        padding: 5px;
       }
 
       .form {
-        background-color: rgba(206,206,206,0.6);
+        background-color: rgba(206, 206, 206, 0.6);
         padding: 10px;
         display: flex;
         flex-direction: column;
@@ -128,6 +126,7 @@
         .login_btn {
           margin: 20px;
           width: 93.5%;
+          font-size: 18px;
         }
       }
     }

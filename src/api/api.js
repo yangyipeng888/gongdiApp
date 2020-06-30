@@ -2,7 +2,7 @@ import {
   get,
   post
 } from './http'
-
+import axios from 'axios'
 
 class sApi {
   constructor() {
@@ -405,7 +405,23 @@ class sApi {
     var option = { projectId }
     return post(`${this.Base_url}?method=gettouzijihuabyprojectIdandyear`, option)
   }
-
+  //问题上报
+  tousuInsert = function ( options) {
+    var option = {
+      method: "POST",
+      url: `${this.Base_url}?method=tousuInsert&projectId=${options.projectId}&projectname=${options.projectname}&account=${options.account}&filetype=${options.filetype}&zhenggaiqixian=${options.zhenggaiqixian}&type=${options.type}&miaoshu=${options.miaoshu}`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: options.fData
+    };
+    return axios(option);
+  }
+  //半月报 字段
+  getwentiList = function(projectIds) {
+    var option = { projectIds }
+    return post(`${this.Base_url}?method=getwentiList`, option)
+  }
 }
 
 export const Spi = new sApi()

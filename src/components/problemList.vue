@@ -4,13 +4,19 @@
       <div class="title_time">时间</div>
       <div class="title_desc">问题描述</div>
       <div class="title_type">问题类型</div>
+      <div class="title_status">状态</div>
     </div>
     <div class="problem_content">
       <transition-group name="checkin_ani">
         <div class="problem_list" v-for="pro,index in problems" :key="index">
-          <div class="problem_time">{{pro.time}}</div>
-          <div class="problem_desc van-ellipsis">{{pro.desc}}</div>
+          <div class="problem_time van-ellipsis">{{pro.timestamp}}</div>
+          <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
           <div class="problem_type">{{pro.type}}</div>
+          <div class="problem_status">
+            <div class="status_txt">
+              {{pro.xiufuzhuangtai}}
+            </div>
+          </div>
         </div>
       </transition-group>
     </div>
@@ -23,28 +29,33 @@
   export default {
     name: 'problemList',
     mounted() {
-      this.timeId = setInterval(() => {
-        this.problems.unshift(
-          { time: '2020-6-6', type: 1, desc: Math.random() + 'xx工地xx人员没佩戴安全帽子' }
-        )
-      }, 1000)
+      // this.timeId = setInterval(() => {
+      //   this.problems.unshift(
+      //     { time: '2020-6-6', type: 1, desc: Math.random() + 'xx工地xx人员没佩戴安全帽子' }
+      //   )
+      // }, 1000)
+      this.getwentiList()
     },
     destroyed() {
       if (this.timeId) {
         clearInterval(this.timeId)
       }
     },
+    methods: {
+      getwentiList() {
+        let id = this.$store.state.currentSite
+        this.$Spi.getwentiList(id).then((res) => {
+          this.problems = res
+          this.problems.forEach((item) => {
+            item.timestamp = item.timestamp.split(' ')[0]
+          })
+        })
+      }
+    },
     data() {
       return {
         timeId: null,
-        problems: [
-          { time: '2020-6-6', type: 1, desc: 'xx工地xx人员没佩戴安全帽子111' },
-          { time: '2020-6-6', type: 1, desc: 'xx工地xx人员没佩戴安全帽子111' },
-          { time: '2020-6-6', type: 1, desc: 'xx工地xx人员没佩戴安全帽子111' },
-          { time: '2020-6-6', type: 1, desc: 'xx工地xx人员没佩戴安全帽子111' },
-          { time: '2020-6-6', type: 1, desc: 'xx工地xx人员没佩戴安全帽子111' },
-
-        ]
+        problems: []
       }
 
     }
@@ -70,22 +81,27 @@
       color: white;
 
       .title_time {
-        width: 20%;
+        width: 25%;
       }
 
       .title_desc {
-        width: 60%;
+        width: 35%;
       }
 
       .title_type {
         width: 20%;
 
       }
+
+      .title_status {
+        width: 20%;
+
+      }
     }
 
     .problem_content {
-      min-height: 150px;
-      max-height: 150px;
+      min-height: 30px;
+      max-height: 90px;
       overflow: scroll;
 
       .problem_list:nth-child(2n) {
@@ -100,16 +116,34 @@
         line-height: 30px;
 
         .problem_time {
-          width: 20%;
+          width: 25%;
         }
 
         .problem_desc {
-          width: 60%;
+          width: 35%;
         }
 
         .problem_type {
           width: 20%;
 
+        }
+
+        .problem_status {
+          width: 20%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .status_txt {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            width: 70%;
+            height: 80%;
+            background-color: indianred;
+            font-size: 15px !important;
+          }
         }
       }
     }
@@ -130,9 +164,11 @@
   .checkin_ani-enter-active {
     transition: transform 1s ease;
   }
+
   .checkin_ani-enter {
     transform: translateY(-100%);
   }
+
   .checkin_ani-leave-to {
     transform: translateY(100%);
   }

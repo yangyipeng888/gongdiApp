@@ -9,14 +9,15 @@
       <div class="content">
         <van-form @submit="onSubmit">
           <van-field
-            v-model="pro.site"
-            name="问题地点"
-            label="问题地点"
-            placeholder="问题地点"
+            disabled
+            v-model="pro.projectname"
+            name="项目名称"
+            label="项目名称"
+            placeholder="项目名称"
           >
           </van-field>
           <van-field
-            v-model="pro.desc"
+            v-model="pro.miaoshu"
             name="问题描述"
             label="问题描述"
             placeholder="问题描述"
@@ -32,24 +33,24 @@
             @click="showType = true"
           >
           </van-field>
-          <van-field
-            readonly
-            clickable
-            name="picker"
-            :value="pro.lv"
-            label="重要程度"
-            placeholder="请点击选择"
-            @click="showLv = true"
-          >
-          </van-field>
+          <!--          <van-field-->
+          <!--            readonly-->
+          <!--            clickable-->
+          <!--            name="picker"-->
+          <!--            :value="pro.lv"-->
+          <!--            label="重要程度"-->
+          <!--            placeholder="请点击选择"-->
+          <!--            @click="showLv = true"-->
+          <!--          >-->
+          <!--          </van-field>-->
           <van-field name="uploader" label="问题照片">
             <template #input>
-              <uploader :fileList="fileList"></uploader>
-              <!--              <van-uploader v-model="fileList"/>-->
+              <!--              <uploader :fileList="fileList" ></uploader>-->
+              <van-uploader v-model="fileList"/>
             </template>
           </van-field>
           <div style="margin: 16px;">
-            <van-button block type="info" native-type="submit">
+            <van-button block type="info" native-type="submit" @click="onSubmit">
               提交
             </van-button>
           </div>
@@ -91,30 +92,48 @@
     data() {
       return {
         pro: {
-          site: '',
-          desc: '',
+          projectId: '',
+          projectname: '',
+          account: '',
+          filetype: 1,
+          zhenggaiqixian: '',
           type: '',
-          lv: ''
+          miaoshu: '',
+          fData: null
         },
         fileList: [
-          { url: 'https://img.yzcdn.cn/vant/leaf.jpg' }
           // Uploader 根据文件后缀来判断是否为图片文件
           // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
           // { url: 'https://cloud-image', isImage: true }
         ],
-        proTypes: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-        proLvs: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+        proTypes: ['生产安全', '工地安全'],
+        proLvs: ['一般', '严重'],
         showType: false,
         showLv: false
 
       }
+    },
+    mounted() {
+      let id = this.$store.state.currentSite
+      let siteObj = this.$store.state.constructionSite[id]
+      let name = siteObj.name
+      this.pro.projectname = name
+      this.pro.projectId = id
+      this.pro.account = this.$store.state.userName
     },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
       },
       onSubmit() {
-
+        var files = new FormData()
+        for (let i = 0; i < this.fileList.length; i++) {
+          files.append('file', this.fileList[i].file)
+        }
+        this.pro.fData = files
+        this.$Spi.tousuInsert(this.pro).then((res) => {
+          console.log(11111, res)
+        })
       },
       onConfirmType(value) {
         this.pro.type = value
@@ -123,6 +142,9 @@
       onConfirmLv(value) {
         this.pro.lv = value
         this.showLv = false
+      },
+      onGetFile(e) {
+        console.log(e)
       }
     }
   }

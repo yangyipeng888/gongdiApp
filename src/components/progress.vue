@@ -283,11 +283,16 @@
       }
 
       .list:after {
+        position: absolute;
+        top:5px;
+        right: 0;
         content: '单位（万元）';
-        text-align: left;
+        text-align: right;
         color: black;
         font-size: 15px;
-        padding-right: 20px;
+        /*padding-right: 20px;*/
+        /*padding-right: 20px;*/
+
       }
 
       .list {

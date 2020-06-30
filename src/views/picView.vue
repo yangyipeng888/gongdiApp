@@ -37,7 +37,7 @@
       </div>
 
     </div>
-    <van-popup v-model="show" position="bottom" :style="{ height: '30%' }">
+    <van-popup v-model="showPop" position="bottom" :style="{ height: '30%' }">
       <van-picker
         title="选择时间"
         show-toolbar
@@ -62,12 +62,9 @@
       navBar,
       gridItem
     },
-    mounted() {
-
-    },
     data() {
       return {
-        show: false,
+        showPop: false,
         contents: null,
         columns: [
           // 第一列
@@ -84,12 +81,17 @@
         ]
       }
     },
+    mounted() {
+      setTimeout(() => {
+        this.showPop = true
+      }, 500)
+    },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
       },
       selFileType() {
-        this.show = true
+        this.showPop = true
       },
       getYears() {
         let arr = []
@@ -103,7 +105,7 @@
         return arr
       },
       onConfirm(values, index) {
-        this.show = false
+        this.showPop = false
         let monthObj = {
           '一月': '1',
           '二月': '2',

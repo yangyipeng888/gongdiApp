@@ -12,10 +12,11 @@
         <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
         <van-empty class="empty" v-show="!contents" description="暂无文件"></van-empty>
         <div class="files" v-show="contents">
+          <div class="sel_title">{{selTitle}}:</div>
           <van-grid :column-num="3" :border="false">
             <van-grid-item v-for="item in contents" @click="openFile(item.url)">
               <div class="file_item">
-                <van-image  fit="fill" :src="require('../assets/img/file.png')"/>
+                <van-image fit="fill" :src="require('../assets/img/file.png')"/>
                 <div class="file_name">
                   {{item.miaoshu}}
                 </div>
@@ -28,13 +29,13 @@
 
     </div>
     <van-popup v-model="showPop" position="bottom" :style="{ height: '38%' }">
-<!--      <van-tree-select-->
-<!--        class="tree"-->
-<!--        :items="items"-->
-<!--        :active-id.sync="activeId"-->
-<!--        :main-active-index.sync="activeIndex"-->
-<!--        @click-item="getFileList"-->
-<!--      />-->
+      <!--      <van-tree-select-->
+      <!--        class="tree"-->
+      <!--        :items="items"-->
+      <!--        :active-id.sync="activeId"-->
+      <!--        :main-active-index.sync="activeIndex"-->
+      <!--        @click-item="getFileList"-->
+      <!--      />-->
       <tree-select :items="items" :getFileList="getFileList">
       </tree-select>
     </van-popup>
@@ -45,6 +46,7 @@
   import { Toast } from 'vant'
   import navBar from '../components/navBar'
   import treeSelect from '../components/treeSelect'
+
   export default {
     name: 'files',
     components: {
@@ -55,6 +57,7 @@
       return {
         showPop: false,
         contents: null,
+        selTitle:'',
         items: [
           {
             text: '前期文件',
@@ -169,6 +172,11 @@
         activeIndex: 0
       }
     },
+    mounted() {
+      setTimeout(() => {
+        this.showPop = true
+      }, 500)
+    },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
@@ -180,6 +188,7 @@
         this.showPop = true
       },
       getFileList(value) {
+        this.selTitle = value.text;
         let type = value.id
         this.showPop = false
         this.$Spi.getFileList(
@@ -249,11 +258,18 @@
           width: 100%;
           height: 100%;
 
+          .sel_title {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 5px 0 0 10px;
+          }
+
           .file_item {
             height: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
+
             .file_name {
               text-align: center;
               font-size: 13px;
