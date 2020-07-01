@@ -4,70 +4,163 @@
       <nav-bar class="nav"
                :leftText="'返回'"
                :onClickLeftHandler="onClickLeft"
-               :title="'半月报概况'"></nav-bar>
+               :title="'半月报概况'"
+               :show-right="true"
+               :onClickRightHandler="selFileType"
+      ></nav-bar>
       <van-tabs class="sel_tab" v-model="active" animated sticky>
-        <van-tab title="资金进度">
+        <tab :title="'资金进度'">
           <div class="form">
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">当年完成资金：</div>
-              <div class="form_desc">200(万元)</div>
+            <div class="form_item van-hairline--bottom" v-for="(item,key,index) in ziJinObj">
+              <div class="form_title">{{key}}</div>
+              <div class="form_desc">{{item}}(万元)</div>
             </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">总资金：</div>
-              <div class="form_desc">2000(万元)</div>
+
+          </div>
+        </tab>
+        <tab :title="'进展情况'">
+          <div class="form">
+            <div class="form_item van-hairline--bottom" v-for="item in jinduObj.list">
+              <div class="form_title">{{item.title}}：</div>
+              <div class="form_desc">{{item.pros}}</div>
             </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">累计完成：</div>
-              <div class="form_desc">200(万元)</div>
-            </div>
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">当年完成工作量：</div>
-              <div class="form_desc">200(万元)
+          </div>
+        </tab>
+        <tab :title="'项目问题'">
+          <div class="form">
+            <div class="form_item van-hairline--bottom" v-for="item in problemList">
+              <div class="form_title">{{item.title}}：</div>
+              <div class="form_desc">
+                备注：{{item.pros.beizhu}}<br>
+                计划：{{item.pros.jihua}}<br>
+                解决建议：{{item.pros.jiejuejianyi}}
               </div>
-            </div>
 
+            </div>
+          </div>
+        </tab>
 
-          </div>
-        </van-tab>
-        <van-tab title="进展情况">
-          <div class="form">
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">进度1：</div>
-              <div class="form_desc">经多次协调，北岸办公用地已和经营公司初步达成一致意见，施工单位已进驻办公。
-                因项目周边用地紧张，目前便桥平台施工人员在船舶上暂时解决住宿问题。后续需积极协调场地建设工人宿舍。</div>
-            </div>
-          </div>
-        </van-tab>
-        <van-tab title="项目问题">
-          <div class="form">
-            <div class="form_item van-hairline--bottom">
-              <div class="form_title">临建场地紧张问题：</div>
-              <div class="form_desc">目前情况：工程地处广州新中轴线繁华地带，两岸基本建设完成，施工期办公生活场所、加工场地缺乏。设计中已考虑两岸主墩位置搭设材料存放平台，但办公生活用地未能解决。</div>
-            </div>
-          </div>
-        </van-tab>
       </van-tabs>
 
     </div>
-
+    <van-popup v-model="showPop" position="bottom" :style="{ height: '38%' }">
+      <van-picker
+        title="选择时间"
+        show-toolbar
+        :columns="columns"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+        @change="onChange"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
   import { Toast } from 'vant'
   import navBar from '../components/navBar'
+  import tab from '../components/tab'
 
   export default {
     name: 'files',
     components: {
-      navBar
+      navBar,
+      tab
+    },
+    mounted() {
+      let id = this.$store.state.currentSite
+      this.$Spi.getbanyuebaobyprojectId(id).then((res) => {
+        let data = res
+        let sel = []
+        for (let i = 0; i < data.length; i++) {
+          sel.push(data[i])
+        }
+        let values = []
+        this.columns = [
+          {
+            values,
+            defaultIndex: 0
+          }
+        ]
+        sel.forEach((item) => {
+          values.push(item.createTime)
+        })
+      })
     },
     data() {
       return {
-        active: 0
+        active: 0,
+        showPop: false,
+        columns: null,
+        ziJinObj: null,
+        jinduObj: { list: null },
+        problemList: [
+          {
+            title: null,
+            pros: { beizhu: null, jiejuejianyi: null, jihua: null }
+          }
+        ]
       }
     },
     methods: {
+      selFileType() {
+        this.showPop = true
+      },
+      onConfirm(values, index) {
+        let createtime = values[0]
+        this.showPop = false
+        let id = this.$store.state.currentSite
+        this.$Spi.getCzwtByProjectId(id, createtime).then((res) => {
+          let prolist = []
+          let list = res.data.czwtData
+          if (list && list.length) {
+            for (let i = 0; i < list.length; i++) {
+              let pros = JSON.parse(list[i].wtx)[0]
+              let title = list[i].title
+              prolist.push({ title, pros })
+            }
+          }
+          this.problemList = prolist
+
+          //左边要展示的内容
+          let jinduObj = { title: '进展情况', show: true, list: [] }
+          let jinduList = res.data.jinduData
+          if (jinduList && jinduList.length) {
+            for (let i = 0; i < jinduList.length; i++) {
+              let pros = JSON.parse(jinduList[i].jdx)
+              let title = jinduList[i].title
+              let show = true
+              jinduObj.list.push({ title, pros, show })
+            }
+          }
+          this.jinduObj = jinduObj
+
+          let obj = {}
+          let zijinObj = res.data.zijin[0]
+          for (let key in zijinObj) {
+            if (key == 'dangnianwanchenggongzuoliang') {
+              obj['当年完成工作量：'] = zijinObj[key]
+              // pros.push('当年完成工作量：' + zijinObj[key] + '(万元)')
+            } else if (key == 'dangnianwanchengzijin') {
+              obj['当年完成资金：'] = zijinObj[key]
+              // pros.push('当年完成资金：' + zijinObj[key] + '(万元)')
+            } else if (key == 'leijiwancheng') {
+              obj['累计完成：'] = zijinObj[key]
+              // pros.push('累计完成：' + zijinObj[key] + '(万元)')
+            } else if (key == 'zongzijin') {
+              obj['总资金：'] = zijinObj[key]
+              // pros.push('总资金：' + zijinObj[key] + '(万元)')
+            }
+          }
+          this.ziJinObj = obj
+
+        })
+      },
+      onChange(picker, value, index) {
+      },
+      onCancel() {
+        this.showPop = false
+      },
       onClickLeft() {
         this.$router.back(-1)
       }

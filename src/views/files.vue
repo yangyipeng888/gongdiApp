@@ -18,7 +18,7 @@
               <div class="file_item">
                 <van-image fit="fill" :src="require('../assets/img/file.png')"/>
                 <div class="file_name">
-                  {{item.miaoshu}}
+                  {{item.desc}}
                 </div>
               </div>
             </van-grid-item>
@@ -57,7 +57,7 @@
       return {
         showPop: false,
         contents: null,
-        selTitle:'',
+        selTitle: '',
         items: [
           {
             text: '前期文件',
@@ -188,7 +188,7 @@
         this.showPop = true
       },
       getFileList(value) {
-        this.selTitle = value.text;
+        this.selTitle = value.text
         let type = value.id
         this.showPop = false
         this.$Spi.getFileList(
@@ -201,6 +201,10 @@
             Toast.fail('没有找到文件！')
             return
           }
+          response.forEach((item) => {
+            let desc = item.url.split('/')
+            item.desc = desc[desc.length - 1]
+          })
           this.contents = response
           Toast.success('获取成功！')
         }).catch(function(response) {

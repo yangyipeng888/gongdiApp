@@ -7,7 +7,7 @@
                :title="'项目概况'"
       ></nav-bar>
       <van-tabs class="sel_tab" v-model="active" animated sticky>
-        <van-tab title="项目概况">
+        <tab :title="'项目概况'">
           <div class="form">
             <div class="form_item van-hairline--bottom">
               <div class="form_title">项目名称：</div>
@@ -30,8 +30,8 @@
               <div class="form_desc">{{info.projectGuimo}}</div>
             </div>
           </div>
-        </van-tab>
-        <van-tab title="项目负责人">
+        </tab>
+        <tab :title="'项目负责人'">
           <div class="form">
             <div class="form_item van-hairline--bottom">
               <div class="form_title">建设单位：</div>
@@ -74,8 +74,8 @@
               <div class="form_desc">{{info.shigongdanweiname}}({{info.shigongdanweitel}})</div>
             </div>
           </div>
+        </tab>
 
-        </van-tab>
       </van-tabs>
 
     </div>
@@ -87,6 +87,7 @@
   import { Spi } from '../api/api'
   import { Toast } from 'vant'
   import navBar from '../components/navBar'
+  import tab from '../components/tab'
 
   export default {
     name: 'files',
@@ -121,7 +122,8 @@
       }
     },
     components: {
-      navBar
+      navBar,
+      tab
     },
     mounted() {
       let projectid = this.$store.state.currentSite
@@ -139,7 +141,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .files_container {
 
     height: 100vh;

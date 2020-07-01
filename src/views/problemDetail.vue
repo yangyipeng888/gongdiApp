@@ -7,7 +7,45 @@
                :title="'问题详情'"
       ></nav-bar>
       <div class="content">
-        正在开发!
+        <div class="detail_wrap" v-for="item in details">
+          <div class="detail_title van-hairline--bottom">
+            <div class="projectName van-ellipsis">{{item.projectname}}</div>
+            <div class="status">
+              <div class="status_txt">{{item.xiufuzhuangtai}}</div>
+            </div>
+            <div class="time">
+              {{item.timestamp}}
+              <van-icon class="clock" name="clock-o"/>
+            </div>
+          </div>
+          <div class="detail_content">
+            <div class="projectName2">
+              <van-icon name="map-marked" class="site"/>
+              {{item.projectname}}
+            </div>
+            <div class="desc">{{item.miaoshu}}</div>
+            <div class="pictures">
+              <van-grid :column-num="3" :border="false">
+                <grid-item v-for="pic in item.imgpath">
+                  <div class="file_item" @click="previewImg(pic)">
+                    <van-image
+                      class="file_img"
+                      fit="fill"
+                      lazy-load
+                      :src="pic"
+                    >
+                      <!--                      <template v-slot:loading>-->
+                      <!--                        <van-loading type="spinner" size="20"/>-->
+                      <!--                      </template>-->
+                      <!--                      <template v-slot:error>加载失败</template>-->
+                    </van-image>
+                  </div>
+                </grid-item>
+
+              </van-grid>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -20,42 +58,65 @@
   import { ImagePreview } from 'vant'
   import navBar from '../components/navBar'
   import uploader from '../components/uploader'
+  import gridItem from '../components/gridItem'
 
   export default {
     name: 'problemDetail',
     components: {
       navBar,
-      uploader
+      uploader,
+      gridItem
     },
     data() {
       return {
-        pro: {
-          projectId: '',
-          projectname: '',
-          account: '',
-          filetype: 1,
-          zhenggaiqixian: '',
-          type: '',
-          miaoshu: '',
-          fData: null
-        },
-        fileList: [
-          // Uploader 根据文件后缀来判断是否为图片文件
-          // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-          // { url: 'https://cloud-image', isImage: true }
-        ],
-
+        details: [
+          {
+            name: 1,
+            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
+          },
+          {
+            name: 1,
+            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
+          },
+          {
+            name: 1,
+            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
+          }
+        ]
       }
     },
     mounted() {
-      let id = this.$store.state.currentSite
-
+      this.getwentiList()
     },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
       },
+      getwentiList() {
+        let id = this.$store.state.currentSite
+        this.$Spi.getwentiList(id).then((res) => {
+          res.reverse();
+          this.details = res
+          this.details.forEach((item) => {
+            item.timestamp = item.timestamp.split(' ')[0]
+            let str = item.imgpath
+            str = item.imgpath.replace('[', '')
+            str = str.replace(']', '')
+            item.imgpath = str.split(',')
+            for (let i = 0; i < item.imgpath.length; i++) {
+              let ip = this.$Spi.getCurIp()
+              item.imgpath[i] = ip + item.imgpath[i].trim();
+            }
+          })
+        })
 
+      },
+      previewImg(url) {
+        ImagePreview({
+          images: [url],
+          showIndex: false
+        })
+      }
 
 
     }
@@ -87,6 +148,84 @@
         bottom: 0px;
         left: 0px;
         overflow: scroll;
+
+        .detail_wrap {
+          margin: 10px;
+          border-radius: 3px;
+          box-shadow: 0px 0px 5px #888888;
+
+          .detail_title {
+            height: 30px;
+            display: flex;
+            margin: 0 5px;
+            padding: 5px 0;
+            justify-content: center;
+            align-items: center;
+
+            .projectName {
+              width: 50%;
+              font-size: 20px;
+              font-weight: 600;
+            }
+
+            .status {
+              height: 80%;
+              width: 20%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .status_txt {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 5px;
+                width: 80%;
+                height: 90%;
+                background-color: $common_fail;
+                font-size: 15px !important;
+              }
+            }
+
+            .time {
+              height: 100%;
+              width: 30%;
+              font-size: 16px;
+              color: gray;
+              display: flex;
+              align-items: center;
+              .clock {
+                color: #FBBE66 !important;
+              }
+            }
+          }
+
+          .detail_content {
+            font-size: 16px;
+            padding: 5px;
+            color: gray;
+
+            .projectName2 {
+              .site {
+                color: cornflowerblue;
+              }
+            }
+
+            .desc {
+
+            }
+
+            .pictures {
+              .file_item {
+                margin: 2px;
+
+                .file_img {
+
+                }
+              }
+            }
+          }
+        }
 
 
       }

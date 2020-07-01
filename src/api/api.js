@@ -16,6 +16,10 @@ class sApi {
     this.Base_url = 'http://203.88.202.230:8080/zhihuigongdi/pazhou/sand.do'
   }
 
+  getCurIp() {
+    return this.Base_url.split('/pazhou')[0]
+  }
+
   //系统登录
   login = function(account, passwd) {
     var option = {
@@ -406,16 +410,16 @@ class sApi {
     return post(`${this.Base_url}?method=gettouzijihuabyprojectIdandyear`, option)
   }
   //问题上报
-  tousuInsert = function ( options) {
+  tousuInsert = function(options) {
     var option = {
-      method: "POST",
+      method: 'POST',
       url: `${this.Base_url}?method=tousuInsert&projectId=${options.projectId}&projectname=${options.projectname}&account=${options.account}&filetype=${options.filetype}&zhenggaiqixian=${options.zhenggaiqixian}&type=${options.type}&miaoshu=${options.miaoshu}`,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       data: options.fData
-    };
-    return axios(option);
+    }
+    return axios(option)
   }
   //半月报 字段
   getwentiList = function(projectIds) {

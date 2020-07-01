@@ -45,6 +45,7 @@
       getwentiList() {
         let id = this.$store.state.currentSite
         this.$Spi.getwentiList(id).then((res) => {
+          res.reverse();
           this.problems = res
           this.problems.forEach((item) => {
             item.timestamp = item.timestamp.split(' ')[0]
@@ -141,7 +142,7 @@
             border-radius: 5px;
             width: 70%;
             height: 80%;
-            background-color: indianred;
+            background-color:$common_fail;
             font-size: 15px !important;
           }
         }

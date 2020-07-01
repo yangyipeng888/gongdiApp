@@ -91,7 +91,7 @@
           transform: translateX(-50%);
           left: 50%;
           top: -150%;
-          width: 30%;
+          height: 120px;
         }
 
       }

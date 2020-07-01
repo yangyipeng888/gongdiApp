@@ -18,6 +18,7 @@
           </van-field>
           <van-field
             v-model="pro.miaoshu"
+            type="textarea"
             name="问题描述"
             label="问题描述"
             placeholder="问题描述"
@@ -132,7 +133,9 @@
         }
         this.pro.fData = files
         this.$Spi.tousuInsert(this.pro).then((res) => {
-          console.log(11111, res)
+          if (res && res.msg) {
+            Toast.success(res.msg)
+          }
         })
       },
       onConfirmType(value) {
