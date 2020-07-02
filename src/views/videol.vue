@@ -1,37 +1,21 @@
 <template>
   <div class="files_container">
     <div class="files_main">
-      <van-nav-bar
-        class="nav"
-        title="现场视频"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-      >
-      </van-nav-bar>
+      <nav-bar class="nav"
+               :leftText="'返回'"
+               :onClickLeftHandler="onClickLeft"
+               :title="'现场视频'"
+      ></nav-bar>
       <div class="content">
-        <!--        <van-button class="sel_btn" type="info" @click="selFileType">选择文件</van-button>-->
-        <van-empty class="empty" v-show="!contents" description="暂无视频"></van-empty>
-        <div class="files" v-show="contents">
-          <van-grid :column-num="2" :border="false">
-            <van-grid-item v-for="item in contents">
-              <div class="file_item" @click="previewImg(item.url)">
-                <van-image
-                  width="100%"
-                  height="250px"
-                  fit="contain"
-                  :src="item.url"
-                >
-                  <template v-slot:loading>
-                    <van-loading type="spinner" size="20"/>
-                  </template>
-                  <template v-slot:error>加载失败</template>
-                </van-image>
-                <div class="file_name">
-                  {{item.name}}
-                </div>
-              </div>
-            </van-grid-item>
+        <van-empty class="empty" v-show="!videos" description="暂无视频"></van-empty>
+        <div class="files" v-show="videos">
+          <van-grid :column-num="2">
+            <grid-item v-for="item in videos">
+              <video-item class="videoItem"
+                          :src="item.url"
+                          :name="item.name"
+              ></video-item>
+            </grid-item>
           </van-grid>
         </div>
       </div>
@@ -42,35 +26,58 @@
 </template>
 
 <script>
+  import videoItem from '../components/videoItem'
   import { Toast } from 'vant'
-  import { ImagePreview } from 'vant'
+  import navBar from '../components/navBar'
+  import gridItem from '../components/gridItem'
 
   export default {
     name: 'files',
+    components: {
+      navBar,
+      gridItem,
+      videoItem
+    },
     data() {
       return {
-        contents: [
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 },
-          { url: 'https://img.yzcdn.cn/vant/cat.jpeg', name: 123123213123 }
-        ],
+        videos: []
 
       }
     },
+    mounted() {
+      this.getVideoList()
+    },
     methods: {
+      getVideoList() {
+        let curSiteId = this.$store.state.currentSite
+        if (!curSiteId) {
+          return
+        }
+        let settings = this.$store.state.constructionSite[curSiteId].settings
+        let shipinurl = settings.shexiangtouid.split(';')
+        let shipin = []
+        let name = []
+        let video = []
+        for (let i = 0; i < shipinurl.length; i++) {
+          let arr = shipinurl[i]
+          let a = arr.split('-')
+          name.push(a[0])
+          shipin.push(a[1])
+          video.push({
+            name: a[0],
+            url: a[1]
+          })
+        }
+        this.videos = video
+        this.shipinName = name
+        this.shipinurl = shipin
+
+      },
       onClickLeft() {
         this.$router.back(-1)
-      },
-      previewImg(url) {
-        ImagePreview({
-          images: [url],
-          showIndex: false
-        })
       }
+
+
     }
   }
 </script>
@@ -118,21 +125,27 @@
           width: 100%;
           height: 100%;
 
+          .videoItem {
+            /*height: 160px;*/
+            margin: 5px;
+          }
+
+
           .file_item {
-            height: 100%;
+            height: 120px !important;
             width: 100%;
+            display: flex;
+            justify-content: center;
 
-            .file_name {
-              text-align: center;
-              font-size: 13px;
-
-            }
           }
         }
       }
     }
 
 
+    .tree {
+      height: 100% !important;
+    }
   }
 
 </style>

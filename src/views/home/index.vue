@@ -44,7 +44,7 @@
       <div class="box">
         <div class="title ">
           <div class="titleC">现场视频</div>
-<!--          <div class="more">更多</div>-->
+          <div class="more" @click="enter('/video')">更多</div>
         </div>
         <div class="box_content van-hairline--top">
           <video-list></video-list>
@@ -127,7 +127,7 @@
 
     .content {
       width: 100%;
-      padding-bottom: 100px;
+      padding-bottom: 110px;
       position: absolute;
       top: 46px;
       bottom: 0px;

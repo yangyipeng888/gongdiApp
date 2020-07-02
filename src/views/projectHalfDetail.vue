@@ -28,7 +28,7 @@
         </tab>
         <tab :title="'项目问题'">
           <div class="form">
-            <div class="form_item van-hairline--bottom" v-for="item in problemList">
+            <div class="form_item van-hairline--bottom" v-show="problemList" v-for="item in problemList">
               <div class="form_title">{{item.title}}：</div>
               <div class="form_desc">
                 备注：{{item.pros.beizhu}}<br>
@@ -83,7 +83,7 @@
           }
         ]
         sel.forEach((item) => {
-          values.push(item.createTime)
+          values.push(this.date2Text(item.createTime))
         })
       })
     },
@@ -94,12 +94,13 @@
         columns: null,
         ziJinObj: null,
         jinduObj: { list: null },
-        problemList: [
-          {
-            title: null,
-            pros: { beizhu: null, jiejuejianyi: null, jihua: null }
-          }
-        ]
+        problemList: null
+        // problemList: [
+        //   {
+        //     title: null,
+        //     pros: { beizhu: null, jiejuejianyi: null, jihua: null }
+        //   }
+        // ]
       }
     },
     methods: {
@@ -107,7 +108,7 @@
         this.showPop = true
       },
       onConfirm(values, index) {
-        let createtime = values[0]
+        let createtime = this.text2Date(values[0])
         this.showPop = false
         let id = this.$store.state.currentSite
         this.$Spi.getCzwtByProjectId(id, createtime).then((res) => {
@@ -163,6 +164,30 @@
       },
       onClickLeft() {
         this.$router.back(-1)
+      },
+      text2Date(str) {
+        let index1 = str.indexOf('年')
+        let index2 = str.indexOf('月')
+        let year = str.slice(0, index1)
+        let month = str.slice(index1 + 1, index2)
+        if (month < 10) {
+          month = '0' + month
+        }
+        let num = str.slice(index2 + 1)
+        if (num == '上半月') {
+          num = '01'
+        } else {
+          num = '02'
+        }
+        return `${year}${month}${num}`
+      },
+      date2Text(value) {
+        let str = value.toString()
+        let year = Number(str.slice(0, 2))
+        let month = Number(str.slice(2, 4))
+        let num = Number(str.slice(4, 6))
+        num = num == 1 ? '上半月' : '下半月'
+        return `${year}年${month}月${num}`
       }
 
     }

@@ -7,8 +7,10 @@
       <div class="title_status">状态</div>
     </div>
     <div class="problem_content">
+      <div class="nothing" v-show="problems&&problems.length==0">暂无问题</div>
       <transition-group name="checkin_ani">
-        <div class="problem_list" v-for="pro,index in problems" :key="index">
+        <div class="problem_list" v-show="problems&&problems.length"
+             v-for="pro,index in problems" :key="index">
           <div class="problem_time van-ellipsis">{{pro.timestamp}}</div>
           <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
           <div class="problem_type">{{pro.type}}</div>
@@ -45,7 +47,7 @@
       getwentiList() {
         let id = this.$store.state.currentSite
         this.$Spi.getwentiList(id).then((res) => {
-          res.reverse();
+          res.reverse()
           this.problems = res
           this.problems.forEach((item) => {
             item.timestamp = item.timestamp.split(' ')[0]
@@ -105,6 +107,12 @@
       max-height: 90px;
       overflow: scroll;
 
+      .nothing {
+        line-height: 30px;
+        height: 30px;
+        text-align: center;
+      }
+
       .problem_list:nth-child(2n) {
         background-color: #F8F6F7;
       }
@@ -142,7 +150,7 @@
             border-radius: 5px;
             width: 70%;
             height: 80%;
-            background-color:$common_fail;
+            background-color: $common_fail;
             font-size: 15px !important;
           }
         }

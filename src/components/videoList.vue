@@ -1,24 +1,29 @@
 <template>
   <div class="videoL_container">
-    <van-grid :column-num="3">
-      <video-item class="videoItem"
-                  v-for="video in shipinurl"
-                  :src="video"
-      ></video-item>
+    <van-grid :column-num="2">
+      <grid-item v-for="item in videos">
+        <video-item class="videoItem"
+                    :src="item.url"
+                    :name="item.name"
+        ></video-item>
+      </grid-item>
     </van-grid>
   </div>
 </template>
 
 <script>
   import videoItem from './videoItem'
+  import gridItem from '../components/gridItem'
 
   export default {
     name: 'videoList',
     components: {
-      videoItem
+      videoItem,
+      gridItem
     },
     data() {
       return {
+        videos: [],
         shipinName: [],
         shipinurl: []
       }
@@ -36,14 +41,20 @@
         let shipinurl = settings.shexiangtouid.split(';')
         let shipin = []
         let name = []
+        let video = []
         for (let i = 0; i < shipinurl.length; i++) {
           let arr = shipinurl[i]
           let a = arr.split('-')
           name.push(a[0])
           shipin.push(a[1])
+          video.push({
+            name: a[0],
+            url: a[1]
+          })
         }
+        this.videos = video.slice(0, 2)
         this.shipinName = name
-        this.shipinurl = shipin.slice(0,2)
+        this.shipinurl = shipin
 
       }
     }
@@ -58,8 +69,7 @@
 
 
     .videoItem {
-      width: 50%;
-      height: 120px;
+      margin: 3px;
     }
   }
 </style>
