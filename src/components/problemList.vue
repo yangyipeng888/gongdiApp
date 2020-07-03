@@ -15,7 +15,7 @@
           <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
           <div class="problem_type">{{pro.type}}</div>
           <div class="problem_status">
-            <div class="status_txt">
+            <div class="status_txt" :class="{status_ok:pro.xiufuzhuangtai=='已修复',status_nok:pro.xiufuzhuangtai!='已修复',}">
               {{pro.xiufuzhuangtai}}
             </div>
           </div>
@@ -144,14 +144,21 @@
           align-items: center;
 
           .status_txt {
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 5px;
             width: 70%;
             height: 80%;
-            background-color: $common_fail;
             font-size: 15px !important;
+          }
+          .status_ok {
+            background-color: $common_success;
+          }
+
+          .status_nok {
+            background-color: $common_fail;
           }
         }
       }

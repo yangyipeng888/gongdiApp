@@ -11,7 +11,10 @@
           <div class="detail_title van-hairline--bottom">
             <div class="projectName van-ellipsis">{{item.projectname}}</div>
             <div class="status">
-              <div class="status_txt">{{item.xiufuzhuangtai}}</div>
+              <div class="status_txt status_ok" v-show="item.xiufuzhuangtai=='已修复'">{{item.xiufuzhuangtai}}</div>
+              <div class="status_txt status_nok" v-show="item.xiufuzhuangtai=='未修复'" @click="changeStatus(item)">
+                {{item.xiufuzhuangtai}}
+              </div>
             </div>
             <div class="time">
               {{item.timestamp}}
@@ -59,6 +62,7 @@
   import navBar from '../components/navBar'
   import uploader from '../components/uploader'
   import gridItem from '../components/gridItem'
+  import { Dialog } from 'vant'
 
   export default {
     name: 'problemDetail',
@@ -95,7 +99,7 @@
       getwentiList() {
         let id = this.$store.state.currentSite
         this.$Spi.getwentiList(id).then((res) => {
-          res.reverse();
+          res.reverse()
           this.details = res
           this.details.forEach((item) => {
             item.timestamp = item.timestamp.split(' ')[0]
@@ -105,11 +109,29 @@
             item.imgpath = str.split(',')
             for (let i = 0; i < item.imgpath.length; i++) {
               let ip = this.$Spi.getCurIp()
-              item.imgpath[i] = ip + item.imgpath[i].trim();
+              item.imgpath[i] = ip + item.imgpath[i].trim()
             }
           })
         })
 
+      },
+      changeStatus(item) {
+        Dialog.confirm({
+          title: '修复问题',
+          message: '问题是否已修复',
+          // messageAlign:'left',
+          width: '300px'
+        })
+          .then(() => {
+            let id = item.id
+            this.$Spi.updatewentibyId(id).then((res) => {
+              Toast.success('提交成功!')
+              item.xiufuzhuangtai = res.msg
+            })
+          })
+          .catch(() => {
+            // on cancel
+          })
       },
       previewImg(url) {
         ImagePreview({
@@ -176,14 +198,23 @@
               align-items: center;
 
               .status_txt {
+                color: white;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 border-radius: 5px;
                 width: 80%;
-                height: 90%;
-                background-color: $common_fail;
+                height: 100%;
                 font-size: 15px !important;
+              }
+
+              .status_ok {
+                background-color: $common_success;
+              }
+
+              .status_nok {
+                background-color: $common_fail;
+                text-decoration: underline;
               }
             }
 
@@ -194,6 +225,7 @@
               color: gray;
               display: flex;
               align-items: center;
+
               .clock {
                 color: #FBBE66 !important;
               }

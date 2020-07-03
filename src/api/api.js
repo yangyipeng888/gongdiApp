@@ -426,6 +426,11 @@ class sApi {
     var option = { projectIds }
     return post(`${this.Base_url}?method=getwentiList`, option)
   }
+  //更新问题状态
+  updatewentibyId = function(Id) {
+    var option = { Id }
+    return post(`${this.Base_url}?method=updatewentibyId`, option)
+  }
 }
 
 export const Spi = new sApi()
