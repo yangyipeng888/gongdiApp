@@ -44,6 +44,16 @@ export const constantRouterMap = [
 
   },
   {
+    path: '/problemSolved',
+    name: 'problemSolved',
+    component: () => import('@/views/problemSolved'),
+    meta: {
+      title: '项目修复',
+      keepAlive: false
+    }
+
+  },
+  {
     path: '/projectHalfDetail',
     name: 'projectHalfDetail',
     component: () => import('@/views/projectHalfDetail'),
@@ -64,6 +74,24 @@ export const constantRouterMap = [
 
   },
   {
+    path: '/problemListDetail',
+    name: 'problemListDetail',
+    component: () => import('@/views/problemListDetail'),
+    meta: {
+      title: '问题详情',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/problemAppoint',
+    name: 'problemAppoint',
+    component: () => import('@/views/problemAppoint'),
+    meta: {
+      title: '问题详情',
+      keepAlive: false
+    }
+  },
+  {
     path: '/problemDetail',
     name: 'problemDetail',
     component: () => import('@/views/problemDetail'),
@@ -71,7 +99,6 @@ export const constantRouterMap = [
       title: '问题详情',
       keepAlive: false
     }
-
   },
   {
     path: '/video',

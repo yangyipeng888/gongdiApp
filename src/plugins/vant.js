@@ -4,13 +4,13 @@ import {
   Button, List, Cell, Tabbar, TabbarItem,
   Field, Popup, Grid, GridItem, Image as VanImage, Overlay
   , NavBar, Empty, Loading, TreeSelect, Picker, Icon, Tab,
-  Tabs, Circle, Search, Swipe, SwipeItem, Form, Uploader,Lazyload
+  Tabs, Circle, Search, Swipe, SwipeItem, Form, Uploader, Lazyload, Step, Steps, DatetimePicker
 } from 'vant'
 
 Vue.use(Lazyload)
 Vue.use(Lazyload, {
-  lazyComponent: true,
-});
+  lazyComponent: true
+})
 Vue.use(Uploader)
 Vue.use(Swipe)
 Vue.use(SwipeItem)
@@ -34,4 +34,7 @@ Vue.use(Empty)
 Vue.use(Loading)
 Vue.use(Tab)
 Vue.use(Tabs)
+Vue.use(DatetimePicker)
+Vue.use(Step)
+Vue.use(Steps)
 Vue.use(Tabbar).use(TabbarItem)

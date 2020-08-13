@@ -15,7 +15,8 @@
           <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
           <div class="problem_type">{{pro.type}}</div>
           <div class="problem_status">
-            <div class="status_txt" :class="{status_ok:pro.xiufuzhuangtai=='已修复',status_nok:pro.xiufuzhuangtai!='已修复',}">
+            <div class="status_txt" :class="{status_ok:pro.xiufuzhuangtai==myConst.problem_status.OK,status_nok:pro.xiufuzhuangtai==myConst.problem_status.NOT_OK,
+            status_appoint:pro.xiufuzhuangtai==myConst.problem_status.NOT_APPOINT,}">
               {{pro.xiufuzhuangtai}}
             </div>
           </div>
@@ -45,8 +46,11 @@
     },
     methods: {
       getwentiList() {
-        let id = this.$store.state.currentSite
-        this.$Spi.getwentiList(id).then((res) => {
+        let projectIds = this.$store.state.currentSite
+        let account = this.$store.state.loginData.account
+        let quanxian = this.$store.state.right
+        let req = { projectIds, account, quanxian }
+        this.$Spi.getwentiList(req).then((res) => {
           res.reverse()
           this.problems = res
           this.problems.forEach((item) => {
@@ -153,12 +157,17 @@
             height: 80%;
             font-size: 15px !important;
           }
+
           .status_ok {
             background-color: $common_success;
           }
 
           .status_nok {
             background-color: $common_fail;
+          }
+
+          .status_appoint {
+            background-color: $common_warning;
           }
         }
       }

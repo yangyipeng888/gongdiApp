@@ -54,9 +54,10 @@ router.beforeEach((to, from, next) => {
         store.state.logined = true
         store.state.userName = userInfo.uid
         store.state.pw = userInfo.pw;
+        let siteId = result.projectids.split(',')[0]
         store.commit('setSite', {
           name: 'siteId',
-          id: 1001
+          id: siteId
         })
         next('/home')
         //请求登录记录信息
@@ -70,6 +71,7 @@ router.beforeEach((to, from, next) => {
       })
       .catch(function(e) {
         Toast.fail('请求超时！')
+        next('/login')
       })
     // if (
     //   //与第一if相同，跳转判断

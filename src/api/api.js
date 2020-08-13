@@ -12,8 +12,10 @@ class sApi {
     // this.Base_url = 'http://123.58.244.175:38080/zhihuigongdi/pazhou/sand.do';
     // this.Base_url2 = 'http://39.100.94.4:38080/zhihuigongdi/export.do'
     // this.Base_url = 'http://39.100.94.4:38080/zhihuigongdi/pazhou/sand.do'
-    this.Base_url2 = 'http://203.88.202.230:8080/zhihuigongdi/export.do'
-    this.Base_url = 'http://203.88.202.230:8080/zhihuigongdi/pazhou/sand.do'
+    // this.Base_url2 = 'http://203.88.202.230:8080/zhihuigongdi/export.do'
+    // this.Base_url = 'http://203.88.202.230:8080/zhihuigongdi/pazhou/sand.do'
+    this.Base_url2 = 'http://192.168.1.28:8080/zhihuigongdi/export.do'
+    this.Base_url = 'http://192.168.1.28:8080/zhihuigongdi/pazhou/sand.do'
   }
 
   getCurIp() {
@@ -421,16 +423,48 @@ class sApi {
     }
     return axios(option)
   }
-  //半月报 字段
-  getwentiList = function(projectIds) {
-    var option = { projectIds }
-    return post(`${this.Base_url}?method=getwentiList`, option)
+  //问题列表
+  getwentiList = function(data) {
+    return post(`${this.Base_url}?method=getwentiList`, data)
   }
   //更新问题状态
-  updatewentibyId = function(Id) {
-    var option = { Id }
-    return post(`${this.Base_url}?method=updatewentibyId`, option)
+  updatewentibyId = function(data) {
+    // var option = { Id ,account}
+    // return post(`${this.Base_url}?method=updatewentibyId`, option)
+
+
+    var option = {
+      method: 'POST',
+      url: `${this.Base_url}?method=updatewentibyId&id=${data.id}&miaoshu=${data.miaoshu}&account=${data.account}&filetype=${data.filetype}`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: data.fData
+    }
+    return axios(option)
   }
+  //半月报 字段
+  getwentidetailbyId = function(Id) {
+    var option = { Id }
+    return post(`${this.Base_url}?method=getwentidetailbyId`, option)
+  }
+  //获取问题指派处理人
+  getChuliAccount = function(projectId) {
+    var option = {
+      method: 'getChuliAccount',
+      projectId
+    }
+    return get(this.Base_url, option)
+  }
+  //问题指派处理人
+  insertZhipai = function(data) {
+    return post(`${this.Base_url}?method=insertZhipai`, data)
+  }
+  //是否有修复权限
+  isChuliQuanxian = function(data) {
+    return post(`${this.Base_url}?method=isChuliQuanxian`, data)
+  }
+
 }
 
 export const Spi = new sApi()

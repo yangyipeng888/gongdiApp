@@ -28,7 +28,7 @@
       </div>
 
     </div>
-    <van-popup v-model="showPop" position="bottom" :style="{ height: '38%' }">
+    <van-popup v-model="showPop" position="bottom" :style="{ height: '45%' }">
       <!--      <van-tree-select-->
       <!--        class="tree"-->
       <!--        :items="items"-->
@@ -97,14 +97,26 @@
                 // id，作为匹配选中状态的标识符
                 id: 6
               },
+            ]
+          },
+          {
+            text: '合同管理',
+            // 该导航下所有的可选项
+            children: [
               {
                 text: '合同管理',
                 id: 7
               },
+            ]
+          },
+          {
+            text: '资金支付',
+            // 该导航下所有的可选项
+            children: [
               {
                 text: '资金支付',
                 id: 8
-              }
+              },
             ]
           },
           {
@@ -151,22 +163,6 @@
               }
             ]
           },
-          {
-            text: '建设管理',
-            // 该导航下所有的可选项
-            children: [
-              {
-                // 名称
-                text: '上级要求文件',
-                // id，作为匹配选中状态的标识符
-                id: 1
-              },
-              {
-                text: '会议纪要',
-                id: 2
-              }
-            ]
-          }
         ],
         activeId: 0,
         activeIndex: 0

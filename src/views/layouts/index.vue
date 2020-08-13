@@ -31,7 +31,7 @@
             icon: 'home-o'
           },
           {
-            img: require('../../assets/img/jiahao.png'),
+            img: require('../../assets/img/安全.png'),
             to: {
               name: 'submit'
             }

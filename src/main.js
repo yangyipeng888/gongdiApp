@@ -13,6 +13,8 @@ Vue.prototype.$Spi = Spi
 import _ from 'lodash'
 Vue.prototype._ = _
 
+import Const from './utils/const'
+Vue.prototype.myConst = Const;
 
 // 设置 js中可以访问 $cdn
 import { $cdn } from '@/config'
@@ -33,14 +35,14 @@ Vue.prototype.$isAndroid = window.navigator.appVersion.match(/android/gi)
 Vue.prototype.$isIphone = window.navigator.appVersion.match(/iphone/gi)
 
 //地图
-// import VueAMap from 'vue-amap';
-// Vue.use(VueAMap);
-// VueAMap.initAMapApiLoader({
-//   key: '300b50711517e0c54b02fae841ff233f',
-//   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
-//   // 默认高德 sdk 版本为 1.4.4
-//   v: '1.4.4'
-// });
+import VueAMap from 'vue-amap';
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  key: '300b50711517e0c54b02fae841ff233f',
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+  // 默认高德 sdk 版本为 1.4.4
+  v: '1.4.4'
+});
 // import BaiduMap from 'vue-baidu-map'
 // Vue.use(BaiduMap, {
 //   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */

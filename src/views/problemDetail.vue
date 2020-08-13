@@ -7,45 +7,67 @@
                :title="'问题详情'"
       ></nav-bar>
       <div class="content">
-        <div class="detail_wrap" v-for="item in details">
+        <div class="detail_wrap">
           <div class="detail_title van-hairline--bottom">
-            <div class="projectName van-ellipsis">{{item.projectname}}</div>
+            <div class="projectName van-ellipsis">{{detail.projectname}}</div>
             <div class="status">
-              <div class="status_txt status_ok" v-show="item.xiufuzhuangtai=='已修复'">{{item.xiufuzhuangtai}}</div>
-              <div class="status_txt status_nok" v-show="item.xiufuzhuangtai=='未修复'" @click="changeStatus(item)">
-                {{item.xiufuzhuangtai}}
+              <div class="status_txt status_ok" v-show="detail.xiufuzhuangtai=='已修复'">{{detail.xiufuzhuangtai}}</div>
+              <div class="status_txt status_nok" v-show="detail.xiufuzhuangtai=='未修复'"
+                   @click.stop="changeStatus(detail)">
+                {{detail.xiufuzhuangtai}}
               </div>
             </div>
             <div class="time">
-              {{item.timestamp}}
+              {{detail.timestamp}}
               <van-icon class="clock" name="clock-o"/>
             </div>
           </div>
           <div class="detail_content">
             <div class="projectName2">
               <van-icon name="map-marked" class="site"/>
-              {{item.projectname}}
+              {{detail.projectname}}
             </div>
-            <div class="desc">{{item.miaoshu}}</div>
             <div class="pictures">
-              <van-grid :column-num="3" :border="false">
-                <grid-item v-for="pic in item.imgpath">
-                  <div class="file_item" @click="previewImg(pic)">
-                    <van-image
-                      class="file_img"
-                      fit="fill"
-                      lazy-load
-                      :src="pic"
-                    >
-                      <!--                      <template v-slot:loading>-->
-                      <!--                        <van-loading type="spinner" size="20"/>-->
-                      <!--                      </template>-->
-                      <!--                      <template v-slot:error>加载失败</template>-->
-                    </van-image>
-                  </div>
-                </grid-item>
-
-              </van-grid>
+              <van-steps direction="vertical" :active="active">
+                <van-step>
+                  <div>【修复前】</div>
+                  <div class="desc">{{detail.miaoshu1}}</div>
+                  <van-grid :column-num="3" :border="false">
+                    <grid-item v-for="pic in detail.pic1">
+                      <div class="file_item" @click="previewImg(pic)">
+                        <van-image
+                          class="file_img"
+                          fit="fill"
+                          lazy-load
+                          :src="pic"
+                        >
+                        </van-image>
+                      </div>
+                    </grid-item>
+                  </van-grid>
+                </van-step>
+                <van-step>
+                  <div>【修复后】</div>
+                  <div class="desc">{{detail.miaoshu2}}</div>
+                  <van-grid :column-num="3" :border="false">
+                    <grid-item v-for="pic in detail.pic2">
+                      <div class="file_item" @click="previewImg(pic)">
+                        <van-image
+                          class="file_img"
+                          fit="fill"
+                          lazy-load
+                          :src="pic"
+                        >
+                          <!--                      <template v-slot:loading>-->
+                          <!--                        <van-loading type="spinner" size="20"/>-->
+                          <!--                      </template>-->
+                          <!--                      <template v-slot:error>加载失败</template>-->
+                        </van-image>
+                      </div>
+                    </grid-item>
+                  </van-grid>
+                </van-step>
+              </van-steps>
             </div>
           </div>
         </div>
@@ -65,7 +87,7 @@
   import { Dialog } from 'vant'
 
   export default {
-    name: 'problemDetail',
+    name: 'problemListDetail',
     components: {
       navBar,
       uploader,
@@ -73,65 +95,57 @@
     },
     data() {
       return {
-        details: [
-          {
-            name: 1,
-            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
-          },
-          {
-            name: 1,
-            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
-          },
-          {
-            name: 1,
-            pics: ['https://img.yzcdn.cn/vant/cat.jpeg', 'https://img.yzcdn.cn/vant/cat.jpeg']
-          }
-        ]
+        detail: null,
+        active: 1
       }
     },
     mounted() {
-      this.getwentiList()
+      // let id = this.$store.state.selProblemId
+      let id= this.$route.params.id
+      this.$Spi.getwentidetailbyId(id).then((res) => {
+        this.detail = res
+        let pics = res.detail
+        this.detail.pic1 = []
+        this.detail.pic2 = []
+        for (let i = 0; i < pics.length; i++) {
+          let item = pics[i]
+          let filetype = item.filetype
+          let str = item.imgpath
+          str = item.imgpath.replace('[', '')
+          str = str.replace(']', '')
+          let ip = this.$Spi.getCurIp()
+          if (filetype == 1) {
+            this.active = 0
+            this.detail.miaoshu1 = item.miaoshu
+            this.detail.pic1.push(ip + str.trim())
+          } else {
+            this.active = 1
+            this.detail.miaoshu2 = item.miaoshu
+            this.detail.pic2.push(ip + str.trim())
+          }
+        }
+        if (res.detail && res.detail.length) {
+          let timestamp = res.detail[0].timestamp
+          this.detail.timestamp = timestamp.split(' ')[0]
+        }
+
+      })
+
     },
     methods: {
-      onClickLeft() {
-        this.$router.back(-1)
-      },
-      getwentiList() {
-        let id = this.$store.state.currentSite
-        this.$Spi.getwentiList(id).then((res) => {
-          res.reverse()
-          this.details = res
-          this.details.forEach((item) => {
-            item.timestamp = item.timestamp.split(' ')[0]
-            let str = item.imgpath
-            str = item.imgpath.replace('[', '')
-            str = str.replace(']', '')
-            item.imgpath = str.split(',')
-            for (let i = 0; i < item.imgpath.length; i++) {
-              let ip = this.$Spi.getCurIp()
-              item.imgpath[i] = ip + item.imgpath[i].trim()
-            }
-          })
-        })
+      clickItem(item) {
 
       },
+      onClickLeft() {
+        this.$router.push({ name: 'problemListDetail' })
+      },
+
       changeStatus(item) {
-        Dialog.confirm({
-          title: '修复问题',
-          message: '问题是否已修复',
-          // messageAlign:'left',
-          width: '300px'
+        this.$router.push({
+          name: 'problemSolved',
+          params: item
         })
-          .then(() => {
-            let id = item.id
-            this.$Spi.updatewentibyId(id).then((res) => {
-              Toast.success('提交成功!')
-              item.xiufuzhuangtai = res.msg
-            })
-          })
-          .catch(() => {
-            // on cancel
-          })
+
       },
       previewImg(url) {
         ImagePreview({
@@ -256,6 +270,19 @@
                 }
               }
             }
+
+            .pictures /deep/ .van-steps {
+              background-color: transparent;
+            }
+
+            .pictures /deep/ .van-icon {
+              color: $common_blue;
+            }
+
+            .pictures /deep/ .van-step__title {
+              color: gray;
+            }
+
           }
         }
 

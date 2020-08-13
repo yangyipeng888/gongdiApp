@@ -48,9 +48,10 @@
             that.$store.state.logined = true
             that.$store.state.userName = that.id
             that.$store.state.pw = that.pw
+            let siteId = result.projectids.split(',')[0]
             store.commit('setSite', {
               name: 'siteId',
-              id: 1001
+              id: siteId
             })
             setTimeout(() => {
               this.$router.push({

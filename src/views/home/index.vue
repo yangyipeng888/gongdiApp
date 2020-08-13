@@ -35,7 +35,7 @@
       <div class="box">
         <div class="title ">
           <div class="titleC">问题报警</div>
-          <div class="more" @click="enter('/problemDetail')">更多</div>
+          <div class="more" @click="enter('/problemListDetail')">更多</div>
         </div>
         <div class="box_content van-hairline--top">
           <problem-list></problem-list>

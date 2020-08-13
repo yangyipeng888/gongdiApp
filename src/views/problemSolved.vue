@@ -4,20 +4,20 @@
       <nav-bar class="nav"
                :leftText="'返回'"
                :onClickLeftHandler="onClickLeft"
-               :title="'问题上报'"
+               :title="'问题修复'"
       ></nav-bar>
       <div class="content">
-        <van-form>
+        <van-form >
           <van-field
             disabled
-            v-model="pro.projectname"
+            v-model="problemItem.projectname"
             name="项目名称"
             label="项目名称"
             placeholder="项目名称"
           >
           </van-field>
           <van-field
-            v-model="pro.miaoshu"
+            v-model="problemItem.miaoshu"
             type="textarea"
             name="问题描述"
             label="问题描述"
@@ -25,13 +25,11 @@
           >
           </van-field>
           <van-field
-            readonly
-            clickable
-            name="picker"
-            :value="pro.type"
+            disabled
+            v-model="problemItem.type"
+            name="问题类型"
             label="问题类型"
-            placeholder="请点击选择"
-            @click="showType = true"
+            placeholder="问题类型"
           >
           </van-field>
           <!--          <van-field-->
@@ -44,7 +42,7 @@
           <!--            @click="showLv = true"-->
           <!--          >-->
           <!--          </van-field>-->
-          <van-field name="uploader" label="问题照片">
+          <van-field name="uploader" label="修复照片">
             <template #input>
               <!--              <uploader :fileList="fileList" ></uploader>-->
               <van-uploader v-model="fileList"/>
@@ -59,22 +57,6 @@
       </div>
 
     </div>
-    <van-popup v-model="showType" position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="proTypes"
-        @confirm="onConfirmType"
-        @cancel="showType = false"
-      />
-    </van-popup>
-    <van-popup v-model="showLv" position="bottom">
-      <van-picker
-        show-toolbar
-        :columns="proLvs"
-        @confirm="onConfirmLv"
-        @cancel="showLv = false"
-      />
-    </van-popup>
   </div>
 </template>
 
@@ -92,75 +74,47 @@
     },
     data() {
       return {
-        pro: {
-          projectId: '',
+        problemItem: {
+          id: '',
           projectname: '',
-          account: '',
-          filetype: 1,
-          zhenggaiqixian: '',
           type: '',
-          miaoshu: '',
-          fData: null
+          miaoshu: ''
         },
         fileList: [
           // Uploader 根据文件后缀来判断是否为图片文件
           // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
           // { url: 'https://cloud-image', isImage: true }
-        ],
-        proTypes: ['生产安全', '工地安全'],
-        proLvs: ['一般', '严重'],
-        showType: false,
-        showLv: false
+        ]
 
       }
     },
     mounted() {
-      let id = this.$store.state.currentSite
-      let siteObj = this.$store.state.constructionSite[id]
-      let name = siteObj.name
-      this.pro.projectname = name
-      this.pro.projectId = id
-      this.pro.account = this.$store.state.userName
+      this.problemItem.projectname = this.$route.params.projectname
+      this.problemItem.id = this.$route.params.id
+      this.problemItem.type = this.$route.params.type
+
     },
     methods: {
       onClickLeft() {
         this.$router.back(-1)
       },
       onSubmit() {
-        if (!this.pro.miaoshu) {
-          Toast.fail('请填写问题描述！')
-          return
-        }
-        if (!this.pro.type) {
-          Toast.fail('请选择问题类型！')
-          return
-        }
-        if (!this.fileList.length) {
-          Toast.fail('请提交问题照片！')
-          return
-        }
         var files = new FormData()
         for (let i = 0; i < this.fileList.length; i++) {
           files.append('file', this.fileList[i].file)
         }
-        this.pro.fData = files
-        this.$Spi.tousuInsert(this.pro).then((res) => {
-          if (res && res.data.msg) {
-            Toast.success(res.data.msg)
-          }
+
+        this.problemItem.fData = files
+        this.problemItem.filetype = 2
+        this.problemItem.account = this.$store.state.userName
+        this.$Spi.updatewentibyId(this.problemItem).then((res) => {
+          Toast.success('提交成功!')
+          this.$router.back(-1)
+          // this.$router.push({ name: 'problemDetail' })
         })
-      },
-      onConfirmType(value) {
-        this.pro.type = value
-        this.showType = false
-      },
-      onConfirmLv(value) {
-        this.pro.lv = value
-        this.showLv = false
-      },
-      onGetFile(e) {
-        console.log(e)
+
       }
+
     }
   }
 </script>

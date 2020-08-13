@@ -6,7 +6,7 @@
       ></nav-bar>
       <div class="content">
         <div class="userbox">
-          <img class="userImg" src="../../assets/img/user.png">
+<!--          <img class="userImg" src="../../assets/img/user.png">-->
           <div class="userText">
             <div class="name">账号名:gongsi</div>
             <div class="comp">xxxx公司</div>
