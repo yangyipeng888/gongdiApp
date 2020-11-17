@@ -91,16 +91,16 @@
         let status = item.xiufuzhuangtai
         // this.$store.state.selProblemId = item.id
         if (status == this.myConst.problem_status.NOT_APPOINT) {
-          this.$router.push({ name: 'problemAppoint', params: item })
-          // let right = this.$store.state.right
-          // let projectIdS = this.$store.state.loginData.projectids
-          // let curId = this.$store.state.currentSite
-          // let hasId = projectIdS.indexOf(curId) != -1
-          // if (right == 3 && hasId) {
-          //   this.$router.push({ name: 'problemAppoint', params: item })
-          // } else {
-          //   Toast.fail(`账号没有指派权限!`)
-          // }
+          // this.$router.push({ name: 'problemAppoint', params: item })
+          let right = this.$store.state.right
+          let projectIdS = this.$store.state.loginData.projectids
+          let curId = this.$store.state.currentSite
+          let hasId = projectIdS.indexOf(curId) != -1
+          if (right == 3 && hasId) {
+            this.$router.push({ name: 'problemAppoint', params: item })
+          } else {
+            Toast.fail(`账号没有指派权限!`)
+          }
         } else if (status == this.myConst.problem_status.NOT_OK) {
           let req = { tousuid: item.id, account: this.$store.state.loginData.account }
           this.$Spi.isChuliQuanxian(req).then((res) => {

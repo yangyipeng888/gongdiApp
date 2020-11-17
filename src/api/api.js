@@ -12,10 +12,10 @@ class sApi {
     // this.Base_url = 'http://123.58.244.175:38080/zhihuigongdi/pazhou/sand.do';
     // this.Base_url2 = 'http://39.100.94.4:38080/zhihuigongdi/export.do'
     // this.Base_url = 'http://39.100.94.4:38080/zhihuigongdi/pazhou/sand.do'
-    // this.Base_url2 = 'http://203.88.202.230:8080/zhihuigongdi/export.do'
-    // this.Base_url = 'http://203.88.202.230:8080/zhihuigongdi/pazhou/sand.do'
-    this.Base_url2 = 'http://192.168.1.28:8080/zhihuigongdi/export.do'
-    this.Base_url = 'http://192.168.1.28:8080/zhihuigongdi/pazhou/sand.do'
+    this.Base_url2 = 'http://203.88.202.230:8080/zhihuigongdi/export.do'
+    this.Base_url = 'http://203.88.202.230:8080/zhihuigongdi/pazhou/sand.do'
+    // this.Base_url2 = 'http://192.168.1.28:8080/zhihuigongdi/export.do'
+    // this.Base_url = 'http://192.168.1.28:8080/zhihuigongdi/pazhou/sand.do'
   }
 
   getCurIp() {
