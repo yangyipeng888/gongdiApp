@@ -7,8 +7,9 @@
       <router-view v-else></router-view>
     </div>
     <div class="layout-footer" v-show="$store.state.currentSite">
-      <!--      <TabBar :data="tabbars" @change="handleChange"/>-->
-      <Tabbar2 :data="tabbars"></Tabbar2>
+      <van-tabbar v-model="active">
+        <van-tabbar-item v-for="tab in tabItems" :to="tab.to" :icon="tab.icon">{{tab.label}}</van-tabbar-item>
+      </van-tabbar>
     </div>
   </div>
 </template>
@@ -19,39 +20,33 @@
 
   export default {
     name: 'AppLayout',
+    computed: {
+      tabItems() {
+        let right = this.$store.getters.right
+        let obj = {}
+        obj[AUTH.gongren] = [
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'person', icon: 'home-o', label: '我的', to: 'user' }
+        ]
+        obj[AUTH.yezhu] = [
+          { name: 'home', icon: 'home-o', label: '首页', to: 'submit' },
+          { name: 'map', icon: 'home-o', label: '地图', to: 'submit' },
+          { name: 'person', icon: 'home-o', label: '我的', to: 'submit' }
+        ]
+        obj[AUTH.shigong] = [
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' }]
+        obj[AUTH.zhengfu] = [
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
+          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' }]
+        return obj[right]
+      }
+    },
     data() {
       return {
-        tabbars: [
-
-          {
-            title: '首页',
-            to: {
-              name: 'Home'
-            },
-            icon: 'home-o'
-          },
-          {
-            img: require('../../assets/img/安全.png'),
-            to: {
-              name: 'submit'
-            }
-
-          },
-          {
-            title: '地图',
-            to: {
-              name: 'Map'
-            },
-            icon: 'map-marked'
-          },
-          // {
-          //   title: '关于我',
-          //   to: {
-          //     name: 'About'
-          //   },
-          //   icon: 'user-o'
-          // }
-        ]
+        active: 0
       }
     },
     components: {

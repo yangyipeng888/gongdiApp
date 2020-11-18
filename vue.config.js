@@ -55,12 +55,12 @@ module.exports = {
     proxy: {
       //配置跨域
       '/maps': {
-          target: "https://webapi.amap.com/",
-          // ws:true,
-          changOrigin:true,
-          // pathRewrite:{
-          //     '^/api':'/'
-          // }
+        target: 'https://webapi.amap.com/',
+        // ws:true,
+        changOrigin: true
+        // pathRewrite:{
+        //     '^/api':'/'
+        // }
       }
     }
   },
@@ -94,7 +94,12 @@ module.exports = {
   chainWebpack: config => {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
-
+    config.plugin('define').tap(args => {
+      args[0].SUCCESS = 200
+      args[0].FAIL = 400
+      args[0].AUTH = { gongren: '5', yezhu: '6', shigong: '7', zhengfu: '8' }
+      return args
+    })
     // 别名 alias
     config.resolve.alias
       .set('@', resolve('src'))
@@ -138,7 +143,7 @@ module.exports = {
       ])
     }
     config
-      // https://webpack.js.org/configuration/devtool/#development
+    // https://webpack.js.org/configuration/devtool/#development
       .when(!IS_PROD, config => config.devtool('cheap-source-map'))
 
     config.when(IS_PROD, config => {

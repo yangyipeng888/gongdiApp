@@ -42,7 +42,6 @@
       logout() {
         localStorage.clear()
         this.$store.state.logined = false
-        //		this.changeMain(0, '/login');
         console.log('登出成功！')
         window.location.reload()
       }

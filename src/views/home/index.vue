@@ -3,7 +3,7 @@
   <div class="index-container">
     <nav-bar class="nav"
              :title="'首页'"
-             :right-text="'登出'"
+             :right-text="'问题上报'"
              :onClickRightHandler="logout"
     ></nav-bar>
     <div class="content">
@@ -11,22 +11,20 @@
       <pro-info></pro-info>
       <div class="box">
         <div class="box_content van-hairline--top">
-          <van-grid :column-num="4" :border="false">
-            <van-grid-item v-for="item in btnList" @click="enter(item.path)">
-              <div class="file_item">
-                <van-image :src="item.imgUrl" fit="contain" style="height: 100px"/>
-                <div class="file_name">
-                  {{item.desc}}
-                </div>
-              </div>
-            </van-grid-item>
-          </van-grid>
+          <div class="file_item" v-for="item in btnList" @click="enter(item.path)">
+            <!--                <van-image :src="item.imgUrl" fit="contain" style="height: 100px"/>-->
+            <img class="file_img" :src="item.imgUrl">
+            <div class="file_name">
+              {{item.desc}}
+            </div>
+          </div>
+
         </div>
       </div>
       <div class="box">
         <div class="title ">
           <div class="titleC">项目进度</div>
-<!--          <div class="more">更多</div>-->
+          <!--          <div class="more">更多</div>-->
         </div>
         <div class="box_content van-hairline--top">
           <pro_progress></pro_progress>
@@ -80,6 +78,12 @@
           { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
           { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '文明施工', path: '/civilize' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全学习', path: '/study' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '质量监管', path: '/quality' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '施工进度', path: '/progress' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
           { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' }
         ]
       }
@@ -146,10 +150,12 @@
           background-color: white;
           display: flex;
           flex-direction: row;
-          .titleC{
+
+          .titleC {
             width: 88%;
           }
-          .more{
+
+          .more {
             text-decoration: underline;
             color: $common_blue;
             font-weight: 100;
@@ -170,10 +176,18 @@
 
         .box_content {
           background-color: white;
+          display: flex;
+          flex-wrap: wrap;
 
           .file_item {
-            height: 100%;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 23%;
+            margin: 1%;
+            .file_img {
+              height: 50px;
+              object-fit: contain
+            }
 
             .file_name {
               text-align: center;

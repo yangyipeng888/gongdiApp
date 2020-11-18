@@ -92,5 +92,12 @@
       }
     }
 
+    .van-hairline--bottom {
+      &::after {
+        border-bottom-width: 0!important;
+      }
+
+    }
+
   }
 </style>

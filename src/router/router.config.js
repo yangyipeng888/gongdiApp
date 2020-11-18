@@ -41,7 +41,60 @@ export const constantRouterMap = [
       title: '项目概况',
       keepAlive: false
     }
-
+  },
+  {
+    path: '/civilize',
+    name: 'civilize',
+    component: () => import('@/views/civilize'),
+    meta: {
+      title: '文明施工',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/study',
+    name: 'study',
+    component: () => import('@/views/study'),
+    meta: {
+      title: '安全学习',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/quality',
+    name: 'quality',
+    component: () => import('@/views/quality'),
+    meta: {
+      title: '质量监管',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/progress',
+    name: 'progress',
+    component: () => import('@/views/progress'),
+    meta: {
+      title: '施工进度',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/staff',
+    name: 'staff',
+    component: () => import('@/views/staff'),
+    meta: {
+      title: '人员监管',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/safe',
+    name: 'safe',
+    component: () => import('@/views/safe'),
+    meta: {
+      title: '安全监管',
+      keepAlive: false
+    }
   },
   {
     path: '/problemSolved',
@@ -120,22 +173,22 @@ export const constantRouterMap = [
     },
     children: [
       {
-        path: '/map',
-        name: 'Map',
-        component: () => import('@/views/home/map'),
-        meta: { title: '地图', keepAlive: false }
-      },
-      {
         path: '/home',
         name: 'Home',
         component: () => import('@/views/home/index'),
         meta: { title: '首页', keepAlive: false }
       },
       {
-        path: '/about',
-        name: 'About',
-        component: () => import('@/views/home/about'),
-        meta: { title: '关于我', keepAlive: false }
+        path: '/map',
+        name: 'Map',
+        component: () => import('@/views/home/map'),
+        meta: { title: '地图', keepAlive: false }
+      },
+      {
+        path: '/user',
+        name: 'User',
+        component: () => import('@/views/home/user'),
+        meta: { title: '我的', keepAlive: false }
       }
     ]
   }

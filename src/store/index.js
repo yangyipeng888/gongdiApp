@@ -12,6 +12,7 @@ const state = {
   loginData: null,
   userName: '',
   right: '',
+  account: "",
   pw: '',
   keyDown: false,
   token: null,
@@ -53,6 +54,7 @@ const mutations = {
     state.loginData = result
     state.right = result.quanxian
     state.logined = true
+    state.account = result.account;
     var keys = result.projectids.split(',')
     var a = {}
     for (var i = 0; i < keys.length; i++) {

@@ -48,6 +48,10 @@ VueAMap.initAMapApiLoader({
 //   // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
 //   ak: 'dP17j7dXXGwGBnvNvi9iiBNakinYmRtr'
 // })
+
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
+
 new Vue({
   el: '#app',
   router,
