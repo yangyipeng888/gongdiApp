@@ -8,7 +8,7 @@
                :show-right="true"
                :onClickRightHandler="selFileType"
       ></nav-bar>
-      <van-tabs class="sel_tab" v-model="active" animated sticky>
+      <van-tabs class="sel_tab" v-model="active" animated swipeable sticky>
         <tab :title="'资金进度'">
           <div class="form">
             <div class="form_item van-hairline--bottom" v-for="(item,key,index) in ziJinObj">

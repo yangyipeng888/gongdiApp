@@ -4,7 +4,7 @@
     <nav-bar class="nav"
              :title="'首页'"
              :right-text="'问题上报'"
-             :onClickRightHandler="logout"
+             :onClickRightHandler="submit"
     ></nav-bar>
     <div class="content">
       <pic-swipe></pic-swipe>
@@ -109,12 +109,10 @@
           path
         })
       },
-      logout() {
-        localStorage.clear()
-        this.$store.state.logined = false
-        //		this.changeMain(0, '/login');
-        console.log('登出成功！')
-        window.location.reload()
+      submit() {
+        this.$router.push({
+          path: '/submit'
+        })
       }
     }
   }
@@ -184,6 +182,7 @@
             flex-direction: column;
             width: 23%;
             margin: 1%;
+
             .file_img {
               height: 50px;
               object-fit: contain

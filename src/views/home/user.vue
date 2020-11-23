@@ -37,7 +37,7 @@
         </template>
       </van-cell>
     </div>
-    <van-button class="logOut" round type="info" block>登出</van-button>
+    <van-button @click="logout" class="logOut" round type="info" block>登出</van-button>
   </div>
 </template>
 

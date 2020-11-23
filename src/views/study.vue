@@ -1,13 +1,39 @@
 <template>
-  <div class="files_container">
-    <div class="files_main">
+  <div class="study_container">
+    <div class="study_main">
       <nav-bar class="nav"
                :leftText="'返回'"
                :onClickLeftHandler="onClickLeft"
-               :title="'质量监管'"
+               :title="'安全学习'"
       ></nav-bar>
       <div class="content">
+        <video class="video" src="http://39.100.94.4:38080/Wanke/static/video/vr.mp4" controls="controls">
+          your browser does not support the video tag
+        </video>
+        <van-tabs class="sel_tab" v-model="active" animated swipeable>
+          <tab :title="'安全新闻'">
+            <div class="news_item van-hairline--bottom" v-for="item in newsList">
+              <div class="news_title">{{item.title}}</div>
+              <div class="news_bottom">
+                <div class="news_time">{{item.time}}</div>
+                <div class="news_read">查看全文</div>
+              </div>
+            </div>
+          </tab>
+          <tab :title="'安全小知识'">
+            <div class="know_item">
+              <h1 class="know_title">
+                {{knowTitle}}
+              </h1>
+              <div class="know_content">
+                {{knowContent}}
+              </div>
+            </div>
 
+          </tab>
+
+
+        </van-tabs>
       </div>
 
     </div>
@@ -17,88 +43,43 @@
 
 <script>
 
-
+  import tab from '../components/tab'
   import navBar from '../components/navBar'
 
   export default {
     name: 'study',
     components: {
       navBar,
+      tab
 
     },
     data() {
       return {
-        details: []
+        active: 0,
+        newsList: [
+          { title: '警钟长鸣，筑牢安全“防火墙”', time: '2020-11-19' },
+          { title: '警惕“法不责众”的致命陋习：不戴头盔、不系安全带', time: '2020-11-19' },
+          { title: '上海市崇明区缪京区长带队开展安全生产和消防工作', time: '2020-11-19' },
+          { title: '中国化学品安全协会西南培训基地落户泸州', time: '2020-11-19' },
+          { title: '中国化学品安全协会西南培训基地落户泸州', time: '2020-11-19' }
+
+        ],
+        knowTitle: '如何防范高空坠落',
+        knowContent: '    高空作业的安全风险主要是高处坠落，可分为临边坠落、洞口坠落、脚手架坠落、悬空高处作业坠落、踩破轻型屋面坠落、拆除工作中坠落、登高过程中坠落等类型。' +
+          '\n     临边坠落。主要风险如下：建筑作业面周边未安装防护栏或防护栏不合格；违章作业；临边防护栏损坏或被移走；作业人员防护措施落实不到位等。' +
+          '\n     洞口坠落。主要风险如下：操作不慎，身体失稳；在洞口旁边嬉闹起哄打架；洞口没有安全防护设施；安全防护设施安装不牢、不合格或损坏等。' +
+          '\n     悬空高处作业坠落。主要风险如下：立足面狭小，用力过猛，身体失稳，重心超出立足地；脚底打滑或不慎踩空；未系安全带或未正确使用；安全带挂钩不牢固；现场未设置安全绳；作业面未设置安全兜网等。'
+
+
       }
     },
     mounted() {
-      this.getwentiList()
+
     },
     methods: {
-      clickItem(item) {
 
-
-        let status = item.xiufuzhuangtai
-        // this.$store.state.selProblemId = item.id
-        if (status == this.myConst.problem_status.NOT_APPOINT) {
-          // this.$router.push({ name: 'problemAppoint', params: item })
-          let right = this.$store.state.right
-          let projectIdS = this.$store.state.loginData.projectids
-          let curId = this.$store.state.currentSite
-          let hasId = projectIdS.indexOf(curId) != -1
-          if (right == 3 && hasId) {
-            this.$router.push({ name: 'problemAppoint', params: item })
-          } else {
-            Toast.fail(`账号没有指派权限!`)
-          }
-        } else if (status == this.myConst.problem_status.NOT_OK) {
-          let req = { tousuid: item.id, account: this.$store.state.loginData.account }
-          this.$Spi.isChuliQuanxian(req).then((res) => {
-            if (res && res.state == 200) {
-              this.$router.push({ name: 'problemSolved', params: item })
-            } else {
-              Toast.fail(`账号没有修复权限!`)
-            }
-          })
-        } else if (status == this.myConst.problem_status.OK) {
-          this.$router.push({ name: 'problemDetail', params: item })
-        }
-
-
-      },
       onClickLeft() {
         this.$router.push({ path: '/' })
-      },
-      getwentiList() {
-        let projectIds = this.$store.state.currentSite
-        let account = this.$store.state.loginData.account
-        let quanxian = this.$store.state.right
-        let req = { projectIds, account, quanxian }
-        this.$Spi.getwentiList(req).then((res) => {
-          res.reverse()
-          this.details = res
-          this.details.forEach((item) => {
-            item.timestamp = item.timestamp.split(' ')[0]
-            if (item.imgpath) {
-              let str = item.imgpath
-              str = item.imgpath.replace('[', '')
-              str = str.replace(']', '')
-              item.imgpath = str.split(',')
-              for (let i = 0; i < item.imgpath.length; i++) {
-                let ip = this.$Spi.getCurIp()
-                item.imgpath[i] = ip + item.imgpath[i].trim()
-              }
-            }
-          })
-        })
-
-      },
-      changeStatus(item) {
-        this.$router.push({
-          name: 'problemSolved',
-          params: item
-        })
-
       },
       previewImg(url) {
         ImagePreview({
@@ -113,13 +94,13 @@
 </script>
 
 <style lang="scss">
-  .files_container {
+  .study_container {
     height: 100vh;
     width: 100%;
     position: relative;
 
 
-    .files_main {
+    .study_main {
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -137,97 +118,49 @@
         bottom: 0px;
         left: 0px;
         overflow: scroll;
+        background-color: white;
 
-        .detail_wrap {
-          margin: 10px;
-          border-radius: 3px;
-          box-shadow: 0px 0px 5px #888888;
+        .video {
+          width: 100%;
+          height: 200px;
+        }
 
-          .detail_title {
-            height: 30px;
-            display: flex;
-            margin: 0 5px;
-            padding: 5px 0;
-            justify-content: center;
-            align-items: center;
+        .news_item {
+          padding: 8px;
 
-            .projectName {
-              width: 50%;
-              font-size: 20px;
-              font-weight: 600;
-            }
-
-            .status {
-              height: 80%;
-              width: 20%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-
-              .status_txt {
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border-radius: 5px;
-                width: 80%;
-                height: 100%;
-                font-size: 15px !important;
-              }
-
-              .status_ok {
-                background-color: $common_success;
-              }
-
-              .status_nok {
-                background-color: $common_fail;
-                /*text-decoration: underline;*/
-              }
-
-              .status_appoint {
-                background-color: $common_warning;
-                /*text-decoration: underline;*/
-              }
-            }
-
-            .time {
-              height: 100%;
-              width: 30%;
-              font-size: 16px;
-              color: gray;
-              display: flex;
-              align-items: center;
-
-              .clock {
-                color: #FBBE66 !important;
-              }
-            }
+          .news_title {
+            font-size: 19px;
+            font-weight: 600;
           }
 
-          .detail_content {
-            font-size: 16px;
-            padding: 5px;
+          .news_bottom {
+            margin-top: 7px;
+            display: flex;
+            justify-content: space-between;
             color: gray;
 
-            .projectName2 {
-              .site {
-                color: cornflowerblue;
-              }
-            }
-
-            .desc {
+            .news_time {
 
             }
 
-            .pictures {
-              .file_item {
-                margin: 2px;
-
-                .file_img {
-
-                }
-              }
+            .news_read {
+              font-size: 13px;
             }
+          }
+        }
+
+        .know_item {
+          padding: 8px;
+
+          .know_title {
+            text-align: center;
+            font-size: 20px;
+          }
+
+          .know_content {
+            font-size: 17px;
+            word-break: break-all;
+            white-space: pre-wrap;
           }
         }
 

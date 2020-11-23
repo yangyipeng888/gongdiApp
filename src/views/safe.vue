@@ -7,9 +7,9 @@
                :title="'质量监管'"
       ></nav-bar>
       <div class="content">
-        <qualityForm1></qualityForm1>
-        <qualityForm2></qualityForm2>
-        <qualityForm3></qualityForm3>
+        <safeForm1></safeForm1>
+        <safeForm2></safeForm2>
+        <safeForm3></safeForm3>
       </div>
 
     </div>
@@ -18,9 +18,9 @@
 </template>
 
 <script>
-  import qualityForm1 from '@/components/gongdi/quality/qualityForm1'
-  import qualityForm2 from '@/components/gongdi/quality/qualityForm2'
-  import qualityForm3 from '@/components/gongdi/quality/qualityForm3'
+  import safeForm1 from '@/components/gongdi/safe/safeForm1'
+  import safeForm2 from '@/components/gongdi/safe/safeForm2'
+  import safeForm3 from '@/components/gongdi/safe/safeForm3'
   import { Toast } from 'vant'
   import { ImagePreview } from 'vant'
   import navBar from '../components/navBar'
@@ -29,9 +29,10 @@
     name: 'problemListDetail',
     components: {
       navBar,
-      qualityForm1,
-      qualityForm2,
-      qualityForm3
+      safeForm1,
+      safeForm2,
+      safeForm3
+
     },
     data() {
       return {
@@ -39,74 +40,13 @@
       }
     },
     mounted() {
-      this.getwentiList()
+
     },
     methods: {
-      clickItem(item) {
-
-
-        let status = item.xiufuzhuangtai
-        // this.$store.state.selProblemId = item.id
-        if (status == this.myConst.problem_status.NOT_APPOINT) {
-          // this.$router.push({ name: 'problemAppoint', params: item })
-          let right = this.$store.state.right
-          let projectIdS = this.$store.state.loginData.projectids
-          let curId = this.$store.state.currentSite
-          let hasId = projectIdS.indexOf(curId) != -1
-          if (right == 3 && hasId) {
-            this.$router.push({ name: 'problemAppoint', params: item })
-          } else {
-            Toast.fail(`账号没有指派权限!`)
-          }
-        } else if (status == this.myConst.problem_status.NOT_OK) {
-          let req = { tousuid: item.id, account: this.$store.state.loginData.account }
-          this.$Spi.isChuliQuanxian(req).then((res) => {
-            if (res && res.state == 200) {
-              this.$router.push({ name: 'problemSolved', params: item })
-            } else {
-              Toast.fail(`账号没有修复权限!`)
-            }
-          })
-        } else if (status == this.myConst.problem_status.OK) {
-          this.$router.push({ name: 'problemDetail', params: item })
-        }
-
-
-      },
       onClickLeft() {
         this.$router.push({ path: '/' })
       },
-      getwentiList() {
-        let projectIds = this.$store.state.currentSite
-        let account = this.$store.state.loginData.account
-        let quanxian = this.$store.state.right
-        let req = { projectIds, account, quanxian }
-        this.$Spi.getwentiList(req).then((res) => {
-          res.reverse()
-          this.details = res
-          this.details.forEach((item) => {
-            item.timestamp = item.timestamp.split(' ')[0]
-            if (item.imgpath) {
-              let str = item.imgpath
-              str = item.imgpath.replace('[', '')
-              str = str.replace(']', '')
-              item.imgpath = str.split(',')
-              for (let i = 0; i < item.imgpath.length; i++) {
-                let ip = this.$Spi.getCurIp()
-                item.imgpath[i] = ip + item.imgpath[i].trim()
-              }
-            }
-          })
-        })
 
-      },
-      changeStatus(item) {
-        this.$router.push({
-          name: 'problemSolved',
-          params: item
-        })
-
-      },
       previewImg(url) {
         ImagePreview({
           images: [url],

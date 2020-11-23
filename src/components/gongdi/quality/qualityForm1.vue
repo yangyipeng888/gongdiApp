@@ -8,7 +8,7 @@
         <div class="listTitle">
           <div class="title_time">时间</div>
           <div class="title_desc">问题描述</div>
-          <div class="title_type">问题类型</div>
+          <div class="title_type">形象进度</div>
           <div class="title_status">操作</div>
         </div>
       </template>
@@ -17,17 +17,70 @@
              v-for="pro,index in problems" :key="index" @click="clickPro(pro)">
           <div class="problem_time van-ellipsis">{{pro.timestamp}}</div>
           <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
-          <div class="problem_type">{{pro.type}}</div>
           <div class="problem_status">
             <div class="status_txt" :class="{status_ok:pro.xiufuzhuangtai==myConst.problem_status.OK,status_nok:pro.xiufuzhuangtai==myConst.problem_status.NOT_OK,
             status_appoint:pro.xiufuzhuangtai==myConst.problem_status.NOT_APPOINT,}">
-              查看
+              良好
             </div>
           </div>
+          <div @click="clickMore" class="problem_type">查看</div>
+
         </div>
       </template>
     </form1>
+    <van-popup round v-model="showDialog">
+      <div class="dialogBox">
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">浇筑部位</span>
+              <span class="custom-title cell_value">1#楼P-L轴交6-10轴9层梁板</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">形象进度</span>
+              <span class="custom-title cell_value">完好</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">浇筑开始时间</span>
+              <span class="custom-title cell_value">2019-12-16 03:00</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">浇筑结束时间</span>
+              <span class="custom-title cell_value">2019-12-16 18:00</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">天气</span>
+              <span class="custom-title cell_value">无雨</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template>
+            <div class="cellBox">
+              <span class="custom-title cell_label">浇筑量（m3）</span>
+              <span class="custom-title cell_value">160.0</span>
+            </div>
+          </template>
+        </van-cell>
+      </div>
 
+    </van-popup>
   </div>
 
 </template>
@@ -56,6 +109,9 @@
     methods: {
       clickPro(item) {
       },
+      clickMore() {
+        this.showDialog = true
+      },
       getwentiList() {
         let projectIds = this.$store.state.currentSite
         let account = this.$store.state.loginData.account
@@ -72,6 +128,7 @@
     },
     data() {
       return {
+        showDialog: false,
         timeId: null,
         problems: []
       }
@@ -131,6 +188,7 @@
 
       .problem_type {
         width: 20%;
+        color: $common_blue;
 
       }
 
@@ -161,6 +219,27 @@
 
         .status_appoint {
           background-color: $common_warning;
+        }
+      }
+    }
+
+    .dialogBox {
+      width: 95vw;
+      max-height: 80vh;
+      border-radius: 5px;
+      overflow: scroll;
+
+      .cellBox {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+
+        .cell_label {
+          color: $common_gray;
+        }
+
+        .cell_value {
+          font-weight: 600;
         }
       }
     }

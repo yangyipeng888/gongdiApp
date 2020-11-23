@@ -1,8 +1,8 @@
 <template>
   <div class="video_container">
-    <div v-for="item in btnList">
-      <img :src="item.imgUrl" style="height: 150px;object-fit: contain">
-      <div class="file_name">
+    <div class="videoBox" v-for="item in btnList">
+      <img class="video_pic" :src="item.imgUrl">
+      <div class="video_name">
         {{item.desc}}
       </div>
     </div>
@@ -26,10 +26,10 @@
       return {
         videos: [],
         btnList: [
-          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '文件管理', path: '/files' },
-          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '现场照片', path: '/picView' },
-          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '项目概况', path: '/projectDetail' },
-          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '文明施工', path: '/civilize' },
+          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '车辆出入口', path: '/files' },
+          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '地磅', path: '/picView' },
+          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '施工作业区', path: '/projectDetail' },
+          { imgUrl: require('@/assets/img/gongdi1.png'), desc: '大门', path: '/civilize' }
         ]
 
       }
@@ -54,8 +54,23 @@
     height: 100%;
     width: 100%;
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .videoBox {
+      margin: 1%;
+      width: 48%;
 
+      .video_pic {
+        border-radius: 3px;
+        height: 100px;
+        width: 100%;
+      }
 
+      .video_name {
+      }
+
+    }
 
 
   }

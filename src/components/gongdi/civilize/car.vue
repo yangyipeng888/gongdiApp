@@ -34,21 +34,40 @@
           {
             staffName: '粤ADC136',
             time: '2020-11-17',
-            suolue: 'https://img.yzcdn.cn/vant/cat.jpeg',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
             content: '车牌已盖好'
           },
           {
             staffName: '粤ADC136',
             time: '2020-11-17',
-            suolue: 'https://img.yzcdn.cn/vant/cat.jpeg',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
             content: '车牌已盖好'
-          },
-          {
+          },   {
             staffName: '粤ADC136',
             time: '2020-11-17',
-            suolue: 'https://img.yzcdn.cn/vant/cat.jpeg',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
             content: '车牌已盖好'
-          }
+          },   {
+            staffName: '粤ADC136',
+            time: '2020-11-17',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
+            content: '车牌已盖好'
+          },   {
+            staffName: '粤ADC136',
+            time: '2020-11-17',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
+            content: '车牌已盖好'
+          },   {
+            staffName: '粤ADC136',
+            time: '2020-11-17',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
+            content: '车牌已盖好'
+          },   {
+            staffName: '粤ADC136',
+            time: '2020-11-17',
+            suolue: 'http://39.103.138.54:8099/gongdishebei/nitouche/1605683867632.jpg',
+            content: '车牌已盖好'
+          },
         ]
       }
     },

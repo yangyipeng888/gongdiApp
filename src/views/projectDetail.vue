@@ -6,7 +6,7 @@
                :onClickLeftHandler="onClickLeft"
                :title="'项目概况'"
       ></nav-bar>
-      <van-tabs class="sel_tab" v-model="active" animated sticky>
+      <van-tabs class="sel_tab" v-model="active" animated swipeable sticky>
         <tab :title="'项目概况'">
           <div class="form">
             <div class="form_item van-hairline--bottom">

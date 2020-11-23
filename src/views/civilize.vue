@@ -6,7 +6,7 @@
                :onClickLeftHandler="onClickLeft"
                :title="'文明施工'"
       ></nav-bar>
-      <van-tabs class="sel_tab" v-model="active" animated sticky>
+      <van-tabs class="sel_tab" v-model="active" animated swipeable>
         <tab :title="'人员识别'">
           <div class="form">
             <staff></staff>

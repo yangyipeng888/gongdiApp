@@ -6,10 +6,10 @@
              :title="'人员监管'"
     ></nav-bar>
 
-    <van-tabs class="sel_tab" v-model="active" animated>
+    <van-tabs class="sel_tab" v-model="active" animated swipeable>
       <tab :title="'数据统计'">
         <div class="form">
-          <div class="dataBox" v-for="item in dataBox">
+          <div class="dataBox" :style="{backgroundColor:item.bgColor}" v-for="item in dataBox">
             <div class="label">{{item.label}}</div>
             <div class="data">{{item.data}}人</div>
           </div>
@@ -42,151 +42,97 @@
       staffList
     },
     data() {
+      let titleFontSize = this.$getRealPX(1.38)
+      let fontSize = this.$getRealPX(1.2)
       return {
+        col: 'green',
         active: 0,
         dataBox: [
-          { label: '今日入闸人数', data: 34 },
-          { label: '今日出勤人数', data: 34 },
-          { label: '今日缺勤人数', data: 34 },
-          { label: '工地人员总数', data: 34 },
-          { label: '管理人员', data: 34 },
-          { label: '工人', data: 34 }
-
+          { label: '工地人员总数', data: 66, bgColor: '#1989fa' },
+          { label: '管理人员', data: 12, bgColor: '#1989fa' },
+          { label: '工人', data: 54, bgColor: '#1989fa' },
+          { label: '今日入闸人数', data: 65 },
+          { label: '今日出勤人数', data: 23 },
+          { label: '今日缺勤人数', data: 1 }
         ],
         echarts1_option: {
-
           title: {
-            text: '基本信息',
-            subtext: '虚假数据'
+            left: 'center',
+            text: '出入闸统计',
+            textStyle: {
+              //文字颜色
+              // color: 'black',
+              //字体风格,'normal','italic','oblique'
+              fontStyle: 'normal',
+              //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
+              fontWeight: 'bold',
+              //字体系列
+              fontFamily: 'sans-serif',
+              //字体大小
+              fontSize: titleFontSize
+            }
+          },
+          color: ['#67C23A', '#E6A23C'],
+          grid: {
+            // left: '3%',
+            // top: '2%',
+            right: '4%'
+            // bottom: '3%',
+            // containLabel: true
           },
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
           },
-          color: ['rgba(31,13,230,0.95)', '#ff475d', '#49ef18', '#efeb23'],
-          legend: [
-            {
-              data: ['学历层次', '职业技能']
+          legend: {
+            data: ['入闸', '出闸'],
+            textStyle: { //图例文字的样式
+              color: 'black',
+              fontSize: fontSize
             },
-            {
-              top: 20,
-              data: ['业绩成果', '专业经历']
-            }
-
-          ],
-          toolbox: {
-            show: true,
-            feature: {
-              dataView: {
-                show: true, readOnly: true,
-                optionToContent: function(opt) {
-                  let axisData = opt.xAxis[0].data //坐标数据
-                  let series = opt.series //折线图数据
-                  let tdHeads = '<td  style="padding: 0 10px">时间</td>' //表头
-                  let tdBodys = '' //数据
-                  series.forEach(function(item) {
-                    //组装表头
-                    tdHeads += `<td style="padding: 0 10px">${item.name}</td>`
-                  })
-                  let table = `<table border="1" style="margin-left:20px;border-collapse:collapse;font-size:14px;text-align:center"><tbody><tr>${tdHeads} </tr>`
-                  for (let i = 0, l = axisData.length; i < l; i++) {
-                    for (let j = 0; j < series.length; j++) {
-                      //组装表数据
-                      tdBodys += `<td>${series[j].data[i]}</td>`
-                    }
-                    table += `<tr><td style="padding: 0 10px">${axisData[i]}</td>${tdBodys}</tr>`
-                    tdBodys = ''
-                  }
-                  table += '</tbody></table>'
-                  return table
-                }
-              },
-              magicType: { show: true, type: ['line', 'bar'] },
-              restore: { show: true },
-              saveAsImage: { show: true }
-            }
+            left: 'center',
+            bottom: 0
           },
-          calculable: true,
-          xAxis: [
-            {
-              type: 'category',
-              data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+          //X轴信息
+          xAxis: [{
+            type: 'category', data: ['王大锤', '王二锤', '马二锤', '大王二锤', '大王二锤1'],
+            axisLabel: {
+              fontSize: fontSize,
+              fontFamily: '微软雅黑',
+              marginTop: '35px',
+              show: true
+            },
+            axisTick: {
+              alignWithLabel: true
             }
+          }
           ],
-          yAxis: [
-            {
-              type: 'value'
+          //Y轴信息
+          yAxis: [{
+            type: 'value', axisLabel: {
+              fontSize: fontSize,
+              fontFamily: '微软雅黑',
+              marginTop: '35px',
+              show: true
             }
-          ],
+          }],
           series: [
             {
-              name: '学历层次',
+              name: '入闸',
               type: 'bar',
-              stack: '个人信息',
-              data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
-              markPoint: {
-                data: [
-                  { type: 'max', name: '最大值' },
-                  { type: 'min', name: '最小值' }
-                ]
-              },
-              markLine: {
-                data: [
-                  { type: 'average', name: '平均值' }
-                ]
-              }
+              barGap: 0,
+              data: [300, 302, 301, 304, 290, 300]
             },
             {
-              name: '职业技能',
+              name: '出闸',
               type: 'bar',
-              stack: '个人信息',
-              data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
-              markPoint: {
-                data: [
-                  { name: '年最高', value: 182.2, xAxis: 7, yAxis: 183 },
-                  { name: '年最低', value: 2.3, xAxis: 11, yAxis: 3 }
-                ]
-              },
-              markLine: {
-                data: [
-                  { type: 'average', name: '平均值' }
-                ]
-              }
-            },
-            {
-              name: '业绩成果',
-              type: 'bar',
-              stack: '个人信息',
-              data: [2.0, 6.0, 7.0, 20.4, 21.7, 60.7, 135.6, 152.2, 56.7, 15.8, 7.0, 2.3],
-              markPoint: {
-                data: [
-                  { name: '年最高', value: 152.2, xAxis: 7, yAxis: 153 },
-                  { name: '年最低', value: 2.0, xAxis: 1, yAxis: 2 }
-                ]
-              },
-              markLine: {
-                data: [
-                  { type: 'average', name: '平均值' }
-                ]
-              }
-            },
-            {
-              name: '专业经历',
-              type: 'bar',
-              stack: '个人信息',
-              data: [1.0, 6.9, 9.0, 36.4, 48.7, 90.7, 100.6, 122.2, 40.7, 8.8, 6.0, 2.3],
-              markPoint: {
-                data: [
-                  { name: '年最高', value: 122.2, xAxis: 7, yAxis: 123 },
-                  { name: '年最低', value: 1.0, xAxis: 1, yAxis: 1 }
-                ]
-              },
-              markLine: {
-                data: [
-                  { type: 'average', name: '平均值' }
-                ]
-              }
+              data: [220, 282, 291, 234, 290, 300]
             }
+
           ]
+
         }
       }
     },
@@ -202,10 +148,45 @@
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('chart1'))
         // 绘制图表，this.echarts1_option是数据
-        myChart.setOption(this.echarts1_option)
-        let myChart2 = this.$echarts.init(document.getElementById('chart2'))
-        myChart2.setOption(this.echarts1_option)
+        let data1 = this.setChartsData('出入闸次数', ['入闸', '出闸'], ['王大锤', '王二锤', '马二锤', '二锤', '二锤1'], [
+          {
+            name: '入闸',
+            type: 'bar',
+            barGap: 0,
+            data: [300, 302, 301, 304, 290, 300]
+          },
+          {
+            name: '出闸',
+            type: 'bar',
+            data: [220, 282, 291, 234, 290, 300]
+          }
 
+        ])
+        myChart.setOption(data1)
+        let myChart2 = this.$echarts.init(document.getElementById('chart2'))
+        let data2 = this.setChartsData('出勤统计', ['出勤', '缺勤'], ['王大锤', '王二锤', '马二锤', '二锤', '二锤1'], [
+          {
+            name: '出勤',
+            type: 'bar',
+            barGap: 0,
+            data: [300, 302, 301, 304, 290, 300]
+          },
+          {
+            name: '缺勤',
+            type: 'bar',
+            data: [220, 282, 291, 234, 290, 300]
+          }
+
+        ])
+        myChart2.setOption(data2)
+      },
+      setChartsData(title, legend, xAxis, series) {
+        let echarts_option = this._.cloneDeep(this.echarts1_option)
+        echarts_option.title.text = title
+        echarts_option.legend.data = legend
+        echarts_option.xAxis[0].data = xAxis
+        echarts_option.series = series
+        return echarts_option
       },
       onClickLeft() {
         this.$router.push({ path: '/' })
@@ -264,7 +245,8 @@
         }
 
         .chart {
-          height: 300px;
+          margin: 10px 0;
+          height: 250px;
           width: 100%;
         }
       }

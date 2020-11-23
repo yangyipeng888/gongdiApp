@@ -5,8 +5,7 @@
              :onClickLeftHandler="onClickLeft"
              :title="'施工进度'"
     ></nav-bar>
-
-    <van-tabs class="sel_tab" v-model="active" animated>
+    <van-tabs class="sel_tab" v-model="active" animated swipeable>
       <tab :title="'规划设计'">
         <div class="form">
           <div class="stepsList">
@@ -18,7 +17,7 @@
               <div class="right">
                 <div class="stepTitle">{{item.title}}</div>
                 <div class="stepTime">{{item.time}}</div>
-                <div class="check">查看文件</div>
+                <div class="check" @click="clickMore">查看文件</div>
               </div>
             </div>
           </div>
@@ -35,7 +34,7 @@
               <div class="right">
                 <div class="stepTitle">{{item.title}}</div>
                 <div class="stepTime">{{item.time}}</div>
-                <div class="check">查看文件</div>
+                <div class="check" @click="clickMore">查看文件</div>
               </div>
             </div>
           </div>
@@ -52,7 +51,7 @@
               <div class="right">
                 <div class="stepTitle">{{item.title}}</div>
                 <div class="stepTime">{{item.time}}</div>
-                <div class="check">查看文件</div>
+                <div class="check" @click="clickMore">查看文件</div>
               </div>
             </div>
           </div>
@@ -60,22 +59,48 @@
       </tab>
 
     </van-tabs>
-
+    <van-popup v-model="show">
+<!--      <myPdf :url="url"></myPdf>-->
+            <div class="pdfBox">
+              <pdf
+                class="pdf"
+                v-for="i in pageCount"
+                :key="i"
+                :src="src"
+                :page="i"
+              ></pdf>
+            </div>
+    </van-popup>
   </div>
 </template>
 
 <script>
+  import myPdf from '@/components/gongdi/common/pdf'
   import navBar from '../components/navBar'
   import tab from '../components/tab'
+  import pdf from 'vue-pdf'
 
   export default {
     name: 'staff',
     components: {
       navBar,
-      tab
+      tab,
+      myPdf
+    },
+    mounted() {
+      let src = 'http://image.cache.timepack.cn/nodejs.pdf'
+      // let src = 'http://39.100.94.4:38080/zhihuigongdi/cailiaopdf/201811210155/%E8%B4%A8%E9%87%8F%E5%91%A8%E6%A3%80%E3%80%9020190423%E3%80%9120190103171046.pdf'
+      this.src = pdf.createLoadingTask(src)
+      this.src.promise.then(pdf => {
+        this.pageCount = pdf.numPages
+      })
     },
     data() {
       return {
+        url: 'http://image.cache.timepack.cn/nodejs.pdf',
+        src: null,
+        pageCount: 0,
+        show: false,
         active: 0,
         stepsList: [
           { title: '地下室结构开始', time: '2020-10-12' },
@@ -85,7 +110,7 @@
           { title: '质量周检【2020-11-12】', time: '2020-11-12' },
           { title: '质量周检【2020-12-12】', time: '2020-12-12' },
           { title: '质量周检【2020-12-12】', time: '2020-12-12' },
-          { title: '质量周检【2020-12-12】', time: '2020-12-12' },
+          { title: '质量周检【2020-12-12】', time: '2020-12-12' }
 
         ]
 
@@ -93,10 +118,13 @@
     },
     created() {
     },
-    mounted() {
 
-    },
     methods: {
+      clickMore() {
+        this.show = true
+        let url = 'http://39.100.94.4:38080/zhihuigongdi/cailiaopdf/201811210155/%E8%B4%A8%E9%87%8F%E5%91%A8%E6%A3%80%E3%80%9020190423%E3%80%9120190103171046.pdf'
+        // window.open(url)
+      },
       onClickLeft() {
         this.$router.push({ path: '/' })
       }
@@ -144,7 +172,7 @@
             position: relative;
 
             .line {
-              top: 20%;
+              top: 30%;
               left: 5.5%;
               width: 1px;
               height: 102%;
@@ -192,6 +220,18 @@
         }
       }
 
+    }
+
+    .pdfBox {
+      height: 80vh;
+      width: 80vw;
+      overflow-y: scroll;
+
+      .pdf {
+        height: 100%;
+        width: 100%;
+
+      }
     }
 
 

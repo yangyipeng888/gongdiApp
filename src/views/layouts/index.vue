@@ -7,7 +7,7 @@
       <router-view v-else></router-view>
     </div>
     <div class="layout-footer" v-show="$store.state.currentSite">
-      <van-tabbar v-model="active">
+      <van-tabbar class="tab" v-model="active">
         <van-tabbar-item v-for="tab in tabItems" :to="tab.to" :icon="tab.icon">{{tab.label}}</van-tabbar-item>
       </van-tabbar>
     </div>
@@ -26,22 +26,30 @@
         let obj = {}
         obj[AUTH.gongren] = [
           { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
-          { name: 'person', icon: 'home-o', label: '我的', to: 'user' }
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
         ]
         obj[AUTH.yezhu] = [
-          { name: 'home', icon: 'home-o', label: '首页', to: 'submit' },
-          { name: 'map', icon: 'home-o', label: '地图', to: 'submit' },
-          { name: 'person', icon: 'home-o', label: '我的', to: 'submit' }
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'map', icon: 'location-o', label: '地图', to: 'map' },
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
         ]
         obj[AUTH.shigong] = [
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' }]
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'map', icon: 'location-o', label: '地图', to: 'map' },
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
+        ]
         obj[AUTH.zhengfu] = [
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' },
-          { name: '1', icon: 'home-o', label: 'gongren', to: 'submit' }]
-        return obj[right]
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'map', icon: 'location-o', label: '地图', to: 'map' },
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
+        ]
+        if (obj[right]) {
+          return obj[right]
+        }
+        return [
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
+        ]
       }
     },
     data() {
@@ -69,6 +77,18 @@
     }
 
     .layout-footer {
+      .tab {
+
+      }
+
+      .tab /deep/ .van-tabbar-item__icon {
+        font-size: 25px !important;
+      }
+
+      .tab /deep/ .van-tabbar-item__text {
+        font-size: 15px !important;
+      }
     }
+
   }
 </style>

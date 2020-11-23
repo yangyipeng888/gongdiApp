@@ -2,71 +2,53 @@
   <div class="qualityForm1">
     <form1>
       <template v-slot:title>
-        现场巡检结果
+        深基坑监控
       </template>
       <template v-slot:list-title>
         <div class="listTitle">
-          <div class="title_time">时间</div>
-          <div class="title_desc">问题描述</div>
-          <div class="title_status">形象进度</div>
-          <div class="title_type">操作</div>
+          <div class="title_time">监测项目</div>
+          <div class="title_desc">变速最大值</div>
+          <div class="title_type">报警概况</div>
+          <div class="title_status">状态</div>
+          <div class="title_operate">操作</div>
         </div>
       </template>
       <template v-slot:list>
         <div class="problem_list" v-show="problems&&problems.length"
              v-for="pro,index in problems" :key="index" @click="clickPro(pro)">
           <div class="problem_time van-ellipsis">{{pro.timestamp}}</div>
-          <div class="problem_desc van-ellipsis">质量周检20201016</div>
+          <div class="problem_desc van-ellipsis">{{pro.miaoshu}}</div>
+          <div class="problem_type">{{pro.type}}</div>
           <div class="problem_status">
             <div class="status_txt" :class="{status_ok:pro.xiufuzhuangtai==myConst.problem_status.OK,status_nok:pro.xiufuzhuangtai==myConst.problem_status.NOT_OK,
             status_appoint:pro.xiufuzhuangtai==myConst.problem_status.NOT_APPOINT,}">
-              良好
+              安全
             </div>
           </div>
-          <div @click="clickMore" class="problem_type">查看</div>
+          <div class="problem_operate">查看</div>
 
         </div>
       </template>
     </form1>
-    <van-popup round v-model="showDialog">
-      <div class="pdfBox">
-        <pdf
-          class="pdf"
-          v-for="i in pageCount"
-          :key="i"
-          :src="src"
-          :page="i"
-        ></pdf>
-      </div>
-    </van-popup>
+
   </div>
 
 </template>
 
 <script>
   import form1 from '@/components/gongdi/common/form'
-  import pdf from 'vue-pdf'
 
   export default {
     name: 'problemList',
     components: {
       form1
     },
-    data() {
-      return {
-        src: null,
-        pageCount: 0,
-        showDialog: false,
-        timeId: null,
-        problems: []
-      }
-    },
     mounted() {
-      let src = 'http://image.cache.timepack.cn/nodejs.pdf'
-      this.src = pdf.createLoadingTask(src)
-      this.src.promise.then(pdf => {
-        this.pageCount = pdf.numPages
-      })
+      // this.timeId = setInterval(() => {
+      //   this.problems.unshift(
+      //     { time: '2020-6-6', type: 1, desc: Math.random() + 'xx工地xx人员没佩戴安全帽子' }
+      //   )
+      // }, 1000)
       this.getwentiList()
     },
     destroyed() {
@@ -76,9 +58,6 @@
     },
     methods: {
       clickPro(item) {
-      },
-      clickMore() {
-        this.showDialog = true
       },
       getwentiList() {
         let projectIds = this.$store.state.currentSite
@@ -93,8 +72,14 @@
           })
         })
       }
-    }
+    },
+    data() {
+      return {
+        timeId: null,
+        problems: []
+      }
 
+    }
   }
 </script>
 
@@ -113,17 +98,22 @@
       }
 
       .title_desc {
-        width: 40%;
+        width: 25%;
       }
+
+      .title_type {
+        width: 20%;
+
+      }
+
       .title_status {
         width: 20%;
 
       }
-      .title_type {
-        width: 15%;
 
+      .title_operate {
+        width: 10%;
       }
-
 
     }
 
@@ -144,8 +134,14 @@
       }
 
       .problem_desc {
-        width: 40%;
+        width: 25%;
       }
+
+      .problem_type {
+        width: 20%;
+
+      }
+
       .problem_status {
         width: 20%;
         display: flex;
@@ -176,23 +172,9 @@
         }
       }
 
-      .problem_type {
-        width: 15%;
+      .problem_operate {
+        width: 10%;
         color: $common_blue;
-
-      }
-
-    }
-
-    .pdfBox {
-      height: 80vh;
-      width: 80vw;
-      overflow-y: scroll;
-
-      .pdf {
-        height: 100%;
-        width: 100%;
-
       }
     }
   }
