@@ -97,6 +97,7 @@ module.exports = {
     config.plugin('define').tap(args => {
       args[0].SUCCESS = 200
       args[0].FAIL = 400
+      args[0].APP = {appid:'2020110502072188',appkey:'22pyj0Rj47F8'}
       args[0].AUTH = { gongren: '5', yezhu: '6', shigong: '7', zhengfu: '8' }
       return args
     })

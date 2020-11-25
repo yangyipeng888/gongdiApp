@@ -377,8 +377,12 @@ class sApi {
     return post(`${this.Base_url}?method=getprojectNameandjianshedanwei`, option)
   }
   //下属单位列表
-  getprojectBelongList = function(projectids) {
-    var option = { projectIds: projectids }
+  // getprojectBelongList = function(projectids) {
+  //   var option = { projectIds: projectids }
+  //   return post(`${this.Base_url}?method=projectInfo`, option)
+  // }
+  getprojectBelongList = function (account) {
+    var option = {account}
     return post(`${this.Base_url}?method=projectInfo`, option)
   }
   //完成排名

@@ -73,8 +73,20 @@
       problemList
     },
     data() {
-      return {
-        btnList: [
+      return {}
+    },
+
+    computed: {
+      btnList() {
+        let right = this.$store.getters.right
+        let obj = {}
+        obj[AUTH.gongren] = [
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全学习', path: '/study' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
+        ]
+        obj[AUTH.yezhu] = [
           { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
           { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
@@ -84,12 +96,47 @@
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '施工进度', path: '/progress' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
-          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' }
-        ]
-      }
-    },
+          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
 
-    computed: {
+        ]
+        obj[AUTH.shigong] = [
+          { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
+          { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '文明施工', path: '/civilize' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全学习', path: '/study' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '质量监管', path: '/quality' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '施工进度', path: '/progress' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
+          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
+        ]
+        obj[AUTH.zhengfu] = [
+          { imgUrl: require('../../assets/img/文件夹-红.png'), desc: '文件管理', path: '/files' },
+          { imgUrl: require('../../assets/img/照片相册.png'), desc: '现场照片', path: '/picView' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '文明施工', path: '/civilize' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全学习', path: '/study' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '质量监管', path: '/quality' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '施工进度', path: '/progress' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
+          { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
+        ]
+        if (obj[right]) {
+          return obj[right]
+        }
+        return [
+          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
+          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
+        ]
+      },
       currentSiteObj() {
         let id = this.$store.state.currentSite
         return this.$store.state.constructionSite[id]

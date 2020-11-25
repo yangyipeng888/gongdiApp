@@ -83,7 +83,8 @@
     },
     mounted() {
       setTimeout(() => {
-        this.showPop = true
+        // this.showPop = true
+        this.onConfirm([2020,'六月'])
       }, 500)
     },
     methods: {
@@ -143,7 +144,7 @@
             return
           }
           this.contents = response
-          Toast.fail('获取成功!')
+          Toast.success('获取成功!')
         }).catch(function(response) {
           Toast.fail('获取失败!')
         })

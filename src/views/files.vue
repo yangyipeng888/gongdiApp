@@ -170,7 +170,8 @@
     },
     mounted() {
       setTimeout(() => {
-        this.showPop = true
+        // this.showPop = true
+        this.getFileList({id:1,text:'立项文件'})
       }, 500)
     },
     methods: {
@@ -261,7 +262,7 @@
           .sel_title {
             font-size: 18px;
             font-weight: 600;
-            padding: 5px 0 0 10px;
+            padding:5px 10px;
           }
 
           .file_item {

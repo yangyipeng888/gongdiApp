@@ -9,11 +9,13 @@
     <div>
       <slot name="content"></slot>
     </div>
-    <div class="form_content">
-      <div class="nothing" v-show="problems&&problems.length==0">暂无问题</div>
+    <div class="form_content" :style="{maxHeight:mh}">
       <transition-group name="checkin_ani">
-            <slot name="list"></slot>
+        <slot name="list"></slot>
       </transition-group>
+    </div>
+    <div>
+      <slot name="footer"></slot>
     </div>
 
 
@@ -23,38 +25,22 @@
 <script>
   export default {
     name: 'problemList',
+    props: {
+      mh: {
+        type: String,
+        default: '23vh'
+      }
+    },
     mounted() {
-      // this.timeId = setInterval(() => {
-      //   this.problems.unshift(
-      //     { time: '2020-6-6', type: 1, desc: Math.random() + 'xx工地xx人员没佩戴安全帽子' }
-      //   )
-      // }, 1000)
-      this.getwentiList()
+
     },
     destroyed() {
-      if (this.timeId) {
-        clearInterval(this.timeId)
-      }
+
     },
     methods: {
-      getwentiList() {
-        let projectIds = this.$store.state.currentSite
-        let account = this.$store.state.loginData.account
-        let quanxian = this.$store.state.right
-        let req = { projectIds, account, quanxian }
-        this.$Spi.getwentiList(req).then((res) => {
-          res.reverse()
-          this.problems = res
-          this.problems.forEach((item) => {
-            item.timestamp = item.timestamp.split(' ')[0]
-          })
-        })
-      }
     },
     data() {
       return {
-        timeId: null,
-        problems: []
       }
 
     }
@@ -84,7 +70,7 @@
     }
 
     .form_content {
-      max-height: 150px;
+      /*max-height: 150px;*/
       overflow: scroll;
 
       .nothing {

@@ -1,8 +1,6 @@
 <template>
   <div class="user_container">
-    <nav-bar class="nav"
-             :title="'我的'"
-    ></nav-bar>
+
     <div class="top">
       <div class="top_wrap">
         <van-image
@@ -12,7 +10,7 @@
         />
         <div class="top_msg">
           <div>
-            <span class="name">小李</span> <span class="job">员工</span>
+            <span class="name">{{$store.state.userName}}</span> <span class="job">员工</span>
           </div>
           <div>
             <!--            <span style="font-size: 16px;">员工</span>-->
@@ -21,23 +19,34 @@
       </div>
     </div>
     <div class="content">
-      <van-cell value="内容" is-link to="submit">
-        <template>
+      <van-cell value="" is-link to="user">
+        <!-- 使用 title 插槽来自定义标题 -->
+        <template #title>
+          <van-icon name="manager-o" style="margin-right: 10px;"/>
           <span class="custom-title">我的信息</span>
         </template>
       </van-cell>
-      <van-cell value="内容" is-link to="submit">
-        <template>
+      <van-cell value="" is-link to="user">
+        <!-- 使用 title 插槽来自定义标题 -->
+        <template #title>
+          <van-icon name="manager-o" style="margin-right: 10px;"/>
           <span class="custom-title">修改密码</span>
         </template>
       </van-cell>
-      <van-cell value="内容" is-link to="submit">
-        <template>
+      <van-cell value="" is-link to="user">
+        <!-- 使用 title 插槽来自定义标题 -->
+        <template #title>
+          <van-icon name="manager-o" style="margin-right: 10px;"/>
           <span class="custom-title">系统介绍</span>
         </template>
       </van-cell>
+
     </div>
-    <van-button @click="logout" class="logOut" round type="info" block>登出</van-button>
+    <div style="margin: 20px;">
+      <van-button block type="info" native-type="submit"  @click="logout" >
+        登出
+      </van-button>
+    </div>
   </div>
 </template>
 
@@ -111,8 +120,8 @@
       }
     }
 
-    .content  {
-      span{
+    .content {
+      span {
         font-size: 19px;
 
       }

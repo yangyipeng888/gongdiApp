@@ -11,6 +11,8 @@ import store from './store'
 import { Spi } from './api/api'
 
 Vue.prototype.$Spi = Spi
+import gdApi from '@/api/gongdanApi'
+Vue.prototype.$gdApi = gdApi
 import _ from 'lodash'
 
 Vue.prototype._ = _

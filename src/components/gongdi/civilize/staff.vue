@@ -40,19 +40,19 @@
             staffName: 12323,
             time: '2020-11-17',
             suolue: 'http://39.100.94.4:38080/zhihuigongdi/zhajilist//img//夏先刚.jpg',
-            content: 'fhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhf'
+            content: ''
           },
           {
             staffName: 12323,
             time: '2020-11-17',
             suolue: 'http://39.100.94.4:38080/zhihuigongdi/zhajilist//img//夏先刚.jpg',
-            content: 'fhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhf'
+            content: ''
           },
           {
             staffName: 12323,
             time: '2020-11-17',
             suolue: 'http://39.100.94.4:38080/zhihuigongdi/zhajilist//img//夏先刚.jpg',
-            content: 'fhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhffhfghfghfhf'
+            content: ''
           }
         ]
       }

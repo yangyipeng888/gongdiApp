@@ -31,8 +31,8 @@
             <div class="form_item van-hairline--bottom" v-show="problemList" v-for="item in problemList">
               <div class="form_title">{{item.title}}：</div>
               <div class="form_desc">
-                备注：{{item.pros.title2}}<br>
-                描述：{{item.pros.desc}}<br>
+                备注：{{item.pros.beizhu}}<br>
+                计划：{{item.pros.jihua}}<br>
                 解决建议：{{item.pros.jiejuejianyi}}
               </div>
 
@@ -124,7 +124,7 @@
           let list = res.data.czwtData
           if (list && list.length) {
             for (let i = 0; i < list.length; i++) {
-              let pros = JSON.parse(list[i].wtx)
+              let pros = JSON.parse(list[i].wtx)[0]
               let title = list[i].title
               prolist.push({ title, pros })
             }
@@ -136,8 +136,7 @@
           let jinduList = res.data.jinduData
           if (jinduList && jinduList.length) {
             for (let i = 0; i < jinduList.length; i++) {
-              // let pros = JSON.parse(jinduList[i].jdx)
-              let pros = jinduList[i].jdx[0]
+              let pros = JSON.parse(jinduList[i].jdx)
               let title = jinduList[i].title
               let show = true
               jinduObj.list.push({ title, pros, show })

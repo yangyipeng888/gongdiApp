@@ -151,7 +151,8 @@
       getDanweiList() {
         if (this.$store.state.loginData) {
           let projectids = this.$store.state.loginData.projectids
-          this.$Spi.getprojectBelongList(projectids).then((res) => {
+          let account = this.$store.state.account;
+          this.$Spi.getprojectBelongList(account).then((res) => {
             this.createMap()//createMap为什么在这里执行，因为markers的颜色要根据这个接口返回的公司类型，暂时这样做
             let data = res.data
             let itemObj = {}
