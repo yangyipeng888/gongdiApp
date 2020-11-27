@@ -35,7 +35,8 @@
             </div>
           </template>
           <template v-slot:footer>
-            <van-pagination @change="getList" v-show="total>0" :total-items="total" v-model="queryParams.pageIndex"  :items-per-page="queryParams.pageSize"/>
+            <van-pagination @change="getList" v-show="total>0" :total-items="total" v-model="queryParams.pageIndex"
+                            :items-per-page="queryParams.pageSize"/>
           </template>
 
         </form1>
@@ -62,36 +63,37 @@
       return {
         problems: [],
         listQuery: {
-          state: '-1',
+          state: '-1'
         },
-        total:0,
+        total: 0,
         queryParams: {
           pageIndex: 1,
-          pageSize: 10,
-        },
+          pageSize: 10
+        }
       }
     },
     mounted() {
-      this.getList();
+      this.getList()
 
     },
     methods: {
       clickMore(row) {
         let req = {
           applyId: this.myConst.appId,
-          applyKey:this.myConst.appKey,
-          orderId: row.id,
+          applyKey: this.myConst.appKey,
+          orderId: row.id
         }
         this.$gdApi.getWork(req).then((res) => {
-          let gdData = {orderInfo: row, works: []}
+          let gdData = { orderInfo: row, works: [] }
           for (let i = 0; i < res.data.length; i++) {
-            let item = res.data[i];
-            gdData.works.push(item);
+            let item = res.data[i]
+            gdData.works.push(item)
           }
           this.$router.push({
             name: 'problemDetails',
             params: {
-              gdData
+              gdData,
+              showBtn: false
             }
           })
         })
@@ -107,29 +109,30 @@
         return this.myConst.GD_STATE_LABEL[orderState]
       },
       getList() {
-        let req = {};
-        req.applyId = this.myConst.appId;
-        req.applyKey = this.myConst.appKey;
-        req.state = this.listQuery.state;
-        req.page = this.queryParams.pageIndex;
-        req.amount = this.queryParams.pageSize;
+        let req = {}
+        req.applyId = this.myConst.appId
+        req.applyKey = this.myConst.appKey
+        req.state = this.listQuery.state
+        let curSite = this.$store.state.currentSite
+        req.orderStyle = this.$store.state.constructionSite[curSite].name
+        req.page = this.queryParams.pageIndex
+        req.amount = this.queryParams.pageSize
         this.$gdApi.getOrderInfo(req).then(res => {
           if (res.code == SUCCESS) {
+            res.data.orders.sort(function(a, b) {
+              return b.createTime - a.createTime
+            })
             res.data.orders.forEach((item) => {
               item.createTime = new Date(item.createTime).toLocaleDateString().split(' ')[0]
             })
             res.data.orders.forEach((item) => {
               item.dealTime = new Date(item.dealTime).toLocaleDateString().split(' ')[0]
             })
-            this.problems = res.data.orders;
-            this.total = res.data.pageSize * this.queryParams.pageSize;
+            this.problems = res.data.orders
+            this.total = res.data.pageSize * this.queryParams.pageSize
 
           } else {
-            this.problems = [];
-            this.$message({
-              message: res.msg,
-              type: 'error'
-            })
+            this.problems = []
           }
           this.loading = false
         })

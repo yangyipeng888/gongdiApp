@@ -76,4 +76,12 @@ export default {
     var method = "/work/getWork";
     return get(method, data)
   },
+  dealWork : function (data) {
+    var method = "/work/dealWork";
+    return post(method, data)
+  },
+  checkWork :function (data) {
+    var method = "/work/checkWork";
+    return post(method, data)
+  }
 }

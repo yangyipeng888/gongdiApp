@@ -91,7 +91,9 @@
         this.$router.push({
           name: 'problemDetails',
           params: {
-            gdData
+            gdData,
+            showBtn: true
+
           }
         })
       },
@@ -115,6 +117,9 @@
         this.$gdApi.getOrderInfoByUser(req).then(res => {
           if (res.code == SUCCESS) {
             this.gdList = res.data.orders
+            res.data.orders.sort(function(a, b) {
+              return b.orderInfo.createTime - a.orderInfo.createTime
+            })
             res.data.orders.forEach((item) => {
               item.orderInfo.createTime = new Date(item.orderInfo.createTime).toLocaleDateString().split(' ')[0]
             })

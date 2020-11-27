@@ -32,11 +32,18 @@
           placeholder="请点击选择"
         >
         </van-field>
-        <van-field v-else name="uploader" :label="item.label">
+        <van-field v-else :label="item.label">
           <template v-if="item.type=='radio'" #input>
             <van-radio-group direction="horizontal" v-model="formData[key]">
               <van-radio v-for="radio in item.options" :name="radio.value">{{radio.text}}</van-radio>
             </van-radio-group>
+          </template>
+          <template v-else-if="item.type=='upload-file'" #input>
+            <van-uploader v-show="!formDescImgs" v-model="fileObj[key]" :after-read="afterRead"/>
+            <div v-show="formDescImgs">
+              <van-image @click="previewImg(item.url)" v-for="item in formDescImgs" width="100" height="100"
+                         :src="item.url"/>
+            </div>
           </template>
           <template v-else-if="item.type=='switch'" #input>
             <van-switch v-model="formData[key]"/>
@@ -51,12 +58,10 @@
           </template>
         </van-field>
       </div>
-
-      <div style="margin: 16px;">
-        <van-button block type="info" native-type="submit">
-          提交
-        </van-button>
+      <div>
+        <slot name="footer"></slot>
       </div>
+
     </van-form>
     <van-popup get-container="body" v-model="isShowPop" position="bottom">
       <van-picker
@@ -77,6 +82,8 @@
 </template>
 
 <script>
+  import { ImagePreview } from 'vant'
+
   export default {
     name: 'formDesc',
     watch: {
@@ -94,9 +101,12 @@
         immediate: true
       }
     },
-    props: ['formDescData'],
+    props: ['formDescData', 'formDescImgs','canBtn'],
+    mounted() {
+    },
     data() {
       return {
+        fileObj: {},
         curPopItem: null,
         curPopKey: null,
         isShowPop: false,
@@ -107,7 +117,19 @@
       }
     },
     methods: {
+      afterRead(file) {
+        console.log(this.fileObj)
+        // console.log(JSON.stringify(this.formData))
+      },
+      beforeDelete(file) {
 
+      },
+      getFormData() {
+        return this.formData
+      },
+      getFormFiles() {
+        return this.fileObj
+      },
       showPop(type, item, key) {
         this.isShowPop = true
         this.showPopType = type
@@ -149,13 +171,19 @@
           strDate = '0' + strDate
         }
         var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-          + ' ' + date.getHours() + seperator2 + date.getMinutes()
-          + seperator2 + date.getSeconds()
+          + ' ' + '00' + seperator2 + '00'
+          + seperator2 + '00'
         return currentdate
       },
       dateConfirm(val) {
         this.formData[this.curPopKey] = this.dateTrans(val)
         this.isShowPop = false
+      },
+      previewImg(url) {
+        ImagePreview({
+          images: [url],
+          showIndex: false
+        })
       }
     }
   }

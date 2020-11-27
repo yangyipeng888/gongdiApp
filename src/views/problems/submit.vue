@@ -15,7 +15,6 @@
             :value="ruleForm.orderStyle"
             label="工单种类"
             placeholder="请点击选择"
-            @click="showType = true"
           >
           </van-field>
           <van-field
@@ -28,14 +27,14 @@
             @click="showLv = true"
           >
           </van-field>
-          <van-field
-            v-model="ruleForm.orderType"
-            type="textarea"
-            name="工单类型"
-            label="工单类型"
-            placeholder="工单类型"
-          >
-          </van-field>
+          <!--          <van-field-->
+          <!--            v-model="ruleForm.orderType"-->
+          <!--            type="textarea"-->
+          <!--            name="工单类型"-->
+          <!--            label="工单类型"-->
+          <!--            placeholder="工单类型"-->
+          <!--          >-->
+          <!--          </van-field>-->
           <van-field
             v-model="ruleForm.orderContent"
             type="textarea"
@@ -49,23 +48,21 @@
               </div>
             </template>
           </van-field>
+          <!--          <van-field name="uploader" label="图片上传">-->
+          <!--            <template #input>-->
+          <!--              <van-uploader v-model="uploader" :after-read="afterRead"/>-->
+          <!--            </template>-->
+          <!--          </van-field>-->
           <van-field
             readonly
             clickable
             name="picker"
             :value="ruleForm.dealTime"
-            label="处理时间"
+            label="预处理时间"
             placeholder="请点击选择"
             @click="showDate = true"
           >
           </van-field>
-
-          <!--          <van-field name="uploader" label="问题照片">-->
-          <!--            <template #input>-->
-          <!--              &lt;!&ndash;              <uploader :fileList="fileList" ></uploader>&ndash;&gt;-->
-          <!--              <van-uploader v-model="fileList"/>-->
-          <!--            </template>-->
-          <!--          </van-field>-->
           <div style="margin: 16px;">
             <van-button block type="info" native-type="submit" @click="onSubmit">
               提交
@@ -99,7 +96,7 @@
       />
     </van-popup>
     <van-popup v-model="showDialog" style="border-radius: 10px">
-      <form-desc :formDescData="formDescData"></form-desc>
+      <form-desc ref="myForm" :formDescData="formDescData"></form-desc>
     </van-popup>
   </div>
 </template>
@@ -161,22 +158,17 @@
     },
     data() {
       return {
+        uploader: [],
         formDescData: null,
         ruleForm: {
-          fileList: '',
           applyId: '',
           orderStyle: '',
           orderType: '',
           taskName: '',
           orderContent: '',
           dealTime: '',
-          user: '',
+          user: ''
         },
-        fileList: [
-          // Uploader 根据文件后缀来判断是否为图片文件
-          // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-          // { url: 'https://cloud-image', isImage: true }
-        ],
         proTypes: ['生产安全', '工地安全'],
         taskData: null,
         proLvs: ['一般', '严重'],
@@ -188,50 +180,88 @@
       }
     },
     mounted() {
-      let id = this.$store.state.currentSite
       this.getOptions()
 
     },
     methods: {
-      clickCheck() {
-        this.showDialog = true
+      afterRead(file) {
+
       },
-      getOptions() {
-        this.$gdApi.getOrderStyle().then((res) => {
-          if (res.code == SUCCESS) {
-            this.proTypes = res.data
-          }
-        }).catch(() => {
 
-        })
-        this.$gdApi.getTaskList().then((res) => {
-          if (res.code == SUCCESS) {
-            this.taskData = res.data
-            this.proLvs = []
-            for (let i = 0; i < this.taskData.length; i++) {
-              this.proLvs.push(this.taskData[i].name)
+      clickCheck() {
+        if (this.formDescData) {
+          this.showDialog = true
+        } else {
+          Toast.fail('请先选择任务名称')
+        }
+      },
+      setOrderStyle() {
+        let id = this.$store.state.currentSite
+        let name = this.$store.state.constructionSite[id].name
+        this.ruleForm.orderStyle = name
+      },
+      async getOptions() {
+        await this.getOrderStyle()
+        await this.getTaskList()
+        this.setOrderStyle()//setOrderStyle 一定要在前两部完成后，不然没数据
+      },
+      getOrderStyle() {
+        return new Promise((resolve, reject) => {
+          this.$gdApi.getOrderStyle().then((res) => {
+            if (res.code == SUCCESS) {
+              this.proTypes = res.data
+              resolve()
             }
-          }
-        }).catch(() => {
-
+          }).catch(() => {
+            reject()
+          })
+        })
+      },
+      getTaskList() {
+        return new Promise((resolve, reject) => {
+          this.$gdApi.getTaskList().then((res) => {
+            if (res.code == SUCCESS) {
+              this.taskData = res.data
+              this.proLvs = []
+              for (let i = 0; i < this.taskData.length; i++) {
+                this.proLvs.push(this.taskData[i].name)
+              }
+              resolve()
+            }
+          }).catch(() => {
+            reject()
+          })
         })
       },
       onClickLeft() {
         this.$router.back(-1)
       },
       onSubmit(formName) {
-        let formData = new FormData();
-        formData.append('file', this.ruleForm.fileList);
-        formData.append('applyId', this.myConst.appId);
-        formData.append('orderStyle', this.ruleForm.orderStyle);
-        formData.append('orderType', this.ruleForm.orderType);
-        formData.append('taskName', this.ruleForm.taskName);
-        formData.append('orderContent', this.ruleForm.orderContent);//待处理
-        formData.append('dealTime', this.ruleForm.dealTime);
-        formData.append('user', this.$store.state.account);
+        //new Formdata
+        let formData = new FormData()
+        //myFormData
+        let myFormData = this.$refs.myForm.getFormData()
+        let orderContent = JSON.parse(this.ruleForm.orderContent)
+        orderContent.formData = myFormData
+        orderContent = JSON.stringify(orderContent)
+        let myFormFiles = this.$refs.myForm.getFormFiles()
+        // formData.append('file', this.ruleForm.fileList)
+        for (let key in myFormFiles) {
+          let list = myFormFiles[key]
+          for (let i = 0; i < list.length; i++) {
+            formData.append('fileList', list[i].file)
+          }
+        }
+        formData.append('applyId', this.myConst.appId)
+        formData.append('orderStyle', this.ruleForm.orderStyle)
+        formData.append('orderType', this.ruleForm.orderType)
+        formData.append('taskName', this.ruleForm.taskName)
+        formData.append('orderContent', orderContent)//待处理
+        formData.append('dealTime', this.ruleForm.dealTime)
+        formData.append('user', this.$store.state.account)
         this.$gdApi.addOrderInfo(formData).then((res) => {
           if (res.code == SUCCESS) {
-            Toast.success(res.msg);
+            Toast.success(res.msg)
           } else {
 
           }
@@ -259,12 +289,12 @@
           strDate = '0' + strDate
         }
         var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-          + ' ' + date.getHours() + seperator2 + date.getMinutes()
-          + seperator2 + date.getSeconds()
+          + ' ' + '00' + seperator2 + '00'
+          + seperator2 + '00'
         return currentdate
       },
       onConfirmDate(value) {
-        this.ruleForm.dealTime = this.dateTrans(value);
+        this.ruleForm.dealTime = this.dateTrans(value)
         this.showDate = false
       }
     }
