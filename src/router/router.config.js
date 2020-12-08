@@ -139,7 +139,7 @@ export const constantRouterMap = [
   {
     path: '/problemDetails',
     name: 'problemDetails',
-    component: () => import('@/views/problems/problemDetails'),
+    component: () => import('@/views/problems/problemDetails/index'),
     meta: {
       title: '工单详情',
       keepAlive: false

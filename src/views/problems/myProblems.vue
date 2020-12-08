@@ -14,7 +14,7 @@
           <template v-slot:list-title>
             <div class="listTitle">
               <div class="title_time">创建者</div>
-              <div class="title_desc">创建时间</div>
+              <div class="title_desc">工单id</div>
               <div class="title_type">状态</div>
               <div class="title_status">操作</div>
             </div>
@@ -23,7 +23,7 @@
             <div class="problem_list" v-show="problems&&problems.length"
                  v-for="pro,index in problems" :key="index" @click="clickPro(pro)">
               <div class="problem_time van-ellipsis">{{pro.createUser}}</div>
-              <div class="problem_desc van-ellipsis">{{pro.createTime}}</div>
+              <div class="problem_desc">{{pro.id}}</div>
               <div class="problem_status">
                 <div class="status_txt" :class="{status_ok:pro.orderState==myConst.GD_STATE.FINISH,status_nok:pro.orderState==myConst.GD_STATE.NOT,
             status_appoint:pro.orderState==myConst.GD_STATE.DOING,}">
@@ -114,6 +114,9 @@
         req.page = this.queryParams.pageIndex
         req.amount = this.queryParams.pageSize
         req.user = this.$store.state.account
+        let id = this.$store.state.currentSite
+        let name = this.$store.state.constructionSite[id].name
+        req.orderStyle = name
         this.$gdApi.getOrderInfoByUser(req).then(res => {
           if (res.code == SUCCESS) {
             this.gdList = res.data.orders
@@ -182,11 +185,11 @@
           line-height: 30px;
 
           .title_time {
-            width: 25%;
+            width: 20%;
           }
 
           .title_desc {
-            width: 35%;
+            width: 40%;
           }
 
           .title_type {
@@ -213,11 +216,11 @@
           line-height: 30px;
 
           .problem_time {
-            width: 25%;
+            width: 20%;
           }
 
           .problem_desc {
-            width: 35%;
+            width: 40%;
           }
 
           .problem_type {

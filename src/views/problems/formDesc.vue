@@ -1,13 +1,13 @@
 <template>
   <div>
-    <van-form :disabled="true" style="width: 90vw;">
+    <van-form :disabled="true" style="width: 100%;">
       <div v-for="(item,key,index) in desc">
         <van-field
           v-model="formData[key]"
-          v-if="item.type=='input'||item.type=='textarea'"
+          v-if="item.type=='input'||item.type=='textarea'||item.type=='number'"
           name="picker"
           :label="item.label"
-          placeholder="请点击选择"
+          placeholder="请输入内容"
         >
         </van-field>
         <van-field
@@ -26,7 +26,7 @@
           clickable
           @click="showPop('date',item,key)"
           v-model="formData[key]"
-          v-else-if="item.type=='date'"
+          v-else-if="item.type=='date'||item.type=='datetime'"
           name="picker"
           :label="item.label"
           placeholder="请点击选择"
@@ -55,6 +55,7 @@
           </template>
           <template v-else #input>
             v
+            {{item.type}}
           </template>
         </van-field>
       </div>
@@ -101,7 +102,7 @@
         immediate: true
       }
     },
-    props: ['formDescData', 'formDescImgs','canBtn'],
+    props: ['formDescData', 'formDescImgs', 'canBtn'],
     mounted() {
     },
     data() {

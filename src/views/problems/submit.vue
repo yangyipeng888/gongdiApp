@@ -35,19 +35,19 @@
           <!--            placeholder="工单类型"-->
           <!--          >-->
           <!--          </van-field>-->
-          <van-field
-            v-model="ruleForm.orderContent"
-            type="textarea"
-            name="工单内容"
-            label="工单内容"
-            placeholder="工单内容"
-          >
-            <template #input>
-              <div style="height: 100%;position: absolute;">
-                <van-button @click="clickCheck" type="primary" size="small">查看模板</van-button>
-              </div>
-            </template>
-          </van-field>
+          <!--          <van-field-->
+          <!--            v-model="ruleForm.orderContent"-->
+          <!--            type="textarea"-->
+          <!--            name="工单内容"-->
+          <!--            label="工单内容"-->
+          <!--            placeholder="工单内容"-->
+          <!--          >-->
+          <!--            <template #input>-->
+          <!--              <div style="height: 100%;position: absolute;">-->
+          <!--                <van-button @click="clickCheck" type="primary" size="small">查看模板</van-button>-->
+          <!--              </div>-->
+          <!--            </template>-->
+          <!--          </van-field>-->
           <!--          <van-field name="uploader" label="图片上传">-->
           <!--            <template #input>-->
           <!--              <van-uploader v-model="uploader" :after-read="afterRead"/>-->
@@ -63,6 +63,9 @@
             @click="showDate = true"
           >
           </van-field>
+
+          <form-desc v-show="formDescData" ref="myForm" :formDescData="formDescData"></form-desc>
+
           <div style="margin: 16px;">
             <van-button block type="info" native-type="submit" @click="onSubmit">
               提交
@@ -95,9 +98,9 @@
         title="选择年月日"
       />
     </van-popup>
-    <van-popup v-model="showDialog" style="border-radius: 10px">
-      <form-desc ref="myForm" :formDescData="formDescData"></form-desc>
-    </van-popup>
+    <!--    <van-popup v-model="showDialog" style="border-radius: 10px">-->
+    <!--      <form-desc ref="myForm" :formDescData="formDescData"></form-desc>-->
+    <!--    </van-popup>-->
   </div>
 </template>
 
@@ -143,10 +146,24 @@
             for (let i = 0; i < this.taskData.length; i++) {
               let name = this.taskData[i].name
               if (n == name) {
-                let content = this.taskData[i].model.data
-                this.ruleForm.orderContent = content
-                this.formDescData = content
-                break
+                // let content = this.taskData[i].modelData
+                // this.ruleForm.orderContent = content
+                // this.formDescData = content
+                let content = this.taskData[i].logicData
+                let nodes = JSON.parse(content).nodes
+                for (let i = 0; i < nodes.length; i++) {
+                  let node = nodes[i]
+                  if (node.id == 0) {
+                    let data = {
+                      formDesc: ''
+                    }
+                    data.formDesc = node.model
+                    this.formDescData = JSON.stringify(data)
+                    this.ruleForm.orderContent = JSON.stringify(data)
+                    break
+                  }
+                }
+
               }
             }
           }
@@ -169,7 +186,7 @@
           dealTime: '',
           user: ''
         },
-        proTypes: ['生产安全', '工地安全'],
+        proTypes: [],
         taskData: null,
         proLvs: ['一般', '严重'],
         showType: false,
@@ -201,7 +218,7 @@
         this.ruleForm.orderStyle = name
       },
       async getOptions() {
-        await this.getOrderStyle()
+        // await this.getOrderStyle()
         await this.getTaskList()
         this.setOrderStyle()//setOrderStyle 一定要在前两部完成后，不然没数据
       },
@@ -237,29 +254,36 @@
         this.$router.back(-1)
       },
       onSubmit(formName) {
-        //new Formdata
-        let formData = new FormData()
         //myFormData
         let myFormData = this.$refs.myForm.getFormData()
         let orderContent = JSON.parse(this.ruleForm.orderContent)
         orderContent.formData = myFormData
         orderContent = JSON.stringify(orderContent)
         let myFormFiles = this.$refs.myForm.getFormFiles()
-        // formData.append('file', this.ruleForm.fileList)
+        let req = {}
+        req.imgs = []
         for (let key in myFormFiles) {
           let list = myFormFiles[key]
-          for (let i = 0; i < list.length; i++) {
-            formData.append('fileList', list[i].file)
+          let listImg = []
+          list.forEach((item) => {
+            listImg.push(item.file)
+          })
+          let data = {
+            fieldName: key,
+            img: listImg
           }
+          req.imgs.push(data)
         }
-        formData.append('applyId', this.myConst.appId)
-        formData.append('orderStyle', this.ruleForm.orderStyle)
-        formData.append('orderType', this.ruleForm.orderType)
-        formData.append('taskName', this.ruleForm.taskName)
-        formData.append('orderContent', orderContent)//待处理
-        formData.append('dealTime', this.ruleForm.dealTime)
-        formData.append('user', this.$store.state.account)
-        this.$gdApi.addOrderInfo(formData).then((res) => {
+        req.applyId = this.myConst.appId
+        req.orderStyle = this.ruleForm.orderStyle
+        req.orderType = this.ruleForm.orderType
+        req.taskName = this.ruleForm.taskName
+        req.orderContent = orderContent
+        req.dealTime = this.ruleForm.dealTime
+        req.user = this.$store.state.account
+
+
+        this.$gdApi.addOrderInfo(req).then((res) => {
           if (res.code == SUCCESS) {
             Toast.success(res.msg)
           } else {
