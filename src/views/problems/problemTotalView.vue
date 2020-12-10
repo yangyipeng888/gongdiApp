@@ -78,23 +78,7 @@
       }
     },
     watch: {
-      // 'curWork': {
-      //   handler(n, o) {
-      //     if (n) {
-      //       debugger
-      //       let orderData = this.$store.state.orderData
-      //       let logicData = this.orderData.logicData
-      //       let logic = util.findLogicNode(logicData, work.nodeId)
-      //       if (logic) {
-      //         let model = logic.model
-      //         let formDescData = { formDesc: model }
-      //         this.formDescData = JSON.stringify(formDescData)
-      //       }
-      //     }
-      //   },
-      //   deep: true,
-      //   immediate: true
-      // }
+
 
     },
     mounted() {
@@ -106,10 +90,13 @@
 
     methods: {
       showListItem(item) {
-        let workData = JSON.parse(item.workData)
-        let formDesc = workData.formDesc
-        let keys = Object.keys(formDesc)
-        return keys.length > 0
+        if(item.workData){
+          let workData = JSON.parse(item.workData)
+          let formDesc = workData.formDesc
+          let keys = Object.keys(formDesc)
+          return keys.length > 0
+        }
+        return false;
       },
       onClickLeft() {
         this.$router.back(-1)

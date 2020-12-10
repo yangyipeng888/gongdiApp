@@ -37,7 +37,9 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -100,11 +102,58 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}'
   )
 }
+
+export function getBase64(imgUrl) {
+  return new Promise((resolve, reject) => {
+    window.URL = window.URL || window.webkitURL
+    var xhr = new XMLHttpRequest()
+    xhr.open('get', imgUrl, true)
+    // 至关重要
+    xhr.responseType = 'blob'
+    xhr.onload = function() {
+      if (this.status == 200) {
+        //得到一个blob对象
+        var blob = this.response
+        console.log('blob', blob)
+        // 至关重要
+        let oFileReader = new FileReader()
+        oFileReader.onloadend = function(e) {
+          // 此处拿到的已经是 base64的图片了
+          let base64 = e.target.result
+          resolve(base64);
+        }
+        oFileReader.readAsDataURL(blob)
+      }
+    }
+    xhr.send()
+  })
+
+}
+export function dateTrans(val) {
+  var date = new Date(val)
+  var seperator1 = '-'
+  var seperator2 = ':'
+  var month = date.getMonth() + 1
+  var strDate = date.getDate()
+  if (month >= 1 && month <= 9) {
+    month = '0' + month
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = '0' + strDate
+  }
+  let hour = date.getHours()
+  let min = date.getMinutes()
+  var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+    + ' ' + hour + seperator2 + min
+    + seperator2 + '00'
+  return currentdate
+}
+

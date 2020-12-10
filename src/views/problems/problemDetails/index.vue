@@ -1,10 +1,11 @@
 <template>
   <div>
-    <handle v-if="isHandle" ></handle>
-    <appoint v-if="isAppoint" ></appoint>
-    <verify v-if="isVerify" ></verify>
-    <finish v-if="isFinish" ></finish>
-    <back v-if="isBack" ></back>
+    <handle v-if="isHandle"></handle>
+    <appoint v-if="isAppoint"></appoint>
+<!--    <appointAccept v-if="isAppointAccept"></appointAccept>-->
+    <verify v-if="isVerify"></verify>
+    <finish v-if="isFinish"></finish>
+    <back v-if="isBack"></back>
   </div>
 </template>
 
@@ -13,6 +14,7 @@
   import tab from '@/components/tab'
   import handle from './handle'
   import appoint from './appoint'
+  import appointAccept from './appointAccept'
   import verify from './verify'
   import finish from './finish'
   import back from './back'
@@ -34,8 +36,9 @@
       handle,
       verify,
       appoint,
+      appointAccept,
       finish,
-      back,
+      back
     },
     computed: {
       // isStart() {
@@ -45,6 +48,9 @@
         return this.nodeState == this.myConst.GD_NODE_STATE.NOT && (this.nodeType == this.myConst.GD_NODE_TYPE.tianbao || this.nodeType == this.myConst.GD_NODE_TYPE.chuli)
       },
       isAppoint() {
+        return this.nodeState == this.myConst.GD_NODE_STATE.NOT && this.nodeType == this.myConst.GD_NODE_TYPE.zhipai
+      },
+      isAppointAccept() {
         return this.nodeState == this.myConst.GD_NODE_STATE.NOT && this.nodeType == this.myConst.GD_NODE_TYPE.zhipai
       },
       isVerify() {

@@ -7,7 +7,7 @@
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+        <van-collapse-item v-show="showListItem(item)"  v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
           <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
@@ -43,27 +43,36 @@
     computed: {
       history() {
         let orderData = this.$store.state.orderData
+        let logicData = JSON.parse(orderData.logicData)
         let curWork = this.$store.state.curWork
+        let curNodeId = curWork.nodeId
+        let curWorkObj = this.$store.state.curWorkObj
         let his = []
-        if (orderData && curWork) {
-          let works = orderData.works
-          for (let i = 0; i < works.length; i++) {
-            let work = works[i]
-            if (work.id != curWork.id) {//只加之前的
-              his.push(work)
-            } else {
-              break
-            }
+        let nodeIds = Object.keys(curWorkObj)
+        for (let i = 0; i < nodeIds.length; i++) {
+          if (nodeIds[i] < curNodeId) {//只加之前的
+            his.push(curWorkObj[nodeIds[i]])
           }
-
         }
+        let preNodeIds = util.findAllPreNodeId(logicData, curNodeId)
         return his
       },
       formDescData() {
         let orderData = this.$store.state.orderData
         let curWork = this.$store.state.curWork
-        return curWork.workData
+        if (curWork.workData) {
+          return curWork.workData
 
+        } else {
+          let logicData = orderData.logicData
+          let logic = util.findLogicNode(logicData, curWork.nodeId)
+          if (logic) {
+            let model = logic.model
+            let formDescData = { formDesc: model }
+            return JSON.stringify(formDescData)
+            // this.formDescData = JSON.stringify(formDescData)
+          }
+        }
       }
     },
     data() {
@@ -101,6 +110,15 @@
     },
 
     methods: {
+      showListItem(item) {
+        if(item.workData){
+          let workData = JSON.parse(item.workData)
+          let formDesc = workData.formDesc
+          let keys = Object.keys(formDesc)
+          return keys.length > 0
+        }
+        return false;
+      },
       onClickLeft() {
         this.$router.back(-1)
       },

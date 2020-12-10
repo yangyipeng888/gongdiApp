@@ -97,5 +97,9 @@ export default {
   assignWork:function(data) {
     var method = '/work/assignWork'
     return post(method, data)
-  }
+  },
+  isAcceptWork:function(data) {
+    var method = 'work/isAcceptWork'
+    return post(method, data)
+  },
 }

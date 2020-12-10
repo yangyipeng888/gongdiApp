@@ -1,6 +1,28 @@
 import myConst from '@/utils/const'
 
 export default {
+  findAllPreNodeId(logicData, nodeId) {
+    let all = []
+    let edges = logicData.edges
+    for (let i = 0; i < edges.length; i++) {
+      let edge = edges[i]
+      if (edge.target == nodeId) {
+        all.push(edge.source)
+      }
+    }
+    let findOut = []
+    while (all && all.length) {
+      let preId = all.pop()
+      findOut.push(preId)
+      for (let i = 0; i < edges.length; i++) {
+        let edge = edges[i]
+        if (edge.target == preId) {
+          all.push(edge.source)
+        }
+      }
+    }
+    return findOut.reverse()
+  },
   findPreNodeId(logicData, nodeId) {
     let pre = []
     let edges = logicData.edges

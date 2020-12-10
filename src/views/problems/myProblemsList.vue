@@ -34,7 +34,7 @@
                     {{showNodeState(pro.nodeState)}}
                   </div>
                 </div>
-                <div @click="clickPro(pro)" class="problem_type">查看</div>
+                <div @click="clickPro(pro)" class="problem_type">{{showBtnLabel(pro)}}</div>
 
               </div>
             </template>
@@ -63,9 +63,7 @@
         problems: []
       }
     },
-    computed: {
-
-    },
+    computed: {},
     mounted() {
       let orderData = this.$store.state.orderData
       let orderId = orderData.orderInfo.id
@@ -77,6 +75,7 @@
         if (res.code == SUCCESS) {
           this.problems = []
           let works = res.data.works
+          this.combineFormFile(res.data.imgs, works)
           this.$store.state.curWorkObj = works
           for (let key in works) {
             let work = works[key]
@@ -92,6 +91,7 @@
                   let logicData = JSON.parse(orderData.logicData)
                   let preNodeId = util.findPreNodeId(logicData, work.nodeId)
                   let curWorkObj = this.$store.state.curWorkObj
+
                   let preNode = curWorkObj[preNodeId]
                   if (preNode.nodeState == this.myConst.GD_NODE_STATE.WAITING) {
                     this.problems.push(work)
@@ -115,11 +115,59 @@
       form1
     },
     methods: {
+      combineFormFile(imgs, worksObj) {
+        if (imgs && imgs.length) {
+          let imgsObj = {}
+          for (let i = 0; i < imgs.length; i++) {
+            let ii = imgs[i]
+            let fieldName = ii.fieldName
+            let thumbnail = ii.thumbnail
+            let img = ii.img
+            let imgUrl = `${this.myConst.gdIp}/profile/${img}`
+            if (!imgsObj[fieldName]) {
+              imgsObj[fieldName] = []
+            }
+            // imgsObj[fieldName].push(imgUrl)
+            imgsObj[fieldName].push({ url: imgUrl })
+          }
+          let works = []
+          for (let key in worksObj) {
+            works.push(worksObj[key])
+          }
+          for (let j = 0; j < works.length; j++) {
+            let work = works[j]
+            if (work.workData) {
+              let workData = JSON.parse(work.workData)
+              let formDesc = workData.formDesc
+              let formData = workData.formData
+              let imgsObjKeys = Object.keys(imgsObj)
+              let formDescKeys = Object.keys(formDesc)
+              for (let k = 0; k < imgsObjKeys.length; k++) {
+                let key = imgsObjKeys[k]
+                if (formDescKeys.indexOf(key) != -1) {
+                  formData[key] = imgsObj[key]
+                }
+              }
+              work.workData = JSON.stringify(workData)
+
+            }
+          }
+        }
+      },
       onClickLeft() {
         this.$router.back(-1)
       },
       showNodeState(nodeState) {
         return this.myConst.GD_NODE_STATE_LABEL[nodeState]
+      },
+      showBtnLabel(pro) {
+        if (pro.nodeState == this.myConst.GD_NODE_STATE.FINISH) { //完成
+          return '查看'
+        } else if (pro.nodeState == this.myConst.GD_NODE_STATE.WAITING) { //待审核
+          return `查看`
+        } else {
+          return `${pro.nodeType}`
+        }
       },
       clickPro(work) {
         this.$store.state.curWork = work

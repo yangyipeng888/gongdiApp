@@ -17,8 +17,8 @@
                 <div class="listTitle">
                   <div class="title_time">创建者</div>
                   <div class="title_desc">工单id</div>
-                  <div class="title_type">工单状态</div>
-                  <div class="title_status">操作</div>
+                  <div class="title_status">工单状态</div>
+                  <div class="title_type">操作</div>
                 </div>
               </template>
               <template v-slot:list>
@@ -56,8 +56,8 @@
                 <div class="listTitle">
                   <div class="title_time">创建者</div>
                   <div class="title_desc">工单id</div>
-                  <div class="title_type">工单状态</div>
-                  <div class="title_status">操作</div>
+                  <div class="title_status">工单状态</div>
+                  <div class="title_type">操作</div>
                 </div>
               </template>
               <template v-slot:list>
@@ -117,6 +117,7 @@
     watch: {},
     data() {
       return {
+        active:null,
         gdList: [],
         problems: [],
         handleProblems: [],
@@ -183,7 +184,8 @@
               if(!imgsObj[fieldName]){
                 imgsObj[fieldName]=[];
               }
-              imgsObj[fieldName].push(imgUrl);
+              // imgsObj[fieldName].push(imgUrl)
+              imgsObj[fieldName].push({ url: imgUrl})
             }
             let works =  orders[i].works;
             for(let j=0;j<works.length;j++){
@@ -246,7 +248,7 @@
               let item = res.data.orders[i]
                 this.handleProblems.push(item.orderInfo)
             }
-            this.total = res.data.pageSize * this.queryParams.pageSize
+            this.total = res.data.pageSize * this.querdeyParams.pageSize
           } else {
             this.problems = []
             this.handleProblems = []
@@ -305,18 +307,18 @@
             }
 
             .title_desc {
-              width: 40%;
+              width: 45%;
             }
-
-            .title_type {
-              width: 20%;
-
-            }
-
             .title_status {
               width: 20%;
 
             }
+            .title_type {
+              width: 15%;
+
+            }
+
+
           }
 
           .problem_list:nth-child(2n) {
@@ -336,14 +338,10 @@
             }
 
             .problem_desc {
-              width: 40%;
+              width: 45%;
             }
 
-            .problem_type {
-              width: 20%;
-              color: $common_blue;
 
-            }
 
             .problem_status {
               width: 20%;
@@ -373,6 +371,11 @@
               .status_appoint {
                 background-color: $common_warning;
               }
+            }
+            .problem_type {
+              width: 15%;
+              color: $common_blue;
+
             }
           }
 

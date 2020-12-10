@@ -83,7 +83,7 @@
         obj[AUTH.gongren] = [
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全学习', path: '/study' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '项目概况', path: '/projectDetail' },
-          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          // { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
         ]
         obj[AUTH.yezhu] = [
@@ -97,7 +97,7 @@
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
           { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
-          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          // { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
 
         ]
@@ -112,7 +112,7 @@
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
           { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
-          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          // { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
         ]
         obj[AUTH.zhengfu] = [
@@ -126,7 +126,7 @@
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '人员监管', path: '/staff' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '安全监管', path: '/safe' },
           { imgUrl: require('../../assets/img/调动审批.png'), desc: '半月报', path: '/projectHalfDetail' },
-          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
+          // { imgUrl: require('../../assets/img/工作汇报.png'), desc: '所有工单', path: '/allProblems' },
           { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
         ]
         if (obj[right]) {

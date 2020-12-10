@@ -94,8 +94,9 @@
     <van-popup v-model="showDate" position="bottom">
       <van-datetime-picker
         @confirm="onConfirmDate"
-        type="date"
-        title="选择年月日"
+        type="datetime"
+        title="选择完整时间"
+        :min-date="minDate"
       />
     </van-popup>
     <!--    <van-popup v-model="showDialog" style="border-radius: 10px">-->
@@ -111,6 +112,7 @@
   import uploader from '@/components/uploader'
   import * as formResolver from '@/utils/formResolver'
   import formDesc from './formDesc'
+  import * as util from '@/utils/index'
 
   export default {
     name: 'files',
@@ -175,6 +177,7 @@
     },
     data() {
       return {
+        minDate: new Date(),
         uploader: [],
         formDescData: null,
         ruleForm: {
@@ -272,12 +275,10 @@
         req.orderContent = orderContent
         req.dealTime = this.ruleForm.dealTime
         req.user = this.$store.state.account
-
-        this.btnDisable=true;
         this.$gdApi.addOrderInfo(req).then((res) => {
           if (res.code == SUCCESS) {
             Toast.success(res.msg)
-            this.btnDisable=false;
+            this.$router.back(-1)
           } else {
 
           }
@@ -292,25 +293,8 @@
         this.ruleForm.taskName = value
         this.showLv = false
       },
-      dateTrans(val) {
-        var date = new Date(val)
-        var seperator1 = '-'
-        var seperator2 = ':'
-        var month = date.getMonth() + 1
-        var strDate = date.getDate()
-        if (month >= 1 && month <= 9) {
-          month = '0' + month
-        }
-        if (strDate >= 0 && strDate <= 9) {
-          strDate = '0' + strDate
-        }
-        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-          + ' ' + '00' + seperator2 + '00'
-          + seperator2 + '00'
-        return currentdate
-      },
       onConfirmDate(value) {
-        this.ruleForm.dealTime = this.dateTrans(value)
+        this.ruleForm.dealTime = util.dateTrans(value)
         this.showDate = false
       }
     }

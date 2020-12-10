@@ -7,10 +7,9 @@
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="item,index in history"
-                           :title="`${item.nodeType}节点(${item.dealUser})`"
+        <van-collapse-item :formDisabled="true" v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
-          <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
+          <form-desc :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
 
             </template>
@@ -71,7 +70,7 @@
         }
         let preNodeIds = util.findAllPreNodeId(logicData, curNodeId)
         return his
-      }
+      },
     },
     data() {
       return {
@@ -95,10 +94,6 @@
 
     methods: {
       assignWork() {
-        if (!this.selUserName) {
-          Toast.fail('请选择指派人')
-          return
-        }
         let curWork = this.$store.state.curWork
         let workId = curWork.id
         let orderData = this.$store.state.orderData
@@ -110,28 +105,8 @@
         req.dealUser = this.$store.state.account
         req.workId = workId
         req.nodes = this.selUsers
-        let dealUser = this.selUsers[0].dealUser
-        this.$gdApi.assignWork(req).then((res2) => {
-          if (res2.code == SUCCESS) {
-            let workId = res2.data[0]
-            let req2 = {}
-            req2.applyId = this.myConst.appId
-            req2.applyKey = this.myConst.appKey
-            req2.orderId = orderId
-            req2.workId = workId
-            req2.isAccept = 0
-            req2.dealUser = dealUser
-            this.$gdApi.isAcceptWork(req2).then((res) => {
-              if (res.code == SUCCESS) {
-                Toast.success(res.msg)
-                this.$router.back(-1)
-              } else {
-                Toast.fail(res.msg)
-              }
-            })
-          } else {
-            Toast.fail(res2.msg)
-          }
+        this.$gdApi.assignWork(req).then((res) => {
+          debugger
         })
       },
       getDealUser() {
@@ -178,7 +153,7 @@
             'nodeId': nextN.id,
             'nodeType': nextN.nodeType,
             'dealType': '0',
-            'dealUser': find.account
+            'dealUser': find.name
           }]
         }
         this.showPicker = false
