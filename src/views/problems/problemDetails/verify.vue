@@ -3,35 +3,32 @@
     <nav-bar class="nav"
              :leftText="'返回'"
              :onClickLeftHandler="onClickLeft"
-             :title="'工单详情'"
+             :title="'工单审核'"
     ></nav-bar>
-    <van-tabs class="sel_tab" v-model="active" animated swipeable>
-      <tab v-for="(item,index) in allCheckNodes" :title="item.title">
-        <div class="form">
-          <form-desc :formDescData="item.checkData" :formDescImgs="formDescImgs">
+    <div class="sel_tab">
+      <van-collapse v-model="activeNames">
+        <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+                           :name="`${index}`">
+          <form-desc :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
-            </template>
-          </form-desc>
-        </div>
-        <div class="form">
-          <form-desc :ref="'myForm'+index" :formDescData="formDescData" :formDescImgs="formDescImgs">
-            <template v-slot:footer>
-              <div style="margin: 1px;">
-                <van-button block @click="CheckSumbit('myForm'+index,true,item)" type="info">通过审核
-                </van-button>
-                <van-button style="margin-top: 16px;" block @click="CheckSumbit('myForm'+index,false,item)"
-                            type="danger">回退
-                </van-button>
-              </div>
 
             </template>
           </form-desc>
-        </div>
-      </tab>
+        </van-collapse-item>
+      </van-collapse>
+      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
+        <template v-slot:footer>
+          <div style="margin: 10px;">
+            <van-button block @click="CheckSumbit(true)" type="info">通过审核
+            </van-button>
+            <van-button style="margin-top: 16px;" block @click="CheckSumbit(false)"
+                        type="danger">回退
+            </van-button>
+          </div>
+        </template>
+      </form-desc>
 
-
-    </van-tabs>
-
+    </div>
   </div>
 </template>
 
@@ -44,76 +41,53 @@
 
   export default {
     name: 'staff',
-    props: ['orderData'],
     components: {
       navBar,
       tab,
       formDesc
     },
     computed: {
-      allCheckNodes() {
-        if (this.orderData && this.curWork) {
-          let curNodeId = this.curWork.nodeId
-          let logicData = JSON.parse(this.orderData.logicData)
-          let nodes = logicData.nodes
-          let edges = logicData.edges
-          let checkNodeIds = []
-          edges.forEach((edge) => {
-            if (edge.target == curNodeId) {
-              checkNodeIds.push(edge.source)
-            }
-          })
-          let result = []
-          let works = this.orderData.works
+      history() {
+        let orderData = this.$store.state.orderData
+        let curWork = this.$store.state.curWork
+        let his = []
+        if (orderData && curWork) {
+          let works = orderData.works
           for (let i = 0; i < works.length; i++) {
             let work = works[i]
-            for (let j = 0; j < checkNodeIds.length; j++) {
-              let id = checkNodeIds[j]
-              if (id == work.nodeId) {
-                let resultD = {}
-                resultD.title = `${work.nodeType}节点（${work.dealUser}）`
-                resultD.checkId = work.id
-                resultD.checkData = work.workData
-                result.push(resultD)
-              }
+            if (work.id != curWork.id) {//只加之前的
+              his.push(work)
+            } else {
+              break
             }
-
           }
-          return result
+
+        }
+        return his
+      },
+      formDescData() {
+        let orderData = this.$store.state.orderData
+        let curWork = this.$store.state.curWork
+        if (orderData && curWork) {
+          let logicData = orderData.logicData
+          let logic = util.findLogicNode(logicData, curWork.nodeId)
+          if (logic) {
+            let model = logic.model
+            let formDescData = { formDesc: model }
+            return JSON.stringify(formDescData)
+            // this.formDescData = JSON.stringify(formDescData)
+          }
         }
       }
     },
     data() {
       return {
-        curWork: null,
-        formDescImgs: null,
-        formDescData: null
+        activeNames: ['0'],
+        formDescImgs: null
+        // formDescData: null
       }
     },
-    watch: {
-      'orderData': {
-        handler(n, o) {
-          if (n) {
-            let account = this.$store.state.account
-            let works = this.orderData.works
-            let work = util.findOwnNode(works, account)
-            this.curWork = work
-            if (work) {
-              let logicData = this.orderData.logicData
-              let logic = util.findLogicNode(logicData, work.nodeId)
-              if (logic) {
-                let model = logic.model
-                let formDescData = { formDesc: model }
-                this.formDescData = JSON.stringify(formDescData)
-              }
-
-            }
-          }
-        },
-        deep: true,
-        immediate: true
-      }
-    },
+    watch: {},
     mounted() {
 
     },
@@ -125,21 +99,26 @@
       onClickLeft() {
         this.$router.back(-1)
       },
-      CheckSumbit(formName, pass, checkNodeData) {
-        let myForm = this.$refs[formName][0]
-        let myFormData = myForm.getFormData()
+      async CheckSumbit(pass) {
+        let orderData = this.$store.state.orderData
+        let curWork = this.$store.state.curWork
+        let myFormData = this.$refs.myForm.getFormData()
         let isPass = pass ? 1 : 0
-        let workId = this.curWork.id
-        let orderId = this.orderData.orderInfo.id
+        let workId = curWork.id
+        let orderId = orderData.orderInfo.id
+        let myFormFiles = await this.$refs.myForm.getFormFiles()
 
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)
 
-        let checkId = checkNodeData.checkId
-        let checkData = checkNodeData.checkData
+        let curWorkObj = this.$store.state.curWorkObj
+        let checkNodeId = util.findCheckNodeId(orderData.logicData, curWork)
+        let checkWork = curWorkObj[checkNodeId]
+        let checkId = checkWork.id
+        let checkData = null
         let req = {
-          imgs: '',
+          imgs: myFormFiles,
           applyId: this.myConst.appId,
           applyKey: this.myConst.appKey,
           orderId,
@@ -153,6 +132,7 @@
         this.$gdApi.checkWork(req).then((res) => {
           if (res.code == SUCCESS) {
             Toast.success(res.msg)
+            this.$router.back(-1)
           } else {
             Toast.fail(res.msg)
           }
@@ -183,14 +163,6 @@
       bottom: 0;
       overflow: scroll;
 
-      .form {
-        margin: 10px;
-        background-color: white;
-        border-radius: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
 
     }
 

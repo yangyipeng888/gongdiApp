@@ -7,12 +7,16 @@ import {
 
 Vue.use(Vuex)
 const state = {
+  curWork: null,//一个节点
+  curWorkObj:null,//一条工单里面的节点(works)
+  orderData: null,//一条工单(logicData orderInfo works)
+  gdList: [],//所有工单
   jump: null,
   uid: 1,
   loginData: null,
   userName: '',
   right: '',
-  account: "",
+  account: '',
   pw: '',
   keyDown: false,
   token: null,
@@ -54,7 +58,7 @@ const mutations = {
     state.loginData = result
     state.right = result.quanxian
     state.logined = true
-    state.account = result.account;
+    state.account = result.account
     var keys = result.projectids.split(',')
     var a = {}
     for (var i = 0; i < keys.length; i++) {

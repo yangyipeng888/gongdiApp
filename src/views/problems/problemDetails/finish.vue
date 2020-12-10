@@ -3,7 +3,7 @@
     <nav-bar class="nav"
              :leftText="'返回'"
              :onClickLeftHandler="onClickLeft"
-             :title="'处理工单'"
+             :title="'工单详情'"
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
@@ -16,10 +16,9 @@
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc  ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
+      <form-desc :formDisabled="true" ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
         <template v-slot:footer>
-          <van-button block @click="submit" type="info">提交处理
-          </van-button>
+
         </template>
       </form-desc>
 
@@ -35,7 +34,7 @@
   import util from './common'
 
   export default {
-    name: 'staff',
+    name: 'finish',
     components: {
       navBar,
       tab,
@@ -63,16 +62,8 @@
       formDescData() {
         let orderData = this.$store.state.orderData
         let curWork = this.$store.state.curWork
-        if (orderData && curWork) {
-          let logicData = orderData.logicData
-          let logic = util.findLogicNode(logicData, curWork.nodeId)
-          if (logic) {
-            let model = logic.model
-            let formDescData = { formDesc: model }
-            return JSON.stringify(formDescData)
-            // this.formDescData = JSON.stringify(formDescData)
-          }
-        }
+        return curWork.workData
+
       }
     },
     data() {
@@ -82,7 +73,26 @@
         // formDescData: null
       }
     },
-    watch: {},
+    watch: {
+      // 'curWork': {
+      //   handler(n, o) {
+      //     if (n) {
+      //       debugger
+      //       let orderData = this.$store.state.orderData
+      //       let logicData = this.orderData.logicData
+      //       let logic = util.findLogicNode(logicData, work.nodeId)
+      //       if (logic) {
+      //         let model = logic.model
+      //         let formDescData = { formDesc: model }
+      //         this.formDescData = JSON.stringify(formDescData)
+      //       }
+      //     }
+      //   },
+      //   deep: true,
+      //   immediate: true
+      // }
+
+    },
     mounted() {
 
     },
@@ -94,7 +104,7 @@
       onClickLeft() {
         this.$router.back(-1)
       },
-      async submit() {
+      submit() {
         let myFormData = this.$refs.myForm.getFormData()
         let curWork = this.$store.state.curWork
         let orderData = this.$store.state.orderData
@@ -103,9 +113,8 @@
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)
-        let myFormFiles = await this.$refs.myForm.getFormFiles()
         let req = {}
-        req.imgs = myFormFiles
+        req.imgs = ''
         req.applyId = this.myConst.appId
         req.applyKey = this.myConst.appKey
         req.orderId = orderId

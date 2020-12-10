@@ -2,9 +2,10 @@ import axios from 'axios'
 import qs from 'qs'
 
 import myConst from '@/utils/const'
-let appid = myConst.appId;
-let appKey = myConst.appKey;
-let ip =myConst.gdIp;
+
+let appid = myConst.appId
+let appKey = myConst.appKey
+let ip = myConst.gdIp
 let service = axios.create({
   baseURL: ip,
   timeout: 5000,
@@ -27,6 +28,7 @@ function get(url, params) {
   })
 
 }
+
 function post(url, params) {
   return new Promise((resolve, reject) => {
     service.post(url, params)
@@ -59,29 +61,41 @@ export default {
     var method = '/orderTask/getTaskList'
     return get(method, req)
   },
-  addOrderInfo : function (data) {
-    var method = "/orderInfo/addOrderInfo";
+  addOrderInfo: function(data) {
+    var method = '/orderInfo/addOrderInfo'
     return post(method, data)
   },
 
   getOrderInfo: function(data) {
-    var method = "/orderInfo/getOrderInfo";
+    var method = '/orderInfo/getOrderInfo'
     return get(method, data)
   },
-  getOrderInfoByUser:function (data) {
-    var method = "/orderInfo/getOrderInfoByUser";
+  getOrderInfoByUser: function(data) {
+    var method = '/orderInfo/getOrderInfoByUser'
     return get(method, data)
   },
-  getWork : function (data) {
-    var method = "/work/getWork";
+  getWork: function(data) {
+    var method = '/work/getWork'
     return get(method, data)
   },
-  dealWork : function (data) {
-    var method = "/work/dealWork";
+  dealWork: function(data) {
+    var method = '/work/dealWork'
     return post(method, data)
   },
-  checkWork :function (data) {
-    var method = "/work/checkWork";
+  checkWork: function(data) {
+    var method = '/work/checkWork'
+    return post(method, data)
+  },
+  getNewWorkAndImg: function(data) {
+    var method = '/orderInfo/getNewWorkAndImg'
+    return get(method, data)
+  },
+  getStaff: function(data) {
+    var method = '/staff/getStaff'
+    return get(method, data)
+  },
+  assignWork:function(data) {
+    var method = '/work/assignWork'
     return post(method, data)
   }
 }

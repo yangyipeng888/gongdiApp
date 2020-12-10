@@ -67,7 +67,7 @@
           <form-desc v-show="formDescData" ref="myForm" :formDescData="formDescData"></form-desc>
 
           <div style="margin: 16px;">
-            <van-button block type="info" native-type="submit" @click="onSubmit">
+            <van-button :disabled="btnDisable" block type="info" native-type="submit" @click="onSubmit">
               提交
             </van-button>
           </div>
@@ -192,7 +192,8 @@
         showType: false,
         showLv: false,
         showDate: false,
-        showDialog: false
+        showDialog: false,
+        btnDisable: false
 
       }
     },
@@ -253,27 +254,17 @@
       onClickLeft() {
         this.$router.back(-1)
       },
-      onSubmit(formName) {
+
+
+      async onSubmit(formName) {
         //myFormData
         let myFormData = this.$refs.myForm.getFormData()
         let orderContent = JSON.parse(this.ruleForm.orderContent)
         orderContent.formData = myFormData
         orderContent = JSON.stringify(orderContent)
-        let myFormFiles = this.$refs.myForm.getFormFiles()
+        let myFormFiles = await this.$refs.myForm.getFormFiles()
         let req = {}
-        req.imgs = []
-        for (let key in myFormFiles) {
-          let list = myFormFiles[key]
-          let listImg = []
-          list.forEach((item) => {
-            listImg.push(item.file)
-          })
-          let data = {
-            fieldName: key,
-            img: listImg
-          }
-          req.imgs.push(data)
-        }
+        req.imgs = myFormFiles
         req.applyId = this.myConst.appId
         req.orderStyle = this.ruleForm.orderStyle
         req.orderType = this.ruleForm.orderType
@@ -282,10 +273,11 @@
         req.dealTime = this.ruleForm.dealTime
         req.user = this.$store.state.account
 
-
+        this.btnDisable=true;
         this.$gdApi.addOrderInfo(req).then((res) => {
           if (res.code == SUCCESS) {
             Toast.success(res.msg)
+            this.btnDisable=false;
           } else {
 
           }

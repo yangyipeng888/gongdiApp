@@ -19,12 +19,26 @@ export default {
   GD_NODE_STATE: {
     'NOT': 0,
     'FINISH': 1,
-    'BACK': 2
+    'BACK': 2,
+    'WAITING': 3,
+    'REFUSE': 4,
+    'ACCEPT': 5,
   },
   GD_NODE_STATE_LABEL: {
     '0': '未处理',
     '1': '已处理',
-    '2': '回退'
+    '2': '回退',
+    '3': '待审核',
+    '4': '拒绝',
+    '5': '待接收',
+
+  },
+  GD_NODE_TYPE: {
+    'kaishi': '开始',
+    'tianbao': '填报',
+    'chuli': '处理',
+    'shenhe': '审核',
+    'zhipai': '指派'
   },
   problem_status: {
     NOT_APPOINT: '待指派',

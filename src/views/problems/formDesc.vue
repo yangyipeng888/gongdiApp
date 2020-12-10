@@ -1,8 +1,9 @@
 <template>
   <div>
-    <van-form :disabled="true" style="width: 100%;">
+    <van-form style="width: 100%;">
       <div v-for="(item,key,index) in desc">
         <van-field
+          :disabled="formDisabled"
           v-model="formData[key]"
           v-if="item.type=='input'||item.type=='textarea'||item.type=='number'"
           name="picker"
@@ -11,6 +12,7 @@
         >
         </van-field>
         <van-field
+          :disabled="formDisabled"
           readonly
           clickable
           @click="showPop('select',item,key)"
@@ -22,6 +24,7 @@
         >
         </van-field>
         <van-field
+          :disabled="formDisabled"
           readonly
           clickable
           @click="showPop('date',item,key)"
@@ -32,17 +35,20 @@
           placeholder="请点击选择"
         >
         </van-field>
-        <van-field v-else :label="item.label">
+        <van-field v-else :label="item.label" :disabled="formDisabled">
           <template v-if="item.type=='radio'" #input>
             <van-radio-group direction="horizontal" v-model="formData[key]">
               <van-radio v-for="radio in item.options" :name="radio.value">{{radio.text}}</van-radio>
             </van-radio-group>
           </template>
           <template v-else-if="item.type=='upload-file'" #input>
-            <van-uploader v-show="!formDescImgs" v-model="fileObj[key]" :after-read="afterRead"/>
-            <div v-show="formDescImgs">
-              <van-image @click="previewImg(item.url)" v-for="item in formDescImgs" width="100" height="100"
-                         :src="item.url"/>
+            <van-uploader v-if="!formDisabled" v-model="fileObj[key]" :after-read="afterRead"/>
+            <div v-else-if="formData[key]">
+              <van-image @click="previewImg(item)" v-for="item in formData[key]" width="100" height="100"
+                         :src="item"/>
+            </div>
+            <div v-else style="color:gray">
+              暂无图片
             </div>
           </template>
           <template v-else-if="item.type=='switch'" #input>
@@ -102,7 +108,7 @@
         immediate: true
       }
     },
-    props: ['formDescData', 'formDescImgs', 'canBtn'],
+    props: ['formDescData', 'formDescImgs', 'canBtn', 'formDisabled'],
     mounted() {
     },
     data() {
@@ -128,8 +134,33 @@
       getFormData() {
         return this.formData
       },
-      getFormFiles() {
-        return this.fileObj
+      imageToBase64(file) {
+        return new Promise((resolve, reject) => {
+          var reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => {
+            console.log('file 转 base64结果：' + reader.result)
+            let iconBase64 = reader.result
+            resolve(iconBase64)
+          }
+        })
+
+      },
+      async getFormFiles() {
+        let result = []
+        for (let key in this.fileObj) {
+          let file = {}
+          file.fieldName = key
+          let imgs = this.fileObj[key]
+          let fileImgs = []
+          for (let i = 0; i < imgs.length; i++) {
+            let a = await this.imageToBase64(imgs[i].file)
+            fileImgs.push(a)
+          }
+          file.img = fileImgs
+          result.push(file)
+        }
+        return result
       },
       showPop(type, item, key) {
         this.isShowPop = true

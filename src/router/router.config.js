@@ -132,9 +132,17 @@ export const constantRouterMap = [
     component: () => import('@/views/problems/myProblems'),
     meta: {
       title: '我的工单',
+      keepAlive: true
+    }
+  },
+  {
+    path: '/myProblemsList',
+    name: 'myProblemsList',
+    component: () => import('@/views/problems/myProblemsList'),
+    meta: {
+      title: '工单详情',
       keepAlive: false
     }
-
   },
   {
     path: '/problemDetails',
@@ -144,7 +152,15 @@ export const constantRouterMap = [
       title: '工单详情',
       keepAlive: false
     }
-
+  },
+  {
+    path: '/problemTotalView',
+    name: 'problemTotalView',
+    component: () => import('@/views/problems/problemTotalView'),
+    meta: {
+      title: '工单详情',
+      keepAlive: false
+    }
   },
   {
     path: '/submit',

@@ -3,11 +3,12 @@
     <nav-bar class="nav"
              :leftText="'返回'"
              :onClickLeftHandler="onClickLeft"
-             :title="'处理工单'"
+             :title="'工单详情'"
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+        <van-collapse-item v-show="showListItem(item)" v-for="item,index in history"
+                           :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
           <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
@@ -16,12 +17,11 @@
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc  ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
-        <template v-slot:footer>
-          <van-button block @click="submit" type="info">提交处理
-          </van-button>
-        </template>
-      </form-desc>
+      <!--      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">-->
+      <!--        <template v-slot:footer>-->
+
+      <!--        </template>-->
+      <!--      </form-desc>-->
 
     </div>
   </div>
@@ -31,11 +31,11 @@
   import { Toast } from 'vant'
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
-  import formDesc from '../formDesc'
-  import util from './common'
+  import formDesc from './formDesc'
+  import util from './problemDetails/common'
 
   export default {
-    name: 'staff',
+    name: 'finish',
     components: {
       navBar,
       tab,
@@ -43,36 +43,31 @@
     },
     computed: {
       history() {
-        let orderData = this.$store.state.orderData
-        let curWork = this.$store.state.curWork
         let his = []
-        if (orderData && curWork) {
+        let orderData = this.$store.state.orderData
+        let orderState = orderData.orderInfo.orderState
+        if (orderData) {
           let works = orderData.works
-          for (let i = 0; i < works.length; i++) {
-            let work = works[i]
-            if (work.id != curWork.id) {//只加之前的
+          if (orderState == this.myConst.GD_STATE.FINISH) {
+            for (let i = 0; i < works.length; i++) {
+              let work = works[i]
+              if (work.nodeState == this.myConst.GD_NODE_STATE.BACK) {
+                continue
+              }
               his.push(work)
-            } else {
-              break
-            }
-          }
 
+            }
+          } else {
+            his.push(works[0])
+          }
         }
         return his
       },
       formDescData() {
         let orderData = this.$store.state.orderData
         let curWork = this.$store.state.curWork
-        if (orderData && curWork) {
-          let logicData = orderData.logicData
-          let logic = util.findLogicNode(logicData, curWork.nodeId)
-          if (logic) {
-            let model = logic.model
-            let formDescData = { formDesc: model }
-            return JSON.stringify(formDescData)
-            // this.formDescData = JSON.stringify(formDescData)
-          }
-        }
+        return curWork.workData
+
       }
     },
     data() {
@@ -82,7 +77,26 @@
         // formDescData: null
       }
     },
-    watch: {},
+    watch: {
+      // 'curWork': {
+      //   handler(n, o) {
+      //     if (n) {
+      //       debugger
+      //       let orderData = this.$store.state.orderData
+      //       let logicData = this.orderData.logicData
+      //       let logic = util.findLogicNode(logicData, work.nodeId)
+      //       if (logic) {
+      //         let model = logic.model
+      //         let formDescData = { formDesc: model }
+      //         this.formDescData = JSON.stringify(formDescData)
+      //       }
+      //     }
+      //   },
+      //   deep: true,
+      //   immediate: true
+      // }
+
+    },
     mounted() {
 
     },
@@ -91,10 +105,16 @@
     },
 
     methods: {
+      showListItem(item) {
+        let workData = JSON.parse(item.workData)
+        let formDesc = workData.formDesc
+        let keys = Object.keys(formDesc)
+        return keys.length > 0
+      },
       onClickLeft() {
         this.$router.back(-1)
       },
-      async submit() {
+      submit() {
         let myFormData = this.$refs.myForm.getFormData()
         let curWork = this.$store.state.curWork
         let orderData = this.$store.state.orderData
@@ -103,9 +123,8 @@
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)
-        let myFormFiles = await this.$refs.myForm.getFormFiles()
         let req = {}
-        req.imgs = myFormFiles
+        req.imgs = ''
         req.applyId = this.myConst.appId
         req.applyKey = this.myConst.appKey
         req.orderId = orderId

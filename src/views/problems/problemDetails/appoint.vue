@@ -6,13 +6,36 @@
              :title="'工单详情'"
     ></nav-bar>
     <div class="sel_tab">
-      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
-        <template v-slot:footer>
-          <van-button block @click="submit" type="info">提交处理
-          </van-button>
-        </template>
-      </form-desc>
+      <van-collapse v-model="activeNames">
+        <van-collapse-item :formDisabled="true" v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+                           :name="`${index}`">
+          <form-desc :formDescData="item.workData" :formDescImgs="formDescImgs">
+            <template v-slot:footer>
 
+            </template>
+          </form-desc>
+        </van-collapse-item>
+      </van-collapse>
+      <van-field
+        readonly
+        clickable
+        name="datetimePicker"
+        :value="selUserName"
+        label="选择指派"
+        placeholder="点击选择指派人"
+        @click="showPicker = true"
+      />
+      <van-button style="margin-top: 16px;" block @click="assignWork"
+                  type="info">指派
+      </van-button>
+      <van-popup v-model="showPicker" position="bottom">
+        <van-picker
+          title="选择指派人"
+          show-toolbar
+          :columns="columns"
+          @confirm="onConfirm"
+        />
+      </van-popup>
     </div>
   </div>
 </template>
@@ -26,79 +49,116 @@
 
   export default {
     name: 'staff',
-    props: ['orderData'],
     components: {
       navBar,
       tab,
       formDesc
     },
-    computed: {},
-    data() {
-      return {
-        formDescImgs: null,
-        formDescData: null
-      }
-    },
-    watch: {
-      'orderData': {
-        handler(n, o) {
-          if (n) {
-            let account = this.$store.state.account
-            let works = this.orderData.works
-            let work = util.findOwnNode(works, account)
-            if (work) {
-              let logicData = this.orderData.logicData
-              let logic = util.findLogicNode(logicData, work.nodeId)
-              if (logic) {
-                let model = logic.model
-                let formDescData = { formDesc: model }
-                this.formDescData = JSON.stringify(formDescData)
-              }
-
+    computed: {
+      history() {
+        let orderData = this.$store.state.orderData
+        let curWork = this.$store.state.curWork
+        let his = []
+        if (orderData && curWork) {
+          let works = orderData.works
+          for (let i = 0; i < works.length; i++) {
+            let work = works[i]
+            if (work.id != curWork.id) {//只加之前的
+              his.push(work)
+            } else {
+              break
             }
           }
-        },
-        deep: true,
-        immediate: true
+
+        }
+        return his
       }
     },
+    data() {
+      return {
+        activeNames: ['0'],
+        formDescImgs: null,
+        showPicker: false,
+        dealUserOpt: [],
+        columns: ['杭州', '宁波', '温州', '绍兴', '湖州', '嘉兴', '金华', '衢州'],
+        selUserName: null,
+        selUsers: null
+        // formDescData: null
+      }
+    },
+    watch: {},
     mounted() {
-
+      this.getDealUser()
     },
 
     created() {
     },
 
     methods: {
+      assignWork() {
+        let curWork = this.$store.state.curWork
+        let workId = curWork.id
+        let orderData = this.$store.state.orderData
+        let orderId = orderData.orderInfo.id
+        let req = {}
+        req.applyId = this.myConst.appId
+        req.applyKey = this.myConst.appKey
+        req.orderId = orderId
+        req.dealUser = this.$store.state.account
+        req.workId = workId
+        req.nodes = this.selUsers
+        this.$gdApi.assignWork(req).then((res) => {
+          debugger
+        })
+      },
+      getDealUser() {
+        let req = {}
+        req.applyId = this.myConst.appId
+        this.$gdApi.getStaff(req).then(res => {
+          if (res.code == SUCCESS) {
+            this.columns = []
+            this.dealUserOpt = res.data
+            for (let i = 0; i < res.data.length; i++) {
+              let item = res.data[i]
+              this.columns.push(item.name)
+            }
+          }
+        })
+      },
       onClickLeft() {
         this.$router.back(-1)
       },
-      submit() {
-        let myFormData = this.$refs.myForm.getFormData()
-        let workId = this.curSelRow.id
-        let orderId = this.gdData.orderInfo.id
-        let orderContent = JSON.parse(this.gdData.orderInfo.orderContent)
-        orderContent.formData = myFormData
-        orderContent = JSON.stringify(orderContent)
-        let formData = new FormData()
-        formData.append('applyId', this.myConst.appId)
-        formData.append('applyKey', this.myConst.appKey)
-        formData.append('workId', workId)
-        formData.append('orderId', orderId)
-        formData.append('orderContent', orderContent)
-        formData.append('fileList', '')
-        this.$gdApi.dealWork(formData).then((res) => {
-          if (res.code == SUCCESS) {
-            Toast.success(res.msg)
-            this.$router.back(-1)
-          } else {
-            Toast.fail(res.msg)
+      onConfirm(val) {
+        let orderData = this.$store.state.orderData
+        let logicData = JSON.parse(orderData.logicData)
+        let curWork = this.$store.state.curWork
+        let nodeId = curWork.nodeId
+        let nextIds = util.findNextNodeId(logicData, nodeId)
+        let nextNodes = []
+        for (let i = 0; i < nextIds.length; i++) {
+          let id = nextIds[i]
+          let node = util.findLogicNode(orderData.logicData, id)
+          nextNodes.push(node)
+        }
+        let nextN = nextNodes[0]
+        let find = null
+        for (let i = 0; i < this.dealUserOpt.length; i++) {
+          let user = this.dealUserOpt[i]
+          if (user.name == val) {
+            find = user
+            break
           }
-
-        })
-
-      },
-      onSubmit() {
+        }
+        if (nextN && find) {
+          this.selUserName = find.name
+          this.selUsers = [{
+            'nodeId': nextN.id,
+            'nodeType': nextN.nodeType,
+            'dealType': '0',
+            'dealUser': find.name
+          }]
+        }
+        this.showPicker = false
 
       }
 

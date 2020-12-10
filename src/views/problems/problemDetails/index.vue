@@ -1,50 +1,124 @@
 <template>
   <div>
-    <handle v-if="nodeType=='处理'||nodeType=='处理'" :orderData="orderData"></handle>
-    <appoint v-if="nodeType=='指派'" :orderData="orderData"></appoint>
-    <verify v-if="nodeType=='审核'" :orderData="orderData"></verify>
-
-
+    <handle v-if="isHandle" ></handle>
+    <appoint v-if="isAppoint" ></appoint>
+    <verify v-if="isVerify" ></verify>
+    <finish v-if="isFinish" ></finish>
+    <back v-if="isBack" ></back>
   </div>
 </template>
 
 <script>
+  import navBar from '@/components/navBar'
+  import tab from '@/components/tab'
   import handle from './handle'
-  import verify from './verify'
   import appoint from './appoint'
+  import verify from './verify'
+  import finish from './finish'
+  import back from './back'
   import util from './common'
 
   export default {
     name: 'index',
     data() {
       return {
-        orderData: null
+        work: null
       }
     },
     mounted() {
-      this.orderData = this.$route.params.gdData
+      this.work = this.$route.params.work
     },
     components: {
+      navBar,
+      tab,
       handle,
-      verify
+      verify,
+      appoint,
+      finish,
+      back,
     },
     computed: {
-      nodeType() {
-        if (this.orderData) {
-          let account = this.$store.state.account
-          let works = this.orderData.works
-          // let orderState = this.orderData.orderInfo.orderState
-          let work = util.findOwnNode(works, account)
-          if (work) {
-            return work.nodeType
-          }
-
+      // isStart() {
+      //   return this.nodeType == this.myConst.GD_NODE_TYPE.kaishi
+      // },
+      isHandle() {
+        return this.nodeState == this.myConst.GD_NODE_STATE.NOT && (this.nodeType == this.myConst.GD_NODE_TYPE.tianbao || this.nodeType == this.myConst.GD_NODE_TYPE.chuli)
+      },
+      isAppoint() {
+        return this.nodeState == this.myConst.GD_NODE_STATE.NOT && this.nodeType == this.myConst.GD_NODE_TYPE.zhipai
+      },
+      isVerify() {
+        return this.nodeState == this.myConst.GD_NODE_STATE.NOT && this.nodeType == this.myConst.GD_NODE_TYPE.shenhe
+      },
+      isFinish() {
+        return this.nodeState == this.myConst.GD_NODE_STATE.FINISH || this.nodeState == this.myConst.GD_NODE_STATE.WAITING
+      },
+      isBack() {
+        //回退
+        return this.nodeState == this.myConst.GD_NODE_STATE.BACK
+      },
+      nodeState() {
+        if (this.work) {
+          // '0': '未处理',
+          //   '1': '已处理',
+          //   '2': '回退',
+          //   '3': '待审核',
+          //   '4': '拒绝',
+          return this.work.nodeState
         }
+      },
+      nodeType() {
+        if (this.work) {
+          return this.work.nodeType //'填报'  处理  审核 指派
+        }
+      }
+    },
+    methods: {
+      onClickLeft() {
+        this.$router.back(-1)
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  .files_container {
 
+    height: 100vh;
+    width: 100%;
+    position: relative;
+
+
+    .files_main {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .nav {
+        /*position: absolute;*/
+        height: 46px;
+      }
+
+      .sel_tab {
+        position: absolute;
+        width: 100%;
+        top: 46px;
+        bottom: 0;
+        overflow: scroll;
+
+        .form {
+          margin: 10px;
+          /*background-color: white;*/
+          border-radius: 10px;
+
+
+        }
+
+      }
+
+
+    }
+
+
+  }
 </style>

@@ -3,20 +3,20 @@
     <nav-bar class="nav"
              :leftText="'返回'"
              :onClickLeftHandler="onClickLeft"
-             :title="'处理工单'"
+             :title="'工单详情'"
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
-        <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+        <van-collapse-item :formDisabled="true" v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
-          <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
+          <form-desc :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
 
             </template>
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc  ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
+      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
         <template v-slot:footer>
           <van-button block @click="submit" type="info">提交处理
           </van-button>
@@ -63,16 +63,17 @@
       formDescData() {
         let orderData = this.$store.state.orderData
         let curWork = this.$store.state.curWork
-        if (orderData && curWork) {
-          let logicData = orderData.logicData
-          let logic = util.findLogicNode(logicData, curWork.nodeId)
-          if (logic) {
-            let model = logic.model
-            let formDescData = { formDesc: model }
-            return JSON.stringify(formDescData)
-            // this.formDescData = JSON.stringify(formDescData)
-          }
-        }
+        return curWork.workData
+        // if (orderData && curWork) {
+        //   let logicData = orderData.logicData
+        //   let logic = util.findLogicNode(logicData, curWork.nodeId)
+        //   if (logic) {
+        //     let model = logic.model
+        //     let formDescData = { formDesc: model }
+        //     return JSON.stringify(formDescData)
+        //     // this.formDescData = JSON.stringify(formDescData)
+        //   }
+        // }
       }
     },
     data() {
@@ -94,11 +95,21 @@
       onClickLeft() {
         this.$router.back(-1)
       },
+      getBackWorkId(curNodeId) {
+        let orderData = this.$store.state.orderData
+        let works = orderData.works
+        for (let i = 0; i < works.length; i++) {
+          let work = works[i]
+          if (work.nodeState == this.myConst.GD_NODE_STATE.NOT && work.nodeId == curNodeId) {
+            return work.id
+          }
+        }
+      },
       async submit() {
         let myFormData = this.$refs.myForm.getFormData()
         let curWork = this.$store.state.curWork
         let orderData = this.$store.state.orderData
-        let workId = curWork.id
+        let workId = this.getBackWorkId(curWork.nodeId)//后端要求
         let orderId = orderData.orderInfo.id
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
