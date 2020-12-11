@@ -246,9 +246,15 @@
             }
             for (let i = 0; i < res.data.orders.length; i++) {
               let item = res.data.orders[i]
-                this.handleProblems.push(item.orderInfo)
+              let works =  item.works
+              for(let j=0;j<works.length;j++){
+                let work = works[j]
+                if(work.nodeType!='开始'&&work.dealUser==account){
+                  this.handleProblems.push(item.orderInfo)
+                }
+              }
             }
-            this.total = res.data.pageSize * this.querdeyParams.pageSize
+            this.total = res.data.pageSize * this.queryParams.pageSize
           } else {
             this.problems = []
             this.handleProblems = []
