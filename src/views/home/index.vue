@@ -1,6 +1,11 @@
 <!-- home -->
 <template>
   <div class="index-container">
+    <!--    <van-notify v-model="showNote" type="success">-->
+    <!--    </van-notify>-->
+    <van-popup v-model="showNote" position="top" :overlay="false" :style="{borderRadius:'8px'}">
+      <notify></notify>
+    </van-popup>
     <nav-bar class="nav"
              :title="'首页'"
              :right-text="'问题上报'"
@@ -61,6 +66,7 @@
   import proInfo from '../../components/proInfo'
   import videoList from '../../components/videoList'
   import problemList from '../../components/problemList'
+  import notify from '@/components/notify'
 
   export default {
     components: {
@@ -70,10 +76,25 @@
       picSwipe,
       navBar,
       videoList,
-      problemList
+      problemList,
+      notify
+    },
+    mounted() {
+      // this.$store.commit('setSite', {
+      //   name: 'siteId',
+      //   id: 1001
+      // })
+      // setTimeout(() => {
+      //   this.showNote = true
+      //   setTimeout(() => {
+      //     this.showNote = false
+      //   }, 1000)
+      // }, 1000)
     },
     data() {
-      return {}
+      return {
+        showNote: false
+      }
     },
 
     computed: {
@@ -143,12 +164,6 @@
       }
     },
 
-    mounted() {
-      // this.$store.commit('setSite', {
-      //   name: 'siteId',
-      //   id: 1001
-      // })
-    },
 
     methods: {
       enter(path) {

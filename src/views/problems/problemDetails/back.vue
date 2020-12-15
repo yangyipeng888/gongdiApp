@@ -32,7 +32,8 @@
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
   import formDesc from '../formDesc'
-  import util from './common'
+  import util from '@/views/problems/common'
+
 
   export default {
     name: 'staff',

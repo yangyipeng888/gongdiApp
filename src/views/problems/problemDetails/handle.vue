@@ -33,7 +33,7 @@
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
   import formDesc from '../formDesc'
-  import util from './common'
+  import util from '@/views/problems/common'
 
   export default {
     name: 'staff',
@@ -154,6 +154,9 @@
         workData.formData = myFormData
         workData = JSON.stringify(workData)
         let myFormFiles = await this.$refs.myForm.getFormFiles()
+        myFormFiles.forEach((item) => {
+          item.workId = workId
+        })
         let req = {}
         req.imgs = myFormFiles
         req.applyId = this.myConst.appId

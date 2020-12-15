@@ -100,7 +100,7 @@
 </template>
 
 <script>
-  import util from './problemDetails/common'
+  import util from '@/views/problems/common'
   import { ImagePreview } from 'vant'
   import navBar from '@/components/navBar'
   import form1 from '@/components/gongdi/common/form'
@@ -222,8 +222,9 @@
         req.orderStyle = name
         this.$gdApi.getOrderInfoByUser(req).then(res => {
           if (res.code == SUCCESS) {
-            this.$store.state.gdList = res.data.orders;
-            this.gdList = res.data.orders
+            let orders =  res.data.orders
+            this.$store.state.gdList = orders;
+            this.gdList = orders;
             res.data.orders.sort(function(a, b) {
               return b.orderInfo.createTime - a.orderInfo.createTime
             })
@@ -233,7 +234,12 @@
             res.data.orders.forEach((item) => {
               item.orderInfo.dealTime = new Date(item.orderInfo.dealTime).toLocaleDateString().split(' ')[0]
             })
-            this.combineFormFile(res.data);
+            for(let i=0;i<orders.length;i++){
+              let order = orders[i];
+              let imgs = order.imgs;
+              let works = order.works;
+              util.combineImgField(imgs,works);
+            }
             let account = this.$store.state.account
             this.handleProblems = []
             this.problems = []
@@ -251,6 +257,7 @@
                 let work = works[j]
                 if(work.nodeType!='开始'&&work.dealUser==account){
                   this.handleProblems.push(item.orderInfo)
+                  break
                 }
               }
             }

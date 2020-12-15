@@ -1,6 +1,7 @@
 <template>
   <div class="formDesc_wrap">
     <van-form style="width: 100%;">
+<!--      {{formData}}-->
       <div v-for="(item,key,index) in desc">
         <van-field
           :disabled="formDisabled"
@@ -42,6 +43,7 @@
             </van-radio-group>
           </template>
           <template v-else-if="item.type=='upload-file'" #input>
+<!--            {{formData[key]}}-->
             <van-uploader v-if="!formDisabled" v-model="formData[key]" :before-read="beforeRead(key)"
                           :after-read="afterRead"/>
             <div v-else-if="formData[key]">
@@ -193,35 +195,6 @@
           result.push(data)
         }
         return result
-        // let ff = this.formData[this.fileKey]
-        // let file = {}
-        // file.fieldName = this.fileKey
-        // file.img = []
-        // for (let i = 0; i < ff.length; i++) {
-        //   let _f = ff[i]
-        //   if (_f.file) {
-        //     // ff.splice(i, 1)
-        //     // i--
-        //     let a = await this.imageToBase64(_f.file)
-        //     file.img.push(a)
-        //   }
-        // }
-        // this.formData[this.fileKey] = null
-        // return [file]
-        // let result = []
-        // for (let key in this.fileObj) {
-        //   let file = {}
-        //   file.fieldName = key
-        //   let imgs = this.fileObj[key]
-        //   let fileImgs = []
-        //   for (let i = 0; i < imgs.length; i++) {
-        //     let a = await this.imageToBase64(imgs[i].file)
-        //     fileImgs.push(a)
-        //   }
-        //   file.img = fileImgs
-        //   result.push(file)
-        // }
-        // return result
       },
       showPop(type, item, key) {
         if (this.formDisabled) {

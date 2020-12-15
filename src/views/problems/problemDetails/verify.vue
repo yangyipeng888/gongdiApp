@@ -37,7 +37,7 @@
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
   import formDesc from '../formDesc'
-  import util from './common'
+  import util from '@/views/problems/common'
 
   export default {
     name: 'staff',
@@ -117,6 +117,9 @@
         let workId = curWork.id
         let orderId = orderData.orderInfo.id
         let myFormFiles = await this.$refs.myForm.getFormFiles()
+        myFormFiles.forEach((item) => {
+          item.workId = workId
+        })
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)

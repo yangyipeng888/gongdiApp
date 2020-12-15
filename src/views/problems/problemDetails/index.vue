@@ -2,7 +2,7 @@
   <div>
     <handle v-if="isHandle"></handle>
     <appoint v-if="isAppoint"></appoint>
-<!--    <appointAccept v-if="isAppointAccept"></appointAccept>-->
+    <!--    <appointAccept v-if="isAppointAccept"></appointAccept>-->
     <verify v-if="isVerify"></verify>
     <finish v-if="isFinish"></finish>
     <back v-if="isBack"></back>
@@ -18,7 +18,7 @@
   import verify from './verify'
   import finish from './finish'
   import back from './back'
-  import util from './common'
+  import util from '@/views/problems/common'
 
   export default {
     name: 'index',

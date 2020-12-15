@@ -98,24 +98,6 @@ export default {
     }
     return null
   },
-  findWorkByUser: function(works, account) {
-    let re = []
-    for (let i = 0; i < works.length; i++) {
-      let work = works[i]
-      if (work.dealUser == account) {
-        re.push(work)
-      }
-    }
-    return re
-  },
-  findOwnNode: function(works, account) {
-    for (let i = 0; i < works.length; i++) {
-      let work = works[i]
-      if (work.nodeState == 0 && work.dealUser == account) {
-        return work
-      }
-    }
-  },
   findLogicNode: function(logicData, nodeId) {
     logicData = JSON.parse(logicData)
     let nodes = logicData.nodes
@@ -125,5 +107,65 @@ export default {
       }
     }
     return null
+  },
+  combineImgField(imgs, works) {
+    if (imgs && imgs.length && works && works.length) {
+      for (let i = 0; i < imgs.length; i++) {
+        let ii = imgs[i]
+        let fieldName = ii.fieldName
+        let img = ii.img
+        let imgUrl = `${myConst.gdIp}/profile/${img}`
+        let workId = ii.workId
+        for (let j = 0; j < works.length; j++) {
+          let work = works[j]
+          if (work.id == workId) {
+            let workData = JSON.parse(work.workData)
+            let formData = workData.formData
+            if (!formData[fieldName]) {
+              formData[fieldName] = []
+            }
+            formData[fieldName].push({ url: imgUrl })
+            work.workData = JSON.stringify(workData)
+          }
+        }
+
+
+      }
+
+    }
+    // if (imgs && imgs.length) {
+    //   let imgsObj = {}
+    //   for (let i = 0; i < imgs.length; i++) {
+    //     let ii = imgs[i]
+    //     let fieldName = ii.fieldName
+    //     let thumbnail = ii.thumbnail
+    //     let img = ii.img
+    //     let imgUrl = `${myConst.gdIp}/profile/${img}`
+    //     if (!imgsObj[fieldName]) {
+    //       imgsObj[fieldName] = []
+    //     }
+    //     // imgsObj[fieldName].push(imgUrl)
+    //     imgsObj[fieldName].push({ url: imgUrl })
+    //   }
+    //   for (let j = 0; j < works.length; j++) {
+    //     let work = works[j]
+    //     if (work.workData) {
+    //       let workData = JSON.parse(work.workData)
+    //       let formDesc = workData.formDesc
+    //       let formData = workData.formData
+    //       let imgsObjKeys = Object.keys(imgsObj)
+    //       let formDescKeys = Object.keys(formDesc)
+    //       for (let k = 0; k < imgsObjKeys.length; k++) {
+    //         let key = imgsObjKeys[k]
+    //         if (formDescKeys.indexOf(key) != -1) {
+    //           formData[key] = imgsObj[key]
+    //         }
+    //       }
+    //       work.workData = JSON.stringify(workData)
+    //       debugger
+    //
+    //     }
+    //   }
+    // }
   }
 }
