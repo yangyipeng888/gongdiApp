@@ -76,29 +76,48 @@
 
     },
     methods: {
-      clickMore(row) {
-        for (let i = 0; i < this.gdList.length; i++) {
-          let item = this.gdList[i]
-          if (item.orderInfo.id == row.id) {
-            this.$store.state.orderData = item
-            break
+      checkWork(order, curWork) {
+        let works = order.works
+        if (curWork.nodeState == this.myConst.GD_NODE_STATE.NOT) {
+          if (curWork.nodeType == this.myConst.GD_NODE_TYPE.shenhe) {
+            //审核节点审核完 状态又是未完成  不能显示出来
+            let preNodeId = util.findPreNodeId(order.logicData, curWork)
+            for (let i = 0; i < works.length; i++) {
+              let work = works[i]
+              if (work.nodeId == preNodeId && work.nodeState == this.myConst.GD_NODE_STATE.WAITING) {
+                return true
+              }
+            }
+            return false
+          }
+          //同一个nodeId同时有回退和未处理状态 ，只显示回退
+          for (let i = 0; i < works.length; i++) {
+            let work = works[i]
+            if (work.nodeId == curWork.nodeId && work.nodeState == this.myConst.GD_NODE_STATE.BACK) {
+              return false
+            }
+          }
+        } else if (curWork.nodeState == this.myConst.GD_NODE_STATE.BACK) {
+          //同一个nodeId同时有回退和完成状态或待审核状态 ，不能显示
+          for (let i = 0; i < works.length; i++) {
+            let work = works[i]
+            if (work.nodeId == curWork.nodeId &&
+              (work.nodeState == this.myConst.GD_NODE_STATE.FINISH || work.nodeState == this.myConst.GD_NODE_STATE.WAITING)) {
+              return false
+            }
+          }
+          //同一个工单,有多个相同orderId的回退work，只显示最新那条(id最大)
+          for (let i = 0; i < this.setBackList.length; i++) {
+            let preBackWork = this.setBackList[i].work
+            if (preBackWork.orderId == curWork.orderId && curWork.id > preBackWork.id) {
+              this.setBackList.splice(i, 1)
+              return true
+            }
           }
         }
-        this.$router.push({
-          name: 'myProblemsList'
-        })
-      },
-      clickPro(row) {
-        for (let i = 0; i < this.gdList.length; i++) {
-          let item = this.gdList[i]
-          if (item.orderInfo.id == row.id) {
-            this.$store.state.orderData = item
-            break
-          }
-        }
-        this.$router.push({
-          name: 'problemTotalView'
-        })
+
+        return true
+
       },
       clickCheck() {
         this.showDialog = true
@@ -152,7 +171,9 @@
                   let nodeState = work.nodeState
                   switch (nodeState) {
                     case this.myConst.GD_NODE_STATE.NOT:
-                      this.notFinishList.push({ order, work })
+                      if (this.checkWork(order, work)) {
+                        this.notFinishList.push({ order, work })
+                      }
                       break
                     case this.myConst.GD_NODE_STATE.FINISH:
                       if (nodeType == '开始') {
@@ -162,7 +183,9 @@
                       }
                       break
                     case this.myConst.GD_NODE_STATE.BACK:
-                      this.setBackList.push({ order, work })
+                      if (this.checkWork(order, work)) {
+                        this.setBackList.push({ order, work })
+                      }
                       break
                     case this.myConst.GD_NODE_STATE.WAITING:
                       this.finishList.push({ order, work })

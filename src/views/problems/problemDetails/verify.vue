@@ -7,7 +7,8 @@
     ></nav-bar>
     <div class="sel_tab">
       <van-collapse v-model="activeNames">
-        <van-collapse-item v-show="showListItem(item)" v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
+        <van-collapse-item v-show="showListItem(item)" v-for="item,index in history"
+                           :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
           <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
@@ -41,6 +42,7 @@
 
   export default {
     name: 'staff',
+    props: ['order', 'work'],
     components: {
       navBar,
       tab,
@@ -48,29 +50,34 @@
     },
     computed: {
       history() {
-        let orderData = this.$store.state.orderData
-        let logicData = JSON.parse(orderData.logicData)
-        let curWork = this.$store.state.curWork
-        let curNodeId = curWork.nodeId
-        let curWorkObj = this.$store.state.curWorkObj
+        let order = this.order
+        let curWork = this.work
+        let works = order.works
         let his = []
-        let nodeIds = Object.keys(curWorkObj)
-        for (let i = 0; i < nodeIds.length; i++) {
-          if (nodeIds[i] < curNodeId) {//只加之前的
-            his.push(curWorkObj[nodeIds[i]])
+        for (let i = 0; i < works.length; i++) {
+          let _work = works[i]
+          if (_work.id == curWork.id) {
+            continue
           }
+          let nodeId = _work.nodeId
+          let hasNodeIndex = this._.findIndex(his, (node) => {
+            return node.nodeId == nodeId
+          })
+          if (hasNodeIndex != -1) {
+            his.splice(hasNodeIndex, 1)
+          }
+          his.push(_work)
         }
-        let preNodeIds = util.findAllPreNodeId(logicData, curNodeId)
         return his
       },
       formDescData() {
-        let orderData = this.$store.state.orderData
-        let curWork = this.$store.state.curWork
+        let order = this.order
+        let curWork = this.work
         if (curWork.workData) {
           return curWork.workData
 
         } else {
-          let logicData = orderData.logicData
+          let logicData = order.logicData
           let logic = util.findLogicNode(logicData, curWork.nodeId)
           if (logic) {
             let model = logic.model
@@ -98,20 +105,32 @@
 
     methods: {
       showListItem(item) {
-        if(item.workData){
+        if (item.workData) {
           let workData = JSON.parse(item.workData)
           let formDesc = workData.formDesc
           let keys = Object.keys(formDesc)
           return keys.length > 0
         }
-        return false;
+        return false
       },
       onClickLeft() {
         this.$router.back(-1)
       },
+      findCheckWork() {
+        let order = this.order
+        let curWork = this.work
+        let checkNodeId = util.findPreNodeId(order.logicData, curWork)
+        let works = order.works
+        for (let i = works.length - 1; i >= 0; i--) {
+          let work = works[i]
+          if (work.nodeId == checkNodeId && work.nodeState == this.myConst.GD_NODE_STATE.WAITING) {
+            return work
+          }
+        }
+      },
       async CheckSumbit(pass) {
-        let orderData = this.$store.state.orderData
-        let curWork = this.$store.state.curWork
+        let orderData = this.order
+        let curWork = this.work
         let myFormData = this.$refs.myForm.getFormData()
         let isPass = pass ? 1 : 0
         let workId = curWork.id
@@ -123,10 +142,7 @@
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)
-
-        let curWorkObj = this.$store.state.curWorkObj
-        let checkNodeId = util.findCheckNodeId(orderData.logicData, curWork)
-        let checkWork = curWorkObj[checkNodeId]
+        let checkWork = this.findCheckWork()
         let checkId = checkWork.id
         let checkData = null
         let req = {

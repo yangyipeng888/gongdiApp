@@ -9,7 +9,7 @@
       <van-collapse v-model="activeNames">
         <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
-          <form-desc :formDisabled="true"  :formDescData="item.workData" :formDescImgs="formDescImgs">
+          <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
             <template v-slot:footer>
 
             </template>
@@ -37,6 +37,7 @@
 
   export default {
     name: 'staff',
+    props: ['order', 'work'],
     components: {
       navBar,
       tab,
@@ -44,29 +45,25 @@
     },
     computed: {
       history() {
-        let orderData = this.$store.state.orderData
-        let logicData = JSON.parse(orderData.logicData)
-        let curWork = this.$store.state.curWork
-        let curNodeId = curWork.nodeId
-        let curWorkObj = this.$store.state.curWorkObj
-        let his = []
-        let nodeIds = Object.keys(curWorkObj)
-        for (let i = 0; i < nodeIds.length; i++) {
-          if (nodeIds[i] < curNodeId) {//只加之前的
-            his.push(curWorkObj[nodeIds[i]])
+        let order = this.order
+        let curWork = this.work
+        let nextNodeId = util.findNextNodeId(order.logicData, curWork)
+        let works = order.works
+        for (let i = 0; i < works.length; i++) {
+          let _work = works[i]
+          if (_work.nodeId == nextNodeId) {
+            return [_work]
           }
         }
-        let preNodeIds = util.findAllPreNodeId(logicData, curNodeId)
-        return his
       },
       formDescData() {
-        let orderData = this.$store.state.orderData
-        let curWork = this.$store.state.curWork
+        let order = this.order
+        let curWork = this.work
         if (curWork.workData) {
           return curWork.workData
 
         } else {
-          let logicData = orderData.logicData
+          let logicData = order.logicData
           let logic = util.findLogicNode(logicData, curWork.nodeId)
           if (logic) {
             let model = logic.model
@@ -97,7 +94,7 @@
         this.$router.back(-1)
       },
       getBackWorkId(curNodeId) {
-        let orderData = this.$store.state.orderData
+        let orderData = this.order
         let works = orderData.works
         for (let i = 0; i < works.length; i++) {
           let work = works[i]
@@ -108,14 +105,17 @@
       },
       async submit() {
         let myFormData = this.$refs.myForm.getFormData()
-        let curWork = this.$store.state.curWork
-        let orderData = this.$store.state.orderData
+        let curWork = this.work
+        let orderData = this.order
         let workId = this.getBackWorkId(curWork.nodeId)//后端要求
         let orderId = orderData.orderInfo.id
         let workData = JSON.parse(this.formDescData)
         workData.formData = myFormData
         workData = JSON.stringify(workData)
         let myFormFiles = await this.$refs.myForm.getFormFiles()
+        myFormFiles.forEach((item) => {
+          item.workId = workId
+        })
         let req = {}
         req.imgs = myFormFiles
         req.applyId = this.myConst.appId

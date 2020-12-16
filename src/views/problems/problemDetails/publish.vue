@@ -17,11 +17,11 @@
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc :formDisabled="true" ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
-        <template v-slot:footer>
+      <!--      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">-->
+      <!--        <template v-slot:footer>-->
 
-        </template>
-      </form-desc>
+      <!--        </template>-->
+      <!--      </form-desc>-->
 
     </div>
   </div>
@@ -31,7 +31,7 @@
   import { Toast } from 'vant'
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
-  import formDesc from '../formDesc'
+  import formDesc from '@/views/problems/formDesc'
   import util from '@/views/problems/common'
 
   export default {
@@ -44,45 +44,24 @@
     },
     computed: {
       history() {
-        //显示每个节点最新的内容
         let order = this.order
         let curWork = this.work
         let works = order.works
-        let his = []
-        for (let i = 0; i < works.length; i++) {
-          let _work = works[i]
-          // if (_work.nodeId == curWork.nodeId) {
-          //   continue
-          // }
-          let nodeId = _work.nodeId
-          let hasNodeIndex = this._.findIndex(his, (node) => {
-            return node.nodeId == nodeId
-          })
-          if (hasNodeIndex != -1) {
-            his.splice(hasNodeIndex, 1)
-          }
-          his.push(_work)
-        }
-        return his
-
-      },
-      formDescData() {
-
-        // let order = this.order
-        // let curWork = this.work
-        // if (curWork.workData) {
-        //   return curWork.workData
-        //
-        // } else {
-        //   let logicData = order.logicData
-        //   let logic = util.findLogicNode(logicData, curWork.nodeId)
-        //   if (logic) {
-        //     let model = logic.model
-        //     let formDescData = { formDesc: model }
-        //     return JSON.stringify(formDescData)
-        //     // this.formDescData = JSON.stringify(formDescData)
+        return works
+        // let his = []
+        // for (let i = 0; i < works.length; i++) {
+        //   let _work = works[i]
+        //   if (_work.id < curWork.id) {
+        //     his.push(_work)
         //   }
         // }
+        // return his
+      },
+      formDescData() {
+        let orderData = this.$store.state.orderData
+        let curWork = this.$store.state.curWork
+        return curWork.workData
+
       }
     },
     data() {
@@ -92,26 +71,7 @@
         // formDescData: null
       }
     },
-    watch: {
-      // 'curWork': {
-      //   handler(n, o) {
-      //     if (n) {
-      //       debugger
-      //       let orderData = this.$store.state.orderData
-      //       let logicData = this.orderData.logicData
-      //       let logic = util.findLogicNode(logicData, work.nodeId)
-      //       if (logic) {
-      //         let model = logic.model
-      //         let formDescData = { formDesc: model }
-      //         this.formDescData = JSON.stringify(formDescData)
-      //       }
-      //     }
-      //   },
-      //   deep: true,
-      //   immediate: true
-      // }
-
-    },
+    watch: {},
     mounted() {
 
     },

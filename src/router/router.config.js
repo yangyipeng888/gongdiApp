@@ -135,15 +135,24 @@ export const constantRouterMap = [
       keepAlive: true
     }
   },
-  {
-    path: '/myProblemsList',
-    name: 'myProblemsList',
-    component: () => import('@/views/problems/myProblemsList'),
-    meta: {
-      title: '工单详情',
-      keepAlive: false
-    }
-  },
+  // {
+  //   path: '/myProblemsList',
+  //   name: 'myProblemsList',
+  //   component: () => import('@/views/problems/myProblemsList'),
+  //   meta: {
+  //     title: '工单详情',
+  //     keepAlive: false
+  //   }
+  // },
+  // {
+  //   path: '/problemTotalView',
+  //   name: 'problemTotalView',
+  //   component: () => import('@/views/problems/problemTotalView'),
+  //   meta: {
+  //     title: '工单详情',
+  //     keepAlive: false
+  //   }
+  // },
   {
     path: '/problemDetails',
     name: 'problemDetails',
@@ -153,15 +162,7 @@ export const constantRouterMap = [
       keepAlive: false
     }
   },
-  {
-    path: '/problemTotalView',
-    name: 'problemTotalView',
-    component: () => import('@/views/problems/problemTotalView'),
-    meta: {
-      title: '工单详情',
-      keepAlive: false
-    }
-  },
+
   {
     path: '/submit',
     name: 'submit',

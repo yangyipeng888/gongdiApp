@@ -13,8 +13,10 @@
         </div>
       </template>
       <template v-slot:list>
+
         <div class="problem_list" v-show="gongdanList&&gongdanList.length"
              v-for="pro,index in gongdanList" :key="index">
+<!--          {{pro.order.orderInfo.id}}-->
           <div class="problem_time van-ellipsis">{{showTime(pro.work.createTime)}}</div>
           <div class="problem_type van-ellipsis">{{pro.work.nodeType}}</div>
           <div class="problem_status">
@@ -50,11 +52,14 @@
       form1
     },
     mounted() {
+
     },
     methods: {
       bindStateClass(nodeState) {
         switch (nodeState) {
           case this.myConst.GD_NODE_STATE.NOT:
+            return { status_nok: true }
+          case this.myConst.GD_NODE_STATE.BACK:
             return { status_nok: true }
           case this.myConst.GD_NODE_STATE.WAITING:
             return { status_appoint: true }
@@ -70,7 +75,10 @@
         return this.myConst.GD_NODE_STATE_LABEL[nodeState]
       },
       clickMore(pro) {
-
+        this.$router.push({
+          name: 'problemDetails',
+          params: pro
+        })
       }
     },
     data() {

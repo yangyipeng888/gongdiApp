@@ -93,7 +93,7 @@
                 } else {
                   let orderData = this.$store.state.orderData
                   let logicData = JSON.parse(orderData.logicData)
-                  let preNodeId = util.findPreNodeId(logicData, work.nodeId)
+                  let preNodeId = util.findPreNodeIdById(logicData, work.nodeId)
                   let curWorkObj = this.$store.state.curWorkObj
 
                   let preNode = curWorkObj[preNodeId]

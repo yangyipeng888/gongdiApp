@@ -1,17 +1,19 @@
 <template>
   <div>
-    <handle v-if="isHandle"></handle>
-    <appoint v-if="isAppoint"></appoint>
+    <publish :order="order" :work="work" v-if="isPublish"></publish>
+    <finish :order="order" :work="work" v-if="isFinish"></finish>
+    <handle :order="order" :work="work" v-if="isHandle"></handle>
+    <appoint :order="order" :work="work" v-if="isAppoint"></appoint>
     <!--    <appointAccept v-if="isAppointAccept"></appointAccept>-->
-    <verify v-if="isVerify"></verify>
-    <finish v-if="isFinish"></finish>
-    <back v-if="isBack"></back>
+    <verify :order="order" :work="work" v-if="isVerify"></verify>
+    <back :order="order" :work="work" v-if="isBack"></back>
   </div>
 </template>
 
 <script>
   import navBar from '@/components/navBar'
   import tab from '@/components/tab'
+  import publish from './publish'
   import handle from './handle'
   import appoint from './appoint'
   import appointAccept from './appointAccept'
@@ -22,17 +24,26 @@
 
   export default {
     name: 'index',
+    // provide() {
+    //   return {
+    //     order: this.order,
+    //     work: this.work
+    //   }
+    // },
     data() {
       return {
+        order: null,
         work: null
       }
     },
     mounted() {
+      this.order = this.$route.params.order
       this.work = this.$route.params.work
     },
     components: {
       navBar,
       tab,
+      publish,
       handle,
       verify,
       appoint,
@@ -44,6 +55,9 @@
       // isStart() {
       //   return this.nodeType == this.myConst.GD_NODE_TYPE.kaishi
       // },
+      isPublish() {
+        return this.nodeType == this.myConst.GD_NODE_TYPE.kaishi
+      },
       isHandle() {
         return this.nodeState == this.myConst.GD_NODE_STATE.NOT && (this.nodeType == this.myConst.GD_NODE_TYPE.tianbao || this.nodeType == this.myConst.GD_NODE_TYPE.chuli)
       },
@@ -57,6 +71,9 @@
         return this.nodeState == this.myConst.GD_NODE_STATE.NOT && this.nodeType == this.myConst.GD_NODE_TYPE.shenhe
       },
       isFinish() {
+        if (this.nodeType == this.myConst.GD_NODE_TYPE.kaishi) {
+          return false
+        }
         return this.nodeState == this.myConst.GD_NODE_STATE.FINISH || this.nodeState == this.myConst.GD_NODE_STATE.WAITING
       },
       isBack() {
