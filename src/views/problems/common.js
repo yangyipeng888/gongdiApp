@@ -23,7 +23,52 @@ export default {
     }
     return findOut.reverse()
   },
+  checkWork(order, curWork) {
+    let works = order.works
+    if (curWork.nodeState == myConst.GD_NODE_STATE.NOT) {
+      if (curWork.nodeType == myConst.GD_NODE_TYPE.shenhe) {
+        //审核节点审核完 状态又是未完成  不能显示出来
+        let preNodeId = this.findPreNodeId(order.logicData, curWork)
+        for (let i = 0; i < works.length; i++) {
+          let work = works[i]
+          if (work.nodeId == preNodeId && work.nodeState == myConst.GD_NODE_STATE.WAITING) {
+            return true
+          }
+        }
+        return false
+      }
+      //同一个nodeId同时有回退和未处理状态 ，只显示回退
+      for (let i = 0; i < works.length; i++) {
+        let work = works[i]
+        if (work.nodeId == curWork.nodeId && work.nodeState == myConst.GD_NODE_STATE.BACK) {
+          return false
+        }
+      }
+    } else if (curWork.nodeState == myConst.GD_NODE_STATE.BACK) {
+      //同一个nodeId同时有回退和完成状态或待审核状态 ，不能显示
+      for (let i = 0; i < works.length; i++) {
+        let work = works[i]
+        if (work.nodeId == curWork.nodeId &&
+          (work.nodeState == myConst.GD_NODE_STATE.FINISH || work.nodeState == myConst.GD_NODE_STATE.WAITING)) {
+          return false
+        }
+      }
+      //同一个工单,有多个相同orderId的回退work，只显示最新那条(id最大)
+      let setBackWorkId = null
+      for (let i = 0; i < works.length; i++) {
+        let work = works[i]
+        if (work.nodeState == myConst.GD_NODE_STATE.BACK) {
+          setBackWorkId = work.id
+        }
+      }
+      if (curWork.id != setBackWorkId) {
+        return false
+      }
+    }
 
+    return true
+
+  },
   findNextNodeId(logicData, curNode) {
     let curNodeId = curNode.nodeId
     logicData = JSON.parse(logicData)

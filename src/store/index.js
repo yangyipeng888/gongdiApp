@@ -7,8 +7,9 @@ import {
 
 Vue.use(Vuex)
 const state = {
+  showNote: true,
   curWork: null,//一个节点
-  curWorkObj:null,//一条工单里面的节点(works)
+  curWorkObj: null,//一条工单里面的节点(works)
   orderData: null,//一条工单(logicData orderInfo works)
   gdList: [],//所有工单
   jump: null,

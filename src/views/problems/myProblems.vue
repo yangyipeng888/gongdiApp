@@ -7,26 +7,27 @@
                :title="'我的工单'"
       ></nav-bar>
       <van-tabs class="sel_tab" v-model="active" animated swipeable>
-        <tab :title="'发布工单'">
+        <van-tab title="发布工单">
           <div class="form">
             <problemForm :title="'发布工单'" :gongdanList="publishList"></problemForm>
           </div>
-        </tab>
-        <tab :title="'已处理工单'">
+        </van-tab>
+        <van-tab title="已处理工单">
           <div class="form">
             <problemForm :title="'已处理工单'" :gongdanList="finishList"></problemForm>
           </div>
-        </tab>
-        <tab :title="'未处理工单'">
+        </van-tab>
+        <van-tab title="未处理工单">
           <div class="form">
             <problemForm :title="'未处理工单'" :gongdanList="notFinishList"></problemForm>
           </div>
-        </tab>
-        <tab :title="'回退工单'">
+        </van-tab>
+        <van-tab title="回退工单">
           <div class="form">
             <problemForm :title="'回退工单'" :gongdanList="setBackList"></problemForm>
           </div>
-        </tab>
+        </van-tab>
+
       </van-tabs>
 
     </div>
@@ -43,7 +44,7 @@
 
 
   export default {
-    name: 'allProblems',
+    name: 'myProblems',
     components: {
       problemForm,
       navBar,
@@ -57,7 +58,7 @@
         finishList: [],
         notFinishList: [],
         setBackList: [],
-        active: null,
+        active: 0,
         gdList: [],
         problems: [],
         handleProblems: [],
@@ -72,53 +73,14 @@
       }
     },
     mounted() {
+      if (this.$route.params.active) {
+        this.active = this.$route.params.active
+      }
       this.getList()
 
     },
     methods: {
-      checkWork(order, curWork) {
-        let works = order.works
-        if (curWork.nodeState == this.myConst.GD_NODE_STATE.NOT) {
-          if (curWork.nodeType == this.myConst.GD_NODE_TYPE.shenhe) {
-            //审核节点审核完 状态又是未完成  不能显示出来
-            let preNodeId = util.findPreNodeId(order.logicData, curWork)
-            for (let i = 0; i < works.length; i++) {
-              let work = works[i]
-              if (work.nodeId == preNodeId && work.nodeState == this.myConst.GD_NODE_STATE.WAITING) {
-                return true
-              }
-            }
-            return false
-          }
-          //同一个nodeId同时有回退和未处理状态 ，只显示回退
-          for (let i = 0; i < works.length; i++) {
-            let work = works[i]
-            if (work.nodeId == curWork.nodeId && work.nodeState == this.myConst.GD_NODE_STATE.BACK) {
-              return false
-            }
-          }
-        } else if (curWork.nodeState == this.myConst.GD_NODE_STATE.BACK) {
-          //同一个nodeId同时有回退和完成状态或待审核状态 ，不能显示
-          for (let i = 0; i < works.length; i++) {
-            let work = works[i]
-            if (work.nodeId == curWork.nodeId &&
-              (work.nodeState == this.myConst.GD_NODE_STATE.FINISH || work.nodeState == this.myConst.GD_NODE_STATE.WAITING)) {
-              return false
-            }
-          }
-          //同一个工单,有多个相同orderId的回退work，只显示最新那条(id最大)
-          for (let i = 0; i < this.setBackList.length; i++) {
-            let preBackWork = this.setBackList[i].work
-            if (preBackWork.orderId == curWork.orderId && curWork.id > preBackWork.id) {
-              this.setBackList.splice(i, 1)
-              return true
-            }
-          }
-        }
 
-        return true
-
-      },
       clickCheck() {
         this.showDialog = true
       },
@@ -171,7 +133,7 @@
                   let nodeState = work.nodeState
                   switch (nodeState) {
                     case this.myConst.GD_NODE_STATE.NOT:
-                      if (this.checkWork(order, work)) {
+                      if (util.checkWork(order, work)) {
                         this.notFinishList.push({ order, work })
                       }
                       break
@@ -183,7 +145,7 @@
                       }
                       break
                     case this.myConst.GD_NODE_STATE.BACK:
-                      if (this.checkWork(order, work)) {
+                      if (util.checkWork(order, work)) {
                         this.setBackList.push({ order, work })
                       }
                       break
@@ -200,7 +162,7 @@
                 }
               }
             }
-            // console.log(this.publishList, this.finishList, this.notFinishList)
+            // console.log(this.setBackList)
           } else {
             this.publishList = []
             this.finishList = []

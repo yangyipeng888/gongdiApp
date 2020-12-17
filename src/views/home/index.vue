@@ -1,11 +1,10 @@
 <!-- home -->
 <template>
   <div class="index-container">
-    <!--    <van-notify v-model="showNote" type="success">-->
-    <!--    </van-notify>-->
-    <van-popup v-model="showNote" position="top" :overlay="false" :style="{borderRadius:'8px'}">
-      <notify></notify>
-    </van-popup>
+
+    <transition name="van-slide-right">
+      <notify ref="notify" :count="count" v-show="show"></notify>
+    </transition>
     <nav-bar class="nav"
              :title="'首页'"
              :right-text="'问题上报'"
@@ -67,6 +66,7 @@
   import videoList from '../../components/videoList'
   import problemList from '../../components/problemList'
   import notify from '@/components/notify'
+  import problemUtil from '@/views/problems/common'
 
   export default {
     components: {
@@ -84,16 +84,19 @@
       //   name: 'siteId',
       //   id: 1001
       // })
-      // setTimeout(() => {
-      //   this.showNote = true
-      //   setTimeout(() => {
-      //     this.showNote = false
-      //   }, 1000)
-      // }, 1000)
+      this.showNote()
     },
     data() {
       return {
-        showNote: false
+        show: false,
+        count: 0,
+        listQuery: {
+          state: '-1'
+        },
+        queryParams: {
+          pageIndex: 1,
+          pageSize: 1000
+        }
       }
     },
 
@@ -166,6 +169,61 @@
 
 
     methods: {
+      showNote() {
+        let show = this.$store.state.showNote
+        if (show) {
+          this.$store.state.showNote = false
+          this.getList()
+        }
+      },
+      getList() {
+        let req = {}
+        req.applyId = this.myConst.appId
+        req.applyKey = this.myConst.appKey
+        req.state = this.listQuery.state
+        req.page = this.queryParams.pageIndex
+        req.amount = this.queryParams.pageSize
+        req.user = this.$store.state.account
+        let id = this.$store.state.currentSite
+        let name = this.$store.state.constructionSite[id].name
+        req.orderStyle = name
+        this.$gdApi.getOrderInfoByUser(req).then(res => {
+          if (res.code == SUCCESS) {
+            let count = 0
+            let account = this.$store.state.account
+            let aaa = []
+            let orders = res.data.orders
+            for (let i = 0; i < orders.length; i++) {
+              let order = orders[i]
+              let works = order.works
+              for (let j = 0; j < works.length; j++) {
+                let work = works[j]
+                if (work.dealUser != account) {
+                  continue
+                }
+                if (work.nodeState == this.myConst.GD_NODE_STATE.NOT) {
+                  if (problemUtil.checkWork(order, work)) {
+                    aaa.push(work)
+                    count++
+                  }
+                }
+              }
+            }
+            this.count = count
+            if (count > 0) {
+              setTimeout(() => {
+                this.show = true
+                setTimeout(() => {
+                  this.show = false
+                }, 3000)
+              }, 1000)
+            }
+
+          }
+        })
+
+      },
+
       enter(path) {
         this.$router.push({
           path
