@@ -4,7 +4,8 @@ let apiIp = process.env.NODE_ENV == 'development' ? 'http://192.168.1.28:8080' :
 export default {
   appId: 2020120705284754,
   appKey: '2oV64od5KFH8',
-  gdIp: 'http://192.168.1.28:18080/',
+  gdIp:'http://203.88.202.230:8088',
+  // gdIp: 'http://192.168.1.28:18080/',
   // gdIp: 'http://203.88.202.230:9090/',
   GD_STATE: {
     'NOT': 0,

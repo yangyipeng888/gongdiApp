@@ -64,13 +64,13 @@
           >
           </van-field>
 
-          <form-desc v-show="formDescData" ref="myForm" :formDescData="formDescData"></form-desc>
+          <form-desc v-show="formDescData" ref="myForm" :formDescData="formDescData" @validate="onSubmit">
+            <template v-slot:footer>
+              <van-button block native-type="submit" type="info">提交处理
+              </van-button>
+            </template>
+          </form-desc>
 
-          <div style="margin: 16px;">
-            <van-button :disabled="btnDisable" block type="info" native-type="submit" @click="onSubmit">
-              提交
-            </van-button>
-          </div>
         </van-form>
       </div>
 
@@ -129,7 +129,7 @@
           }
           this.proLvs = []
           for (let i = 0; i < this.taskData.length; i++) {
-            let orderStyle = this.taskData[i].orderStyle
+            let orderStyle = this.taskData[i].orderStyle.trim()
             if (n == orderStyle) {
               this.proLvs.push(this.taskData[i].name)
             }
@@ -260,8 +260,9 @@
 
 
       async onSubmit(formName) {
+        let myForm = this.$refs.myForm
         //myFormData
-        let myFormData = this.$refs.myForm.getFormData()
+        let myFormData = myForm.getFormData()
         let orderContent = JSON.parse(this.ruleForm.orderContent)
         orderContent.formData = myFormData
         orderContent = JSON.stringify(orderContent)
