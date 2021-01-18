@@ -157,8 +157,8 @@
           return obj[right]
         }
         return [
-          { name: 'home', icon: 'home-o', label: '首页', to: 'home' },
-          { name: 'person', icon: 'user-o', label: '我的', to: 'user' }
+          { imgUrl: require('../../assets/img/工作汇报.png'), desc: '我的工单', path: '/myProblems' }
+
         ]
       },
       currentSiteObj() {

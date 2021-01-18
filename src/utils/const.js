@@ -2,9 +2,11 @@ let apiIp = process.env.NODE_ENV == 'development' ? 'http://192.168.1.28:8080' :
 
 
 export default {
-  appId: 2020120705284754,
-  appKey: '2oV64od5KFH8',
-  gdIp: 'http://192.168.1.28:18080/',
+  // appId: 2020120705284754,
+  // appKey: '2oV64od5KFH8',
+  appId: 2021011110551519,
+  appKey: '1u5i494wcGHE',
+  gdIp: 'http://203.88.202.230:8088/',
   // gdIp: 'http://203.88.202.230:9090/',
   GD_STATE: {
     'NOT': 0,
@@ -22,7 +24,7 @@ export default {
     'BACK': 2,
     'WAITING': 3,
     'REFUSE': 4,
-    'ACCEPT': 5,
+    'ACCEPT': 5
   },
   GD_NODE_STATE_LABEL: {
     '0': '未处理',
@@ -30,7 +32,7 @@ export default {
     '2': '回退',
     '3': '待审核',
     '4': '拒绝',
-    '5': '待接收',
+    '5': '待接收'
 
   },
   GD_NODE_TYPE: {
