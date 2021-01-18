@@ -1,8 +1,9 @@
 <template>
   <div class="formDesc_wrap">
-    <van-form style="width: 100%;">
+    <van-form style="width: 100%;" ref="form" @submit="onValidateSuccess">
 <!--      {{formData}}-->
       <div v-for="(item,key,index) in desc">
+
         <van-field
           :disabled="formDisabled"
           v-model="formData[key]"
@@ -10,6 +11,7 @@
           name="picker"
           :label="item.label"
           placeholder="请输入内容"
+            :rules="[{validator:validator(formData[key],item), message: `请填写${item.label}` }]"
         >
         </van-field>
         <van-field
@@ -22,6 +24,8 @@
           name="picker"
           :label="item.label"
           placeholder="请点击选择"
+                      :rules="[{validator:validator(formData[key],item), message: `请填写${item.label}` }]"
+
         >
         </van-field>
         <van-field
@@ -34,9 +38,14 @@
           name="picker"
           :label="item.label"
           placeholder="请点击选择"
+                                :rules="[{validator:validator(formData[key],item), message: `请填写${item.label}` }]"
+
         >
         </van-field>
-        <van-field v-else :label="item.label" :disabled="formDisabled">
+        <van-field v-else :label="item.label" :disabled="formDisabled"
+                                        :rules="[{validator:validator(formData[key],item), message: `请填写${item.label}` }]"
+
+        >
           <template v-if="item.type=='radio'" #input>
             <van-radio-group direction="horizontal" v-model="formData[key]">
               <van-radio v-for="radio in item.options" :name="radio.value">{{radio.text}}</van-radio>
@@ -51,6 +60,9 @@
             </div>
             <div v-else style="color:gray">
               暂无图片
+            </div>
+            <div class="van-field__error-message">
+            {{fileValidateMsg}}
             </div>
           </template>
           <template v-else-if="item.type=='switch'" #input>
@@ -134,10 +146,12 @@
         desc: null,
         formData: {},
         formDataCopy: {},//formData副本，提交图片用，因为图片是分开formData上传的，假如formData图片字段删除就要影响到图片上传
-        fileKeys: []
+        fileKeys: [],
+        fileValidateMsg:'',
       }
     },
     methods: {
+
       beforeRead(key) {
         if (this.fileKeys.indexOf(key) == -1) {
           this.fileKeys.push(key)
@@ -236,6 +250,35 @@
           images: [url],
           showIndex: false
         })
+      },
+      validator(value,item){
+        return (value,rule)=>{
+          let required = item.required;
+          let type  = item.type;
+          if(required){//配置了需要验证必填的
+            if(type == 'upload-file'){//文件上传value是个数组
+              if(value&&value.length) {
+               this.fileValidateMsg = ''
+              }else{
+                this.fileValidateMsg = '请上传文件'
+              }
+            }else{
+              if(value&&value.trim()!==''){
+                return  true;
+              }
+              return false;
+            }
+
+          }else{
+            return  true;
+          }
+        }
+      },
+      validatorNotRequired(val,item){
+        return  true;
+      },
+      onValidateSuccess(){
+        this.$emit('validate')
       }
     }
   }
