@@ -18,9 +18,9 @@
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
+      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs" @validate='submit'>
         <template v-slot:footer>
-          <van-button block @click="submit" type="info">提交处理
+          <van-button block  type="info">提交处理
           </van-button>
         </template>
       </form-desc>

@@ -9,16 +9,16 @@
       <van-collapse v-model="activeNames">
         <van-collapse-item v-for="item,index in history" :title="`${item.nodeType}节点(${item.dealUser})`"
                            :name="`${index}`">
-          <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs">
+          <form-desc :formDisabled="true" :formDescData="item.workData" :formDescImgs="formDescImgs" >
             <template v-slot:footer>
 
             </template>
           </form-desc>
         </van-collapse-item>
       </van-collapse>
-      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs">
+      <form-desc ref="myForm" :formDescData="formDescData" :formDescImgs="formDescImgs" @validate='submit'>
         <template v-slot:footer>
-          <van-button block @click="submit" type="info">提交处理
+          <van-button block  type="info">提交处理
           </van-button>
         </template>
       </form-desc>

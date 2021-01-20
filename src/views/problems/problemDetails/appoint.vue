@@ -50,6 +50,7 @@
 
   export default {
     name: 'staff',
+    props: ['order', 'work'],
     components: {
       navBar,
       tab,
@@ -57,21 +58,26 @@
     },
     computed: {
       history() {
-        let orderData = this.$store.state.orderData
-        let logicData = JSON.parse(orderData.logicData)
-        let curWork = this.$store.state.curWork
-        let curNodeId = curWork.nodeId
-        let curWorkObj = this.$store.state.curWorkObj
+        let order = this.order
+        let curWork = this.work
+        let works = order.works
         let his = []
-        let nodeIds = Object.keys(curWorkObj)
-        for (let i = 0; i < nodeIds.length; i++) {
-          if (nodeIds[i] < curNodeId) {//只加之前的
-            his.push(curWorkObj[nodeIds[i]])
+        for (let i = 0; i < works.length; i++) {
+          let _work = works[i]
+          if (_work.id == curWork.id) {
+            continue
           }
+          let nodeId = _work.nodeId
+          let hasNodeIndex = this._.findIndex(his, (node) => {
+            return node.nodeId == nodeId
+          })
+          if (hasNodeIndex != -1) {
+            his.splice(hasNodeIndex, 1)
+          }
+          his.push(_work)
         }
-        let preNodeIds = util.findAllPreNodeId(logicData, curNodeId)
         return his
-      }
+      },
     },
     data() {
       return {
@@ -99,9 +105,9 @@
           Toast.fail('请选择指派人')
           return
         }
-        let curWork = this.$store.state.curWork
+        let curWork = this.work
         let workId = curWork.id
-        let orderData = this.$store.state.orderData
+        let orderData = this.order
         let orderId = orderData.orderInfo.id
         let req = {}
         req.applyId = this.myConst.appId
@@ -110,7 +116,7 @@
         req.dealUser = this.$store.state.account
         req.workId = workId
         req.nodes = this.selUsers
-        let dealUser = this.selUsers[0].dealUser
+        let dealUser = this.selUsers[0].dealUser          //selUsers是个数组,因为可能会指派多个人
         this.$gdApi.assignWork(req).then((res2) => {
           if (res2.code == SUCCESS) {
             let workId = res2.data[0]
@@ -152,18 +158,10 @@
         this.$router.back(-1)
       },
       onConfirm(val) {
-        let orderData = this.$store.state.orderData
-        let logicData = JSON.parse(orderData.logicData)
-        let curWork = this.$store.state.curWork
-        let nodeId = curWork.nodeId
-        let nextIds = util.findNextNodeId(logicData, nodeId)
-        let nextNodes = []
-        for (let i = 0; i < nextIds.length; i++) {
-          let id = nextIds[i]
-          let node = util.findLogicNode(orderData.logicData, id)
-          nextNodes.push(node)
-        }
-        let nextN = nextNodes[0]
+        let orderData = this.order
+        let curWork = this.work
+        let nextId = util.findNextNodeId(orderData.logicData, curWork)
+        let nextNode = util.findLogicNode(orderData.logicData, nextId)
         let find = null
         for (let i = 0; i < this.dealUserOpt.length; i++) {
           let user = this.dealUserOpt[i]
@@ -172,11 +170,12 @@
             break
           }
         }
-        if (nextN && find) {
+        if (find) {
           this.selUserName = find.name
+          //selUsers是个数组,因为可能会指派多个人
           this.selUsers = [{
-            'nodeId': nextN.id,
-            'nodeType': nextN.nodeType,
+            'nodeId': nextNode.id,
+            'nodeType': nextNode.nodeType,
             'dealType': '0',
             'dealUser': find.account
           }]

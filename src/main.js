@@ -12,6 +12,7 @@ import { Spi } from './api/api'
 
 Vue.prototype.$Spi = Spi
 import gdApi from '@/api/gongdanApi'
+
 Vue.prototype.$gdApi = gdApi
 import _ from 'lodash'
 
@@ -32,6 +33,9 @@ import '@/plugins/vant'
 import '@/assets/css/index.scss'
 // 移动端适配
 import 'lib-flexible/flexible.js'
+
+//注册全局组件
+import '@/components/globalComponents'
 
 // filters
 import './filters'

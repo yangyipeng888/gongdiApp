@@ -110,13 +110,14 @@ import { Toast } from 'vant'
 import { ImagePreview } from 'vant'
 import navBar from '@/components/navBar'
 import uploader from '@/components/uploader'
-import * as formResolver from '@/utils/formResolver'
 import formDesc from './formDesc'
 import * as util from '@/utils/index'
+import TestGlobalComp from '../../components/testGlobalComp'
 
 export default {
   name: 'files',
   components: {
+    TestGlobalComp,
     navBar,
     uploader,
     formDesc
@@ -149,6 +150,7 @@ export default {
             let id = this.$store.state.currentSite
             let style = this.$store.state.constructionSite[id].name
             let name = this.taskData[i].name
+
             let orderStyle = this.taskData[i].orderStyle
             if (n == name && orderStyle == style) {
               // let content = this.taskData[i].modelData
@@ -262,7 +264,7 @@ export default {
     },
 
 
-    async onSubmit(formName) {
+    async onSubmit(e) {
       let myForm = this.$refs.myForm
       //myFormData
       let myFormData = myForm.getFormData()
