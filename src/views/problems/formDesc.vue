@@ -125,7 +125,7 @@ export default {
           this.desc = JSON.parse(this.formDescData).formDesc
           if (JSON.parse(this.formDescData).formData) {
             this.formData = JSON.parse(this.formDescData).formData
-            this.formDataCopy = Object.assign({}, this.formData)
+            // this.formDataCopy = Object.assign({}, this.formData)
           }
 
         }
@@ -156,25 +156,25 @@ export default {
     }
   },
   methods: {
-
     beforeRead(key) {
       if (this.fileKeys.indexOf(key) == -1) {
         this.fileKeys.push(key)
       }
     },
     afterRead(file) {
-      this.formDataCopy = Object.assign({}, this.formData)
-      console.log(this.formData, 111111111)
+      debugger
+      // this.formDataCopy = Object.assign({}, this.formData)
     },
     beforeDelete(file) {
 
     },
     getFormData() {
-      for (let i = 0; i < this.fileKeys.length; i++) {
+      let formDataCopy = Object.assign({}, this.formData)
+      for (let i = 0; i < this.fileKeys.length; i++) {//文件file字段要置空，不是通过formData传到后端的，不置空会报错
         let fileKey = this.fileKeys[i]
-        this.formData[fileKey] = ''
+        formDataCopy[fileKey] = []
       }
-      return this.formData
+      return formDataCopy
     },
     imageToBase64(file) {
       return new Promise((resolve, reject) => {
@@ -195,14 +195,14 @@ export default {
         let fieldKey = this.fileKeys[i]
         data.fieldName = fieldKey
         data.img = []
-        let formcopy = this.formDataCopy
-        let files = this.formDataCopy[fieldKey]
+        let files = this.formData[fieldKey]
         if (files && files.length) {
           for (let j = 0; j < files.length; j++) {
             let file = files[j]
             let aaa = null
             if (file.file) {
-              aaa = await this.imageToBase64(file.file)
+              aaa = file.content;
+              // aaa = await this.imageToBase64(file.file)
             } else {
               aaa = await util.getBase64(file.url)
             }
@@ -280,6 +280,9 @@ export default {
         }
       }
     },
+    submit(){
+      this.$refs.form.submit();
+    },
     onValidateSuccess() {
       this.hasBeenValid = true
       this.isFormValid = true
@@ -289,7 +292,7 @@ export default {
       this.hasBeenValid = true
       this.isFormValid = false
     },
-    fileValidMsg(fileList) {
+    fileValidMsg(fileList, key) {
       if (!this.hasBeenValid) {
         return ''
       } else {

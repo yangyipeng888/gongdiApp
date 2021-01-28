@@ -102,7 +102,7 @@ export default {
       let id = this.$store.state.currentSite
       let name = this.$store.state.constructionSite[id].name
       req.orderStyle = name
-      req.orderStyle = '安全检查'
+      // req.orderStyle = '整改通知'
       this.$gdApi.getOrderInfoByUser(req).then(res => {
         this.loading = false
         if (res.code == SUCCESS) {

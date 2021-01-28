@@ -1,6 +1,7 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
+import Spi from '@/api/gongdanApi'
 
 /**
  * Parse the time to string
@@ -128,7 +129,7 @@ export function getBase64(imgUrl) {
         oFileReader.onloadend = function(e) {
           // 此处拿到的已经是 base64的图片了
           let base64 = e.target.result
-          resolve(base64);
+          resolve(base64)
         }
         oFileReader.readAsDataURL(blob)
       }
@@ -137,6 +138,7 @@ export function getBase64(imgUrl) {
   })
 
 }
+
 export function dateTrans(val) {
   var date = new Date(val)
   var seperator1 = '-'
@@ -156,4 +158,8 @@ export function dateTrans(val) {
     + seperator2 + '00'
   return currentdate
 }
+
+export function test(val) {
+}
+
 

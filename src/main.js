@@ -14,6 +14,9 @@ Vue.prototype.$Spi = Spi
 import gdApi from '@/api/gongdanApi'
 
 Vue.prototype.$gdApi = gdApi
+import * as iindex from '@/utils/index'
+Vue.prototype.$util = iindex
+
 import _ from 'lodash'
 
 Vue.prototype._ = _
